@@ -1,0 +1,695 @@
+################################################################################
+#######################    RUE Phytoplankton BRMS   ############################
+################################################################################
+
+library(dplyr)
+library(readxl)
+library(tidyr)
+library(lubridate)
+library(brms)
+library(corrplot)
+
+rm(list = ls())
+#------------------------------------------------------------------------------
+setwd("~/GitHub/Phytoplankton-project/phyto_RUE/dataformatting")
+load('plankton_RUE_data3_290925.RDATA')
+### removing unused columns ....................................................
+plankton_RUE_data4 <- plankton_RUE_data3 %>% select(-(c(16:91, 116:166))) #remove species biomass info
+
+### calculate N:P ratio........................................................
+plankton_RUE_data5 <- plankton_RUE_data4 %>% mutate(N_P_ratio = TotalNitrogen_unfiltered / TotalPhosphorus_unfiltered)
+colnames(plankton_RUE_data5)
+
+#### check distribution of variables ...........................................
+#response
+# hist(plankton_RUE_data5$genus_richness)
+# hist(plankton_RUE_data5$FEve)
+# hist(plankton_RUE_data5$FDis)
+# hist(plankton_RUE_data5$cyano_prop)
+plankton_RUE_data5$log_cyano_prop <- log(plankton_RUE_data5$cyano_prop+0.0001)
+# hist(plankton_RUE_data5$log_cyano_prop)
+# hist(plankton_RUE_data5$species_richness)
+# hist(plankton_RUE_data5$zoo_FEve)
+# hist(plankton_RUE_data5$zoo_FDis)
+# hist(plankton_RUE_data5$log_RUE_A_P)
+# hist(plankton_RUE_data5$log_RUE_A_N)
+# hist(plankton_RUE_data5$log_RUE_zooplankton)
+
+
+#predictors
+# hist(plankton_RUE_data5$Temperature)
+# hist(plankton_RUE_data5$Salinity)
+# hist(plankton_RUE_data5$pH)
+
+# hist(plankton_RUE_data5$CWM_log_Biovolume)
+# hist(sqrt(plankton_RUE_data5$TotalPhosphorus_unfiltered))
+# hist(log(plankton_RUE_data5$TotalNitrogen_unfiltered))
+# hist(plankton_RUE_data5$N_P_ratio)
+plankton_RUE_data5$log_N_P_ratio <- log(plankton_RUE_data5$N_P_ratio)
+# hist(plankton_RUE_data5$log_N_P_ratio)
+
+plankton_RUE_data5$MaxDepth <- as.factor(plankton_RUE_data5$MaxDepth)
+
+# hist(plankton_RUE_data5$MinDepth)
+# hist(plankton_RUE_data5$MaxDepth)
+# hist(plankton_RUE_data5$DOY)
+# hist(plankton_RUE_data5$Zooplankton_MaxDepth)
+
+plankton_RUE_data5$Zooplankton_MaxDepth <- as.factor(plankton_RUE_data5$Zooplankton_MaxDepth)
+
+#test skewness
+# library(moments)
+# skewness(log(plankton_RUE_data5$RUE_C_N))
+# skewness(sqrt(plankton_RUE_data5$MaxDepth))
+
+save(plankton_RUE_data5, file = 'plankton_RUE_data5_260109.RDATA')
+
+#### make everything scaled and add poly terms .................................
+load('plankton_RUE_data5_260109.RDATA')
+
+plankton_RUE_data_scaled <- plankton_RUE_data5 %>%
+  mutate(across(c(Temperature, Salinity, pH, N_P_ratio, log_N_P_ratio, DOY),
+                ~ as.numeric(scale(.))))
+
+save(plankton_RUE_data_scaled, file = 'plankton_RUE_data_scaled_260109.RDATA')
+
+setwd("~/GitHub/Phytoplankton-project/phyto_RUE/dataformatting")
+load('plankton_RUE_data_scaled_260109.RDATA')
+setwd("~/GitHub/Phytoplankton-project/phyto_RUE/BRM_260109")
+
+#make BRMS model- phytoplankton diversity #-----------------------------------
+#genus richness...............................................................
+start_time <- Sys.time()
+
+model <- brm( formula= genus_richness ~ Temperature + 
+                Salinity + pH + log_N_P_ratio + DOY +
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "sigma")
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_GD_L_260109.RData")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+#................
+
+start_time <- Sys.time()
+
+model <- brm( formula= genus_richness ~ poly(Temperature,2,raw = TRUE) + 
+                poly(Salinity,2,raw = TRUE) + poly(pH,2,raw = TRUE) + 
+                poly(log_N_P_ratio,2,raw = TRUE) +
+                poly(DOY,2,raw = TRUE) + 
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "sigma")
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_GD_P_260109.RData")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+#.............
+start_time <- Sys.time()
+
+model <- brm( formula= genus_richness ~ Temperature + 
+                Salinity + pH + log_N_P_ratio*DOY + 
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "sigma")
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_GD_LI_260109.RData")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+#.............
+start_time <- Sys.time()
+
+model <- brm( formula= genus_richness ~ poly(Temperature,2,raw = TRUE) + 
+                poly(Salinity,2,raw = TRUE) + poly(pH,2,raw = TRUE) + 
+                poly(log_N_P_ratio, 2, raw = TRUE) * poly(DOY, 2, raw = TRUE) +
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "sigma")
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_GD_PI_260109.RData")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+#genus richness- poisson .......................................................
+start_time <- Sys.time()
+
+model <- brm( formula= genus_richness ~ Temperature + 
+                Salinity + pH + log_N_P_ratio + DOY +
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              family = poisson(), #changed family
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd")
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_GD_L_p_260127.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+#1 divergent#
+#................
+
+start_time <- Sys.time()
+
+model <- brm( formula= genus_richness ~ poly(Temperature,2,raw = TRUE) + 
+                poly(Salinity,2,raw = TRUE) + poly(pH,2,raw = TRUE) + 
+                poly(log_N_P_ratio,2,raw = TRUE) +
+                poly(DOY,2,raw = TRUE) + 
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              family = poisson(), #changed family
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd")
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_GD_P_p_260127.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+#.............
+start_time <- Sys.time()
+
+model <- brm( formula= genus_richness ~ Temperature + 
+                Salinity + pH + log_N_P_ratio*DOY + 
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              family = poisson(), #changed family
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd")
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_GD_LI_p_260127.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+#.............
+start_time <- Sys.time()
+
+model <- brm( formula= genus_richness ~ poly(Temperature,2,raw = TRUE) + 
+                poly(Salinity,2,raw = TRUE) + poly(pH,2,raw = TRUE) + 
+                poly(log_N_P_ratio, 2, raw = TRUE) * poly(DOY, 2, raw = TRUE) +
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              family = poisson(), #changed family
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd")
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_GD_PI_p_260127.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+#Functional Evenness ...........................................................
+start_time <- Sys.time()
+
+model <- brm( formula= FEve ~ Temperature + 
+                Salinity + pH + log_N_P_ratio + DOY + 
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "sigma")
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_FEve_L_260109.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+
+#.................
+
+start_time <- Sys.time()
+
+model <- brm( formula= FEve ~ poly(Temperature,2,raw = TRUE) + 
+                poly(Salinity,2,raw = TRUE) + poly(pH,2,raw = TRUE) + 
+                poly(log_N_P_ratio,2,raw = TRUE) + 
+                poly(DOY,2,raw = TRUE) + 
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "sigma")
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_FEve_P_260109.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+#.............
+start_time <- Sys.time()
+
+model <- brm( formula= FEve ~ Temperature + 
+                Salinity + pH + log_N_P_ratio*DOY + 
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "sigma")
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_FEve_LI_260109.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+#1 divergence
+
+#.............
+start_time <- Sys.time()
+
+model <- brm( formula= FEve ~ poly(Temperature,2,raw = TRUE) + 
+                poly(Salinity,2,raw = TRUE) + poly(pH,2,raw = TRUE) +
+                poly(log_N_P_ratio, 2, raw = TRUE) * poly(DOY, 2, raw = TRUE) +
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "sigma")
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_FEve_PI_260109.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+#Functional Evenness -beta .....................................................
+start_time <- Sys.time()
+
+model <- brm( formula= FEve ~ Temperature + 
+                Salinity + pH + log_N_P_ratio + DOY + 
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              family = Beta(), #changed family
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "phi") # prior for beta
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_FEve_L_b_260127.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+#2 divergence
+
+#.................
+
+start_time <- Sys.time()
+
+model <- brm( formula= FEve ~ poly(Temperature,2,raw = TRUE) + 
+                poly(Salinity,2,raw = TRUE) + poly(pH,2,raw = TRUE) + 
+                poly(log_N_P_ratio,2,raw = TRUE) + 
+                poly(DOY,2,raw = TRUE) + 
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              family = Beta(), #changed family
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "phi") # prior for beta
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_FEve_P_b_260127.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+#2 divergence
+
+#.............
+start_time <- Sys.time()
+
+model <- brm( formula= FEve ~ Temperature + 
+                Salinity + pH + log_N_P_ratio*DOY + 
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              family = Beta(), #changed family
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "phi") # prior for beta
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_FEve_LI_b_260127.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+#1 divergence
+
+#.............
+start_time <- Sys.time()
+
+model <- brm( formula= FEve ~ poly(Temperature,2,raw = TRUE) + 
+                poly(Salinity,2,raw = TRUE) + poly(pH,2,raw = TRUE) +
+                poly(log_N_P_ratio, 2, raw = TRUE) * poly(DOY, 2, raw = TRUE) +
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              family = Beta(), #changed family
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "phi") # prior for beta
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_FEve_PI_b_260127.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+
+#Functional Dispersion .........................................................
+start_time <- Sys.time()
+
+model <- brm( formula= FDis ~ Temperature + 
+                Salinity + pH + log_N_P_ratio + DOY + 
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "sigma")
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_FDis_L_260109.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+#.................
+
+start_time <- Sys.time()
+
+model <- brm( formula= FDis ~ poly(Temperature,2,raw = TRUE) + 
+                poly(Salinity,2,raw = TRUE) + poly(pH,2,raw = TRUE) + 
+                poly(log_N_P_ratio,2,raw = TRUE) + 
+                poly(DOY,2,raw = TRUE) + 
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "sigma")
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_FDis_P_260109.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+#.............
+start_time <- Sys.time()
+
+model <- brm( formula= FDis ~ Temperature + 
+                Salinity + pH + log_N_P_ratio*DOY + 
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "sigma")
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_FDis_LI_260109.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+#.............
+start_time <- Sys.time()
+
+model <- brm( formula= FDis ~ poly(Temperature,2,raw = TRUE) + 
+                poly(Salinity,2,raw = TRUE) + poly(pH,2,raw = TRUE) + 
+                poly(log_N_P_ratio, 2, raw = TRUE) * poly(DOY, 2, raw = TRUE) +
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "sigma")
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_FDis_PI_260109.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+#Functional Dispersion -beta ...................................................
+start_time <- Sys.time()
+
+model <- brm( formula= FDis ~ Temperature + 
+                Salinity + pH + log_N_P_ratio + DOY + 
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              family = Beta(), #changed family
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "phi") # prior for beta
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_FDis_L_b_260127.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+#.................
+
+start_time <- Sys.time()
+
+model <- brm( formula= FDis ~ poly(Temperature,2,raw = TRUE) + 
+                poly(Salinity,2,raw = TRUE) + poly(pH,2,raw = TRUE) + 
+                poly(log_N_P_ratio,2,raw = TRUE) + 
+                poly(DOY,2,raw = TRUE) + 
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              family = Beta(), #changed family
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "phi") # prior for beta
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_FDis_P_b_260127.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+#.............
+start_time <- Sys.time()
+
+model <- brm( formula= FDis ~ Temperature + 
+                Salinity + pH + log_N_P_ratio*DOY + 
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              family = Beta(), #changed family
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "phi") # prior for beta
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_FDis_LI_b_260127.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+
+#.............
+start_time <- Sys.time()
+
+model <- brm( formula= FDis ~ poly(Temperature,2,raw = TRUE) + 
+                poly(Salinity,2,raw = TRUE) + poly(pH,2,raw = TRUE) + 
+                poly(log_N_P_ratio, 2, raw = TRUE) * poly(DOY, 2, raw = TRUE) +
+                (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+              data = plankton_RUE_data_scaled,
+              family = Beta(), #changed family
+              iter = 4000, warmup = 2000, cores = 4, chains = 4,
+              save_pars = save_pars(all = TRUE),
+              prior = c(
+                set_prior("normal(0, 1)", class = "b"),
+                set_prior("exponential(1)", class = "sd"),
+                set_prior("exponential(1)", class = "phi") # prior for beta
+              ),
+              control = list(adapt_delta = 0.99, max_treedepth = 15),
+              seed = 2345
+)
+
+save(model, file = "BRM_phyto_FDis_PI_b_260127.RDATA")
+
+end_time <- Sys.time()
+elapsed_time <- end_time - start_time
+print(elapsed_time)
+

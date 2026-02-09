@@ -1,0 +1,212 @@
+################################################################################
+############## Zooplankton data formatting and cleaning ########################
+################################################################################
+library(dplyr)
+library(readxl)
+library(tidyr)
+library(vegan)
+library(openxlsx)
+library(lubridate)
+library(sf)
+library(ggplot2)
+library(maps)
+library(viridis)
+library(fuzzyjoin)
+library(ggrepel)
+
+rm(list = ls())
+
+setwd("~/GitHub/Phytoplankton-project/Data/Zooplankton/Zooplankton_data_Syke")
+
+setwd("~/GitHub/Phytoplankton-project/phyto_RUE/dataformatting")
+load('RUE_abundance_com_290925.RDATA')
+load('RUE_abundance_com_scaled_290925.RDATA')
+load('Zooplankton_REC_clean3_260925.RDATA')
+
+################################################################################
+#clean Zooplankton dataset
+Zooplankton_abd_data <- Zooplankton_REC_clean3 %>%
+  select(SampleEvent, Date, latitude, longitude, EnvironmentType, 
+         Zooplankton_MinDepth, Zooplankton_MaxDepth, Species, Abundance) %>%
+  pivot_wider(
+    names_from = Species,
+    values_from = Abundance,
+    values_fill = 0
+  ) # Fills missing combinations with 0
+
+metadata_cols <- c("SampleEvent", "Date", "latitude", "longitude", "EnvironmentType", 
+                   "Zooplankton_MinDepth", "Zooplankton_MaxDepth")
+
+Zooplankton_abd_data <- Zooplankton_abd_data %>%
+  rename_with(~ paste0(.x, "_z"), .cols = -all_of(metadata_cols))
+
+#include environment type to RUE dataset
+load('Phytoplankton_data_format.RDATA')
+Phytoplankton_data2<- Phytoplankton_data%>%
+  select(Site_Id,`Coordinates_ EUREF_WGS84_lat`, `Coordinates_ EUREF_WGS84_long`, 
+         EnvironmentalType, SurfacewaterType, WaterArea, WaterAreaNumber) %>%
+  rename(latitude =`Coordinates_ EUREF_WGS84_lat`,
+         longitude =`Coordinates_ EUREF_WGS84_long`,
+         SiteID = Site_Id, EnvironmentType = EnvironmentalType, 
+         Waterbody = WaterArea, WaterbodyCode = WaterAreaNumber)%>%
+  distinct() %>%
+  mutate(
+    EnvironmentType = case_when(
+      EnvironmentType %in% c("meri ulkos", "meri sisäs") ~ "Coastal",
+      EnvironmentType == "avomeri" ~ "Open water",
+      TRUE ~ EnvironmentType
+    )
+  )
+
+RUE_with_env <- RUE_abundance_com %>%
+  left_join(
+    Phytoplankton_data2 %>%
+      select(latitude, longitude, EnvironmentType, SurfacewaterType),
+    by = c("latitude" = "latitude", "longitude" = "longitude")
+  )
+
+# 1. Prepare your environmental data
+env_sf <- RUE_with_env %>%
+  mutate(Date = as.Date(Date)) %>%
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>%
+  st_transform(crs = 3857)
+
+# 2. Prepare your zooplankton data
+zoo_sf <- Zooplankton_abd_data %>%
+  st_as_sf(coords = c("longitude", "latitude"), crs = 3067) %>%
+  st_transform(crs = 3857)
+
+# 3. Spatial join: keep all env points and attach zoo whenever within 3m radius
+# --- Conditional joins ---
+## Coastal sites (3 m radius) #min distance between site with same habitat type
+coastal_env <- env_sf %>% filter(EnvironmentType == "Coastal")
+coastal_zoo <- zoo_sf %>% filter(EnvironmentType == "Coastal")
+coastal_joined_env_to_zoo <- st_join(
+  coastal_env,
+  coastal_zoo,
+  join = st_is_within_distance,
+  dist = 3,
+  suffix = c("_env", "_zoo")
+)
+coastal_joined_zoo_to_env <- st_join(
+  coastal_zoo,
+  coastal_env,
+  join = st_is_within_distance,
+  dist = 3,
+  suffix = c("_zoo", "_env")
+)
+
+## Open water sites (3 m radius) #min distance between each site
+open_env <- env_sf %>% filter(EnvironmentType == "Open water")
+open_zoo <- zoo_sf %>% filter(EnvironmentType == "Open water")
+open_joined_env_to_zoo <- st_join(
+  open_env,
+  open_zoo,
+  join = st_is_within_distance,
+  dist = 3,
+  suffix = c("_env", "_zoo")
+)
+open_joined_zoo_to_env <- st_join(
+  open_zoo,
+  open_env,
+  join = st_is_within_distance,
+  dist = 3,
+  suffix = c("_zoo", "_env")
+)
+
+# Combine results
+joined_all <- bind_rows(coastal_joined_env_to_zoo,
+                        coastal_joined_zoo_to_env,
+                        open_joined_env_to_zoo,
+                        open_joined_zoo_to_env
+                        ) %>%
+  distinct()
+
+# 4. Filter to get plus or minus 3 days date‐matches
+merged <- joined_all %>%
+  filter(abs(as.numeric(difftime(Date_env, Date_zoo, units = "days"))) <= 3)
+
+# 5. Drop geometry to get plain data.frame and convert to degrees lat lon
+merged_wgs <- st_transform(merged, crs = 4326)
+
+final_df <- merged_wgs %>%
+  mutate(
+    longitude = st_coordinates(geometry)[, 1],
+    latitude  = st_coordinates(geometry)[, 2]
+  ) %>%
+  st_drop_geometry() #836 obs if join both ways
+#less obs by splitting observations between coastal and open sea
+#418 obs if using only env join to zoo
+#also 418 obs if zoo to env
+
+final_df <- final_df %>%
+  mutate(
+    longitude = round(longitude, 5),
+    latitude  = round(latitude, 5)
+  )
+
+#check number of sampling years ................................................
+# Calculate sampling years count per site (lon, lat)
+site_years <- final_df %>%
+  mutate(year = format(Date_env, "%Y")) %>% #extract year from date
+  group_by(longitude, latitude) %>%
+  summarise(years_sampled = n_distinct(year), .groups = "drop") %>%
+  mutate(years_cat = factor(years_sampled))  
+
+site_years <- site_years %>%
+  group_by(longitude, latitude) %>%
+  mutate(site_id = cur_group_id()) %>%  # assigns a unique number per site
+  ungroup()
+
+ggplot(site_years, aes(x = longitude, y = latitude, color = years_cat)) +
+  borders("world", colour = "gray80", fill = "gray95") +
+  geom_point(size = 3, alpha = 0.8) +
+  geom_text_repel(aes(label = site_id), size = 3, max.overlaps = Inf) +
+  coord_fixed(xlim = c(10, 30), ylim = c(53, 66)) +
+  scale_color_viridis_d(option = "plasma", name = "Number of Years") + 
+  theme_minimal() +
+  labs(
+    title = "Sampling Frequency (of Years) For Each Phytoplankton and Zooplankton Site",
+    x = "Longitude",
+    y = "Latitude"
+  )
+
+#find number of sites
+n_sites <- site_years %>%
+  distinct(longitude, latitude)
+
+n_sites
+
+#calculate total Atot for zooplankton#........................................
+filtered_plankton_data2<-final_df
+filtered_plankton_data2$zoo_Atot <- rowSums(filtered_plankton_data2[, 117:167]) 
+
+#RUE calculation
+filtered_plankton_data2 <- filtered_plankton_data2 %>%
+  mutate(RUE_zooplankton = zoo_Atot / Atot)
+filtered_plankton_data2$log_RUE_zooplankton <- log(filtered_plankton_data2$RUE_zooplankton)
+#check NAs
+# sum(is.na(filtered_plankton_data2))
+# filtered_plankton_data2[rowSums(is.na(filtered_plankton_data2)) > 0, ]
+# colSums(is.na(filtered_plankton_data2))
+# names(filtered_plankton_data2)[colSums(is.na(filtered_plankton_data2)) > 0]
+# # only in oxygen soluble and surface water type
+
+#clean up dataset
+plankton_RUE_data <- filtered_plankton_data2 %>%
+  select(-c(Date_zoo)) %>%
+  rename(Date = Date_env)
+
+save(plankton_RUE_data, file = 'plankton_RUE_data_290925.RDATA')
+
+### plot data ############......................................................
+###plot points##
+ggplot() +
+  #geom_sf(data = biomass_sf, aes(color = "Phytoplankton biomass"), size = 2, alpha = 0.7) +  
+  geom_sf(data = env_sf, aes(color = "Phytoplankton"), size = 3, shape= 15, alpha = 0.7) +
+  geom_sf(data = zoo_sf, aes(color = "Zooplankton"), size = 2, alpha = 0.7) +
+  #geom_sf(data = joined_all, aes(color = "joined"), size = 1, alpha = 0.7) +
+  scale_color_manual(values = c("Phytoplankton" = "green", "Zooplankton" = "blue",
+                                "Phytoplankton biomass" = "green", "joined" = "red")) +
+  theme_minimal() +
+  labs(color = "Dataset", title = "Sampling points from datasets")
