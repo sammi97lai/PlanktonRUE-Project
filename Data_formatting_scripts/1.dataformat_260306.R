@@ -178,11 +178,11 @@ load('RDATA/Phytoplankton_data2_clean.RDATA')
 Phytoplankton_data2_clean2 <- Phytoplankton_data2_clean %>% 
   filter(!Genus %in% c("Katablepharis", "Leucocryptos", "Telonema",
                        "Choanoflagellatea", "Diaphanoeca", "Cysts")) #removing heterotrophs and cysts
-sum(Phytoplankton_data2_clean2$Trophy == "HT", na.rm = TRUE) #number of rows with heterotrphs
+# sum(Phytoplankton_data2_clean2$Trophy == "HT", na.rm = TRUE) #number of rows with heterotrphs
 #61306
 Phytoplankton_data2_clean3 <- Phytoplankton_data2_clean2 %>% 
   filter(Trophy != "HT") #removing heterotrophs
-unique(Phytoplankton_data2_clean3$Trophy) #check if all heterotrphs are removed
+# unique(Phytoplankton_data2_clean3$Trophy) #check if all heterotrphs are removed
 #[1] "AU" "MX"
 
 #remove words#
@@ -210,7 +210,8 @@ Phytoplankton_data3_relabel <- Phytoplankton_data2_relabel %>%
                  "Rhodomonas", "Chroomonas", "Cryptomonadales cf.") ~ 
       "Cryptomonadales", #genus level ID not always possible#
     Genus %in% c("Flagellates oval", "Flagellates round", "Unicell", "Monad",
-                 "Flagellates oval cf.", "Flagellates (oval)", "Flagellates (sphere)") ~ 
+                 "Flagellates oval cf.", "Flagellates (oval)", "Flagellates (sphere)",
+                 "Flagellate biflagella", "Flagellate uniflagella") ~ 
       "Unidentified flagellates unicell and monads", #usually unidentifiable#
     Genus %in% c("Anabaena", "Dolichospermum") ~ 
       "Anabaena/Dolichsopsermum", #name change#
