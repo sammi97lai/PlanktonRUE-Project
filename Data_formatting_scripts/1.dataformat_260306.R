@@ -9,17 +9,17 @@ library(sf)         # For spatial features
 library(ggspatial)  # For better map styling
 library(viridis)    # For color scale
 
-setwd("~/GitHub/Phytoplankton-project/phyto_RUE/dataformatting")
+setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts")
 
 ################# Data Organisation and formatting ###############################
 
 ##Offshore##---------------
 ##phytoplankton###
 Finland_offshore_phyto_since2000 <- 
-  read_excel("~/GitHub/Phytoplankton-project/Data/Phytoplankton/Phytoplankton_data_Syke/Finland_offshore_phyto_since2000.xlsx")
+  read_excel("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_data_Syke/Finland_offshore_phyto_since2000.xlsx")
 #water quality#
 Finland_offshore_wq_since2000_from_Vesla_database <- 
-  read_excel("~/GitHub/Phytoplankton-project/Data/Water quality/Finland_offshore_wq_since2000_from Vesla database.xlsx")
+  read_excel("~/GitHub/PlanktonRUE-Project/Data/Water quality/Finland_offshore_wq_since2000_from Vesla database.xlsx")
 Finland_offshore_wq_since2000_from_Vesla_database$Time <- format(as.POSIXct(Finland_offshore_wq_since2000_from_Vesla_database$Time), format = "%H:%M")
 Finland_offshore_wq_since2000_from_Vesla_database<-Finland_offshore_wq_since2000_from_Vesla_database%>%
   rename(`Coordinates_ EUREF_WGS84_lat`=`Coordinates_WGS84 lat`,
@@ -42,11 +42,11 @@ n_distinct(merged_offshore$Site_Id)
 #water quality#
 # Load the data file
 Finland_outer_coastal_wq_since20001 <- 
-  read_excel("~/GitHub/Phytoplankton-project/Data/Water quality/Finland_outer coastal_wq_since2000.xlsx",sheet = "Outer coastal wq part 1")
+  read_excel("~/GitHub/PlanktonRUE-Project/Data/Water quality/Finland_outer coastal_wq_since2000.xlsx",sheet = "Outer coastal wq part 1")
 Finland_outer_coastal_wq_since20002 <- 
-  read_excel("~/GitHub/Phytoplankton-project/Data/Water quality/Finland_outer_coastal_wq_since20002.xlsx")
+  read_excel("~/GitHub/PlanktonRUE-Project/Data/Water quality/Finland_outer_coastal_wq_since20002.xlsx")
 Finland_outer_coastal_wq_since20003 <- 
-  read_excel("~/GitHub/Phytoplankton-project/Data/Water quality/Finland_outer_coastal_wq_since20003.xlsx")
+  read_excel("~/GitHub/PlanktonRUE-Project/Data/Water quality/Finland_outer_coastal_wq_since20003.xlsx")
 
 #combine water quality datasets#
 Outer_coastal_wq <- bind_rows(Finland_outer_coastal_wq_since20001, Finland_outer_coastal_wq_since20002)
@@ -55,7 +55,7 @@ Outer_coastal_wq$Date <- as.Date(Outer_coastal_wq$Date, format = "%d.%m.%Y")
 
 #phytoplankton#
 Finland_outer_coastal_phyto_since2000 <- 
-  read_excel("~/GitHub/Phytoplankton-project/Data/Phytoplankton/Phytoplankton_data_Syke/Finland_outer coastal_phyto_since2000.xlsx")
+  read_excel("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_data_Syke/Finland_outer coastal_phyto_since2000.xlsx")
 Finland_outer_coastal_phyto_since2000$Date <- as.POSIXct(Finland_outer_coastal_phyto_since2000$Date, format = "%d.%m.%Y", tz = "UTC")
 Finland_outer_coastal_phyto_since2000 <- Finland_outer_coastal_phyto_since2000 %>%
   separate(`Coordinates_ EUREF-FIN/WGS85`, into = c("Coordinates_ EUREF_WGS84_lat", "Coordinates_ EUREF_WGS84_long"), sep = "-")
@@ -77,19 +77,19 @@ n_distinct(merged_OUTCOAST$Site_Id) #find number of sites#
 #water quality#
 # Load the data file
 Finland_inner_coastal_wq_since20001 <- 
-  read_excel("~/GitHub/Phytoplankton-project/Data/Water quality/Finland_Inner coastal_wq_since2000.xlsx",sheet = "Inner coastal wq part 1")
+  read_excel("~/GitHub/PlanktonRUE-Project/Data/Water quality/Finland_Inner coastal_wq_since2000.xlsx",sheet = "Inner coastal wq part 1")
 Finland_inner_coastal_wq_since20002 <- 
-  read_excel("~/GitHub/Phytoplankton-project/Data/Water quality/Finland_Inner coastal_wq_since2000.xlsx",sheet = "Inner coastal wq part 2")
+  read_excel("~/GitHub/PlanktonRUE-Project/Data/Water quality/Finland_Inner coastal_wq_since2000.xlsx",sheet = "Inner coastal wq part 2")
 Finland_inner_coastal_wq_since20003 <- 
-  read_excel("~/GitHub/Phytoplankton-project/Data/Water quality/Finland_Inner coastal_wq_since2000.xlsx", sheet = "Inner coastal wq part 3")
+  read_excel("~/GitHub/PlanktonRUE-Project/Data/Water quality/Finland_Inner coastal_wq_since2000.xlsx", sheet = "Inner coastal wq part 3")
 Finland_inner_coastal_wq_since20004 <- 
-  read_excel("~/GitHub/Phytoplankton-project/Data/Water quality/Finland_Inner coastal_wq_since2000.xlsx", sheet = "Inner coastal wq part 4")
+  read_excel("~/GitHub/PlanktonRUE-Project/Data/Water quality/Finland_Inner coastal_wq_since2000.xlsx", sheet = "Inner coastal wq part 4")
 Finland_inner_coastal_wq_since20005 <- 
-  read_excel("~/GitHub/Phytoplankton-project/Data/Water quality/Finland_Inner coastal_wq_since2000.xlsx", sheet = "Inner coastal wq part 5")
+  read_excel("~/GitHub/PlanktonRUE-Project/Data/Water quality/Finland_Inner coastal_wq_since2000.xlsx", sheet = "Inner coastal wq part 5")
 Finland_inner_coastal_wq_since20006 <- 
-  read_excel("~/GitHub/Phytoplankton-project/Data/Water quality/Finland_Inner coastal_wq_since2000.xlsx", sheet = "Inner coastal wq part 6")
+  read_excel("~/GitHub/PlanktonRUE-Project/Data/Water quality/Finland_Inner coastal_wq_since2000.xlsx", sheet = "Inner coastal wq part 6")
 # Load the mapping table
-mapping <- read_excel("~/GitHub/Phytoplankton-project/Data/Water quality/Finland_Inner coastal_wq_since2000_mapping.xlsx")
+mapping <- read_excel("~/GitHub/PlanktonRUE-Project/Data/Water quality/Finland_Inner coastal_wq_since2000_mapping.xlsx")
 # Convert mapping table to named vector
 name_mapping <- setNames(mapping$Translation, mapping$OriginalHeadline)
 # Replace column names
@@ -115,7 +115,7 @@ Inner_coastal_wq$Date <- as.Date(Inner_coastal_wq$Date, format = "%d.%m.%Y")
 
 #phytoplankton#
 Finland_inner_coastal_phyto_since2000 <- 
-  read_excel("~/GitHub/Phytoplankton-project/Data/Phytoplankton/Phytoplankton_data_Syke/Finland_inner coastal_phyto_since2000.xlsx")
+  read_excel("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_data_Syke/Finland_inner coastal_phyto_since2000.xlsx")
 Finland_inner_coastal_phyto_since2000$Date <- as.Date(Finland_inner_coastal_phyto_since2000$Date, format = "%d.%m.%Y")
 Finland_inner_coastal_phyto_since2000 <- Finland_inner_coastal_phyto_since2000 %>%
   separate(`Coordinates_ EUREF-FIN/WGS85`, into = c("Coordinates_ EUREF_WGS84_lat", "Coordinates_ EUREF_WGS84_long"), sep = "-")
@@ -138,7 +138,7 @@ n_distinct(merged_inner_coastal$Site_Id) #find number of sites#
 Phytoplankton_data <- bind_rows(merged_offshore, merged_OUTCOAST)
 Phytoplankton_data <- bind_rows(Phytoplankton_data, merged_inner_coastal)
 
-# setwd("~/GitHub/Phytoplankton-project/phyto_RUE/dataformatting")
+# setwd("~/GitHub/PlanktonRUE-Project/phyto_RUE/dataformatting")
 # save(Phytoplankton_data, file = 'Phytoplankton_data_format.RDATA')
 
 #data selection and formatting#
@@ -146,7 +146,7 @@ Phytoplankton_data2<- Phytoplankton_data%>%
   select(Site_Id, Sampling_Id, SettledSample_Id, Station, Date, Time,`Coordinates_ EUREF_WGS84_lat`,
          `Coordinates_ EUREF_WGS84_long`, StationDepth, Region,
          Temperature, Salinity, pH, Oxygen_soluble, TotalPhosphorus_unfiltered, TotalNitrogen_unfiltered, 
-         `Chlorophyll-a`, Class, Order, Genus, Species,
+         `Chlorophyll-a`, Class, Order, Genus, Species, Trophy,
          Biovolume_um3, UnitsPerLiter, Biomass_ugPerLiter, Carbon_ugPerLiter, SamplingDepth) #subsetting data#
 Phytoplankton_data2<-Phytoplankton_data2%>%
   rename(`latitude`=`Coordinates_ EUREF_WGS84_lat`,
@@ -166,9 +166,9 @@ Phytoplankton_data2_clean <- Phytoplankton_data2  %>%
   mutate(Genus = coalesce(Genus, Species))
 anyNA(Phytoplankton_data2_clean$Genus) #check NAs#
 
-save(Phytoplankton_data2_clean, file = 'Phytoplankton_data2_clean.RDATA')
+save(Phytoplankton_data2_clean, file = 'RDATA/Phytoplankton_data2_clean.RDATA')
 
-load('Phytoplankton_data2_clean.RDATA')
+load('RDATA/Phytoplankton_data2_clean.RDATA')
 
 #.........................fix genus if needed.......................................
 # filtered_data <- Phytoplankton_data2_clean %>% filter(Genus == "Euglenales")
@@ -177,10 +177,26 @@ load('Phytoplankton_data2_clean.RDATA')
 #remove certain Genus
 Phytoplankton_data2_clean2 <- Phytoplankton_data2_clean %>% 
   filter(!Genus %in% c("Katablepharis", "Leucocryptos", "Telonema",
-                       "Choanoflagellatea", "Diaphanoeca")) #removing heterotrophs
+                       "Choanoflagellatea", "Diaphanoeca", "Cysts")) #removing heterotrophs and cysts
+sum(Phytoplankton_data2_clean2$Trophy == "HT", na.rm = TRUE) #number of rows with heterotrphs
+#61306
+Phytoplankton_data2_clean3 <- Phytoplankton_data2_clean2 %>% 
+  filter(Trophy != "HT") #removing heterotrophs
+unique(Phytoplankton_data2_clean3$Trophy) #check if all heterotrphs are removed
+#[1] "AU" "MX"
+
+#remove words#
+Phytoplankton_data2_relabel <- Phytoplankton_data2_clean3 %>%
+  mutate(
+    Genus = trimws(Genus),                         # remove leading/trailing spaces
+    Genus = gsub("\\s+", " ", Genus),              # remove double spaces
+    Genus = gsub("\\(PROPOSED Helcom\\)", "", Genus),
+    Genus = gsub("\\(PROPOSED sisävesi\\)", "", Genus),
+    Genus = trimws(Genus)
+  )
 
 #group certain Genus by relabeling
-Phytoplankton_data2_relabel <- Phytoplankton_data2_clean2 %>%
+Phytoplankton_data3_relabel <- Phytoplankton_data2_relabel %>%
   mutate(Genus = case_when(
     Genus %in% c("Monoraphidium", "Koliella") ~ 
       "Monoraphidium complex", #inconsistencies in ID#
@@ -190,27 +206,33 @@ Phytoplankton_data2_relabel <- Phytoplankton_data2_clean2 %>%
                  "Chrysolykos", "Chrysidiastrum", "Chrysosphaerella",
                  "Chrysamoeba", "Monochrysis", "Phaeaster", "Epipyxis", "Bitrichia") ~ 
       "Ochromonadales", #everything under order Ochromonadales#
-    Genus %in% c("Plagioselmis", "Cryptomonas", "Teleaulax","Hemiselmis") ~ 
+    Genus %in% c("Plagioselmis", "Cryptomonas", "Teleaulax","Hemiselmis",
+                 "Rhodomonas", "Chroomonas", "Cryptomonadales cf.") ~ 
       "Cryptomonadales", #genus level ID not always possible#
-    Genus %in% c("Flagellates   oval", "Flagellates   round", "Unicell", "Monad") ~ 
+    Genus %in% c("Flagellates oval", "Flagellates round", "Unicell", "Monad",
+                 "Flagellates oval cf.", "Flagellates (oval)", "Flagellates (sphere)") ~ 
       "Unidentified flagellates unicell and monads", #usually unidentifiable#
     Genus %in% c("Anabaena", "Dolichospermum") ~ 
       "Anabaena/Dolichsopsermum", #name change#
     Genus %in% c("Chroococcales", "Cyanodictyon", "Merismopedia", "Lemmermanniella",
-                 "Aphanocapsa", "Romeria") ~ 
+                 "Aphanocapsa", "Romeria",
+                 "Synechococcus", "Chroococcales cf.") ~ 
       "Chroococcales/Synechococcales", #genus level ID not always possible"
     Genus %in% c("Centrales", "Cyclotella", "Eupodiscales") ~ "Centrales spp.", 
     Genus %in% c("Eutreptiella", "Trachelomonas", "Lepocinclis",
                  "Eutreptia", "Euglena", "Phacus", "Monomorphina", "Strombomonas",
                  "Colacium", "Euglenales cf.", "Cryptoglena") ~ 
       "Euglenales", #everything under order Euglenales#
+    Genus %in% c("Dinophyceae cysts", "Dinophyceae") ~ "Unidentified Dinophyceae", 
     TRUE ~ Genus  # Keep others unchanged
   ))
+
+unique(Phytoplankton_data3_relabel$Genus) #check Genus list
 
 #..................................................................................
 
 #group by genus and phytoplankton data summed and env data averaged# 
-Phytoplankton_data3 <- Phytoplankton_data2_relabel %>%
+Phytoplankton_data3 <- Phytoplankton_data3_relabel %>%
   group_by(Site_Id, Sampling_Id, SettledSample_Id, Date, Time, Region,
            latitude, longitude, MinDepth, MaxDepth, Genus) %>%
   summarise(across(
@@ -226,8 +248,8 @@ Phytoplankton_data3 <- Phytoplankton_data2_relabel %>%
 
 # unique(Phytoplankton_data3$Genus)
 
-save(Phytoplankton_data3, file = 'Phytoplankton_data3.RDATA')
-load('Phytoplankton_data3.RDATA')
+save(Phytoplankton_data3, file = 'RDATA/Phytoplankton_data3.RDATA')
+load('RDATA/Phytoplankton_data3.RDATA')
 
 ############# choose sites with high temporal coverage #########################
 Phytoplankton_data3$Date <- as.Date(Phytoplankton_data3$Date)
@@ -323,7 +345,7 @@ ggplot() +
 filtered_Phytoplankton_data <- Phytoplankton_data3 %>%
   semi_join(site_sampling_freq_more5, by = c("longitude", "latitude"))
 
-save(filtered_Phytoplankton_data, file = 'Phytoplankton_data4.RDATA')
+save(filtered_Phytoplankton_data, file = 'RDATA/Phytoplankton_data4.RDATA')
 
 #plot which years that each site has sampled in#
 # Create a unique site identifier using lat/lon
