@@ -11,6 +11,7 @@ setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
 ############## Hill Diversity, Genus richness and Rarity-weighted Richness #################----------------------------------
 
 load('filtered_biomass_env_data.RDATA')
+# load('non_filtered_biomass_data.RDATA') #include rare species
 
 bio_data <- filtered_biomass_env_data[-c(1:17)] #keep only abundance data, remove env factors#
 
@@ -143,8 +144,6 @@ filtered_phyto_traits <- phyto_traits %>%
   filter(!Genus %in% c("Katablepharis", "Leucocryptos", "Telonema",
                        "Choanoflagellatea", "Diaphanoeca", "Cysts")) %>%
   select(-heterotrophy) ##removing heterotrophs and cysts#
-Phytoplankton_data2_clean3 <- Phytoplankton_data2_clean2 %>% 
-  filter(Trophy != "HT")
 
 #group Genus and relabel and average traits#....................................
 filtered_phyto_traits <- filtered_phyto_traits %>%
@@ -206,28 +205,28 @@ categorical_summary <- filtered_phyto_traits %>%
 final_phyto_traits <- left_join(categorical_summary, grouped_averages, by = "Genus_grouped")
 colnames(final_phyto_traits)[colnames(final_phyto_traits) == "Genus_grouped"] <- "Genus" #rename to Genus
 
-#match with syke abundance/carbon/biomass genus data#........................
+#match with biomass genus data#..............................................
 setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
 load("filtered_biomass_env_data2.RDATA")
-selected_col_names <- colnames(filtered_biomass_env_data2)[18:min(93, ncol(filtered_biomass_env_data2))]
+selected_col_names <- colnames(filtered_biomass_env_data2)[18:min(91, ncol(filtered_biomass_env_data2))]
 genus_table <- data.frame(Genus = selected_col_names)
 final_phyto_traits2 <- final_phyto_traits %>%
   filter(Genus %in% genus_table$Genus)%>%
   mutate(Genus = factor(Genus, levels = genus_table$Genus)) %>%
   arrange(Genus)  # Arrange rows based on the ordered Genus
 
-setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits")
+setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits/RDATA_and_csv")
 save(final_phyto_traits2, file = 'final_phyto_traits_biomass.RDATA')
 
 #calculating functional diversity#..........................................
 rm(list = ls())
-setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits")
+setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits/RDATA_and_csv")
 load('final_phyto_traits_biomass.RDATA')
 
 setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
 load("filtered_biomass_env_data2.RDATA")
 
-setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits")
+setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits/RDATA_and_csv")
 
 biomass_sub <-filtered_biomass_env_data2 %>%
   select(-c(Site_Id, Sampling_Id, SettledSample_Id, Date, Time,
@@ -266,7 +265,7 @@ write.csv(new_traits, "new_Traits_260306.csv",row.names = FALSE)
 
 #create PCA of functional traits#
 rm(list = ls())
-setwd("~/GitHub/Phytoplankton-project/Data/Phytoplankton/Phytoplankton_functional_traits")
+setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits/RDATA_and_csv")
 Traits <- read.csv("new_Traits_260306.csv", header = T, row.names = 1)
 
 Traits_clean <- Traits #replace NA with column mean (just for PCA)
@@ -293,9 +292,13 @@ fviz_pca_biplot(pca_result,
 #Traits_clean["Coscinodiscus", ] #large Diatom, very high in Biovolume
 
 ##calculating functional diversity##
-setwd("~/GitHub/Phytoplankton-project/Data/Phytoplankton/Phytoplankton_functional_traits")
+setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits/RDATA_and_csv")
 Biomass <- read.csv("biomass.csv", header = T, row.names = 1, check.names=FALSE)
 Traits <- read.csv("new_Traits_260306.csv", header = T, row.names = 1)
+
+# Check which rows sum to zero
+zero_rows <- which(rowSums(Biomass, na.rm = TRUE) == 0)
+zero_rows #1555
 
 dist.traits <- gowdis(Traits) #with gower distance#
 
@@ -304,7 +307,7 @@ dbFD_trait <- dbFD(dist.traits, Biomass, corr = "cailliez",
                    calc.FRic = TRUE, calc.CWM = FALSE)
 save(dbFD_trait, file = 'FD_traits_biomass_260306.RDATA')
 
-setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits")
+setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits/RDATA_and_csv")
 load('FD_traits_biomass_260306.RDATA')
 par(mfrow=c(2,2))
 hist(dbFD_trait$FEve)
@@ -322,21 +325,16 @@ Divphyto = data.frame(FEve = dbFD_trait$FEve,FDis = dbFD_trait$FDis)
 summary(Divphyto)
 rownames(Divphyto) <- NULL
 
-setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits")
-save(Divphyto, file = 'FD_phyto_traits_biomass_260306.RDATA')
 
 #combine with rest of phyto dataset#
-setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits")
-load('FD_phyto_traits_biomass_150925.RDATA')
 setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
-
 load('filtered_biomass_env_data2.RDATA')
 filtered_biomass_env_data3 <- cbind(filtered_biomass_env_data2,Divphyto)
 save(filtered_biomass_env_data3, file = 'filtered_biomass_env_data3_260306.RDATA')
 
 #...............................................................................
 ####### Functional Diversity- Selected traits for Predation #############
-setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits")
+setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits/RDATA_and_csv")
 Biomass <- read.csv("biomass.csv", header = T, row.names = 1, check.names=FALSE)
 Traits <- read.csv("new_Traits_260306.csv", header = T, row.names = 1)
 colnames(Traits)
@@ -360,7 +358,7 @@ dbFD_trait2 <- dbFD(dist.selectedtraits, Biomass, corr = "cailliez",
                    calc.FRic = TRUE, calc.CWM = FALSE)
 save(dbFD_trait2, file = 'FD_traits_selected_biomass_260306.RDATA')
 
-setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits")
+setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits/RDATA_and_csv")
 load('FD_traits_selected_biomass_260306.RDATA')
 par(mfrow=c(2,2))
 hist(dbFD_trait2$FEve)
@@ -373,40 +371,21 @@ Divphyto2 = data.frame(FEve_selected = dbFD_trait2$FEve,FDis_selected = dbFD_tra
 summary(Divphyto2)
 rownames(Divphyto2) <- NULL
 
-setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits")
-save(Divphyto2, file = 'FD_phyto_traits_biomass_260306.RDATA')
-
 #combine with biomass dataset#
-setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits")
-load('FD_phyto_traits_biomass_180925.RDATA')
-setwd("~/GitHub/Phytoplankton-project/phyto_RUE/dataformatting")
-load('filtered_biomass_env_data4_150925.RDATA')
-filtered_biomass_env_data5 <- cbind(filtered_biomass_env_data4,Divphyto2)
-save(filtered_biomass_env_data5, file = 'filtered_biomass_env_data5_180925.RDATA')
+setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
+load('filtered_biomass_env_data3_260306.RDATA')
+filtered_biomass_env_data4 <- cbind(filtered_biomass_env_data3,Divphyto2)
+save(filtered_biomass_env_data4, file = 'filtered_biomass_env_data4_260306.RDATA')
 
 #...............................................................................
 #################### Cyanobacteria Dominance ###################################
-setwd("~/GitHub/Phytoplankton-project/Data/Phytoplankton/Phytoplankton_functional_traits")
-# Carbon <- read.csv("carbon.csv", header = T, row.names = 1, check.names=FALSE)
+setwd("~/GitHub/PlanktonRUE-Project/Data/Phytoplankton/Phytoplankton_functional_traits/RDATA_and_csv")
 Biomass <- read.csv("biomass.csv", header = T, row.names = 1, check.names=FALSE)
-Abundance <- read.csv("abundance.csv", header = T, row.names = 1, check.names=FALSE)
-# colnames(Carbon)
 
 #identify cyanobacteria species#
 Cyano <- c("Anabaena/Dolichsopsermum", "Aphanizomenon", "Chroococcales/Synechococcales",
            "Nodularia", "Snowella", "Woronichinia", "Eucapsis", "Aphanothece",
            "Planktothrix")
-
-#calculate relative abundance percentage of cyanobacteria#
-# Cyano_Dom <- Carbon %>%
-#   rowwise() %>%
-#   mutate(
-#     total = sum(c_across(everything())),               # total across all genus in the row
-#     cyano_sum = sum(c_across(all_of(Cyano))),        # sum of cyanobacteria in the row
-#     cyano_prop = (cyano_sum / total)
-#   ) %>%
-#   ungroup() %>%
-#   select(cyano_prop)  # optional: remove helper columns
 
 Cyano_Dom <- Biomass %>%
   rowwise() %>%
@@ -418,10 +397,10 @@ Cyano_Dom <- Biomass %>%
   ungroup() %>%
   select(cyano_prop)  # optional: remove helper columns
 
-setwd("~/GitHub/Phytoplankton-project/phyto_RUE/dataformatting")
-load('filtered_biomass_env_data5_180925.RDATA')
-filtered_biomass_env_data6 <- cbind(filtered_biomass_env_data5,Cyano_Dom)
-save(filtered_biomass_env_data6, file = 'filtered_biomass_env_data6_180925.RDATA')
+setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
+load('filtered_biomass_env_data4_260306.RDATA')
+filtered_biomass_env_data5 <- cbind(filtered_biomass_env_data4,Cyano_Dom)
+save(filtered_biomass_env_data5, file = 'filtered_biomass_env_data5_260306.RDATA')
 
 #...............................................................................
 ####################plotting results############################################
@@ -429,16 +408,16 @@ library(ggplot2)
 library(ggpubr)
 library(patchwork)
 setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
-load('filtered_biomass_env_data6_180925.RDATA')
+load('filtered_biomass_env_data5_260306.RDATA')
 
 #FD#
-FE <- ggplot(data = filtered_biomass_env_data6, aes(x=longitude, y=latitude, 
+FE <- ggplot(data = filtered_biomass_env_data5, aes(x=longitude, y=latitude, 
                                                    color = FEve)) + 
   geom_point(size = 1.2) +
   scale_color_viridis_c(option="turbo", direction=-1) +
   theme_bw() + ggtitle('Functional Evenness') +
   theme(legend.position="bottom")
-FD <- ggplot(data = filtered_biomass_env_data6, aes(x=longitude, y=latitude,
+FD <- ggplot(data = filtered_biomass_env_data5, aes(x=longitude, y=latitude,
                                                    color = FDis)) + 
   geom_point(size = 1.2) +
   scale_color_viridis_c(option="turbo", direction=-1) +
@@ -446,13 +425,7 @@ FD <- ggplot(data = filtered_biomass_env_data6, aes(x=longitude, y=latitude,
   theme(legend.position="bottom")
 
 #CWM#
-size <- ggplot(data = filtered_biomass_env_data6, aes(x=longitude, y=latitude,
-                                                     color = CWM_log_Biovolume)) + 
-  geom_point(size = 1.2) +
-  scale_color_viridis_c(option="turbo",direction=-1) +
-  theme_bw() + ggtitle('CWM log Biovolume') +
-  theme(legend.position="bottom")
-Cyano <- ggplot(data = filtered_biomass_env_data6, aes(x=longitude, y=latitude,
+Cyano <- ggplot(data = filtered_biomass_env_data5, aes(x=longitude, y=latitude,
                                                       color = cyano_prop)) + 
   geom_point(size = 1.2) +
   scale_color_viridis_c(option="turbo",direction=-1) +
@@ -460,24 +433,27 @@ Cyano <- ggplot(data = filtered_biomass_env_data6, aes(x=longitude, y=latitude,
   theme(legend.position="bottom")
 
 #FD#
-FE_selected <- ggplot(data = filtered_biomass_env_data6, aes(x=longitude, y=latitude, 
+FE_selected <- ggplot(data = filtered_biomass_env_data5, aes(x=longitude, y=latitude, 
                                                     color = FEve_selected)) + 
   geom_point(size = 1.2) +
   scale_color_viridis_c(option="turbo", direction=-1) +
   theme_bw() + ggtitle('Functional Evenness: selected') +
   theme(legend.position="bottom")
-FD_selected <- ggplot(data = filtered_biomass_env_data6, aes(x=longitude, y=latitude,
+FD_selected <- ggplot(data = filtered_biomass_env_data5, aes(x=longitude, y=latitude,
                                                     color = FDis_selected)) + 
   geom_point(size = 1.2) +
   scale_color_viridis_c(option="turbo", direction=-1) +
   theme_bw() + ggtitle('Functional Dispersion: selected') +
   theme(legend.position="bottom")
 
-plot = ggarrange(FE, FE_selected, size, FD_selected, FD, Cyano, nrow = 2, ncol = 3)
+plot = ggarrange(FE, FE_selected, FD_selected, FD, Cyano, nrow = 2, ncol = 3)
 
+setwd("~/GitHub/PlanktonRUE-Project/Figures")
+png("Functional_Diversity_phyto.png", width = 12, height = 8, units = "in", res = 500)
 plot
+dev.off()
 
 #with patchwork
-(FE | FE_selected | size) /
-  (FD | FD_selected | Cyano)
+(FE | FE_selected | Cyano) /
+  (FD | FD_selected )
 

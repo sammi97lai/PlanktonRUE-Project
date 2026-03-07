@@ -8,12 +8,12 @@ library(lubridate)
 setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
 
 rm(list = ls())
-load('filtered_biomass_env_data6_180925.RDATA')
+load('filtered_biomass_env_data5_260306.RDATA')
 
 #calculate RUE for total community - biomass #----------------------------------
 #calculate total biomass#
-RUE_biomass_com<-filtered_biomass_env_data6
-RUE_biomass_com$Btot <- rowSums(RUE_biomass_com[, 18:93]) 
+RUE_biomass_com<-filtered_biomass_env_data5
+RUE_biomass_com$Btot <- rowSums(RUE_biomass_com[, 18:86]) 
 
 #calculate RUE of biomass per unit phosphorus
 RUE_biomass_com <- RUE_biomass_com %>%
@@ -40,4 +40,4 @@ RUE_biomass_com <- RUE_biomass_com %>%
           RUE_B_P, RUE_B_N, log_RUE_B_P, log_RUE_B_N
   )  # Removes na rows 
 
-save(RUE_biomass_com, file = 'RUE_biomass_com_180925.RDATA')
+save(RUE_biomass_com, file = 'RUE_biomass_com_260307.RDATA')

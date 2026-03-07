@@ -100,7 +100,7 @@ just_env<-biomass_data %>% ungroup() %>%
            Temperature, Salinity, pH, Oxygen_soluble, TotalPhosphorus_unfiltered, TotalNitrogen_unfiltered, 
            `Chlorophyll-a`)) #have dataset just of env factors
 
-#------------------------ Total biomass per species ------------------------#
+#....................... Total biomass per species .............................
 # species_biomass: columns with biomass (same order as PA data)
 species_cols <- 18:ncol(biomass_data)
 species_biomass <- biomass_data[, species_cols]
@@ -142,7 +142,27 @@ filtered_biomass_data <- biomass_data_PA %>%
 
 filtered_biomass_env_data<-cbind(just_env,filtered_biomass_data) #combine dataset#
 
+species_cols <- colnames(filtered_biomass_env_data)[18:min(289, ncol(filtered_biomass_env_data))]
+biomass_matrix <- filtered_biomass_env_data[, species_cols]
+
+# Check which rows sum to zero
+zero_rows <- which(rowSums(biomass_matrix, na.rm = TRUE) == 0)
+zero_rows #1555
+
+#remove zero rows from dataset
+# Keep only rows where at least one species has biomass
+filtered_biomass_env_data_nonzero <- filtered_biomass_env_data[
+  rowSums(filtered_biomass_env_data[, species_cols], na.rm = TRUE) > 0, 
+]
+
+# Optional: check that row 1555 is gone
+zero_rows <- which(rowSums(filtered_biomass_env_data_nonzero[, species_cols], na.rm = TRUE) == 0)
+zero_rows  # should return integer(0)
+
+filtered_biomass_env_data<-filtered_biomass_env_data_nonzero
+
 save(filtered_biomass_env_data, file = 'filtered_biomass_env_data.RDATA')
+save(biomass_data, file = 'non_filtered_biomass_data.RDATA') #include rare species
 
 ########################### Abundance ###################################
 abd_data <- filtered_Phytoplankton_data %>%
