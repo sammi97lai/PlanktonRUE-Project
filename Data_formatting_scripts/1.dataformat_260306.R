@@ -138,8 +138,8 @@ n_distinct(merged_inner_coastal$Site_Id) #find number of sites#
 Phytoplankton_data <- bind_rows(merged_offshore, merged_OUTCOAST)
 Phytoplankton_data <- bind_rows(Phytoplankton_data, merged_inner_coastal)
 
-# setwd("~/GitHub/PlanktonRUE-Project/phyto_RUE/dataformatting")
-# save(Phytoplankton_data, file = 'Phytoplankton_data_format.RDATA')
+setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
+save(Phytoplankton_data, file = 'Phytoplankton_data_format.RDATA')
 
 #data selection and formatting#
 Phytoplankton_data2<- Phytoplankton_data%>%
