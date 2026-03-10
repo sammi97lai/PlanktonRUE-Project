@@ -22,9 +22,8 @@ start_time <- Sys.time()
 
 model <- brm(formula = log_RUE_B_P ~ genus_richness + FEve + FDis + 
                species_richness + zoo_FEve + zoo_FDis +
-               Temperature + Salinity + pH + log_N_P_ratio +
-               DOY + 
-               (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+               Temperature + Salinity + pH + MaxDepth + DOY + daylight_hours +
+               (1 | Year) + (1 | Site_Id),  
              data = plankton_RUE_data_scaled,
              iter = 4000, warmup = 2000, cores = 4, chains = 4,
              save_pars = save_pars(all = TRUE),
@@ -51,9 +50,9 @@ model <- brm(formula = log_RUE_B_P ~ genus_richness + FEve + FDis +
                species_richness + zoo_FEve + zoo_FDis +
                poly(Temperature,2,raw = TRUE) + 
                poly(Salinity,2,raw = TRUE) + poly(pH,2,raw = TRUE) + 
-               poly(log_N_P_ratio,2,raw = TRUE) +
-               poly(DOY,2,raw = TRUE) + 
-               (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+               poly(MaxDepth,2,raw = TRUE) +
+               poly(DOY,2,raw = TRUE) + poly(daylight_hours,2,raw = TRUE) +
+               (1 | Year) + (1 | Site_Id), 
              data = plankton_RUE_data_scaled,
              iter = 4000, warmup = 2000, cores = 4, chains = 4,
              save_pars = save_pars(all = TRUE),
@@ -79,8 +78,11 @@ start_time <- Sys.time()
 
 model <- brm(formula = log_RUE_B_P ~ genus_richness + FEve + FDis +
                species_richness + zoo_FEve + zoo_FDis +
-               Temperature + Salinity + pH + log_N_P_ratio*DOY + 
-               (1 | Year) + (1 | Site_Id) + (1 | MaxDepth), 
+               Temperature + Salinity + pH + MaxDepth + DOY + daylight_hours +
+               genus_richness*Temperature + genus_richness*Salinity +
+               FEve*Temperature + FEve*Salinity + 
+               FDis*Temperature + FDis*salinity +
+               (1 | Year) + (1 | Site_Id),  
              data = plankton_RUE_data_scaled,
              iter = 4000, warmup = 2000, cores = 4, chains = 4,
              save_pars = save_pars(all = TRUE),
