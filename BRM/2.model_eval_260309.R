@@ -20,7 +20,7 @@ setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
 load('plankton_RUE_data_scaled_260309.RDATA')
 load('plankton_RUE_data6_260309.RDATA')
 
-setwd("~/GitHub/PlanktonRUE-Project/BRM")
+setwd("~/GitHub/PlanktonRUE-Project/BRM/RDATA")
 
 #if reloo is too much#
 options(
@@ -100,22 +100,22 @@ ggplot(re_site_df,
 #check multicollinearity#.................................................
 lm_check <- lm(log_RUE_B_P ~ genus_richness + FEve + FDis + 
                  species_richness + zoo_FEve + zoo_FDis +
-                 Temperature + Salinity + pH + 
-                 log_N_P_ratio + DOY + cyano_prop, 
+                 Temperature + Salinity + pH + MaxDepth +
+                 DOY + daylight_hours + cyano_prop, 
                data = plankton_RUE_data_scaled)
 vif(lm_check) #below 3 is good#
 
 lm_check <- lm(log_RUE_B_N ~ genus_richness + FEve + FDis + 
                  species_richness + zoo_FEve + zoo_FDis +
-                 Temperature + Salinity + pH + 
-                 log_N_P_ratio + DOY + cyano_prop, 
+                 Temperature + Salinity + pH + MaxDepth +
+                 DOY + daylight_hours + cyano_prop, 
                data = plankton_RUE_data_scaled)
 vif(lm_check) #below 3 is good# 
 
 lm_check <- lm(log_RUE_zooplankton ~ genus_richness + FEve_selected + FDis_selected +
                  species_richness + zoo_FEve + zoo_FDis +
-                 Temperature + Salinity + pH + 
-                 log_N_P_ratio + DOY + cyano_prop, 
+                 Temperature + Salinity + pH + Zooplankton_MaxDepth +
+                 DOY + daylight_hours + cyano_prop, 
                data = plankton_RUE_data_scaled)
 vif(lm_check) #below 3 is good#
 
@@ -135,17 +135,17 @@ corrplot(cor_mat, method= "circle", type="lower", addCoef.col = "black",
 
 ################# Getting results for all models ################################
 # ===========================================================
-# # for phytoplankton div models
-# # Automatic output folder
+# for phytoplankton div models
+# Automatic output folder
 # date_tag <- format(Sys.Date(), "%Y%m%d")
-# outdir <- file.path("~/GitHub/Phytoplankton-project/phyto_RUE/Results",
+# outdir <- file.path("~/GitHub/PlanktonRUE-Project/Results",
 #                     paste0("BRM_phytodiv_results_", date_tag))
 # dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 # 
 # cat("\n Results will be saved to:", outdir, "\n")
 # 
 # # Load model list
-# source("~/GitHub/Phytoplankton-project/phyto_RUE/BRM_260109/2.1.phytodiv_model_list.R")
+# source("~/GitHub/PlanktonRUE-Project/BRM/2.1.phytodiv_model_list.R")
 # 
 # # Check it loaded correctly
 # length(model_list)
@@ -153,35 +153,35 @@ corrplot(cor_mat, method= "circle", type="lower", addCoef.col = "black",
 # ===========================================================
 
 # ===========================================================
-# # for phytoplankton RUE models
-# # Automatic output folder
-# date_tag <- format(Sys.Date(), "%Y%m%d")
-# outdir <- file.path("~/GitHub/Phytoplankton-project/phyto_RUE/Results",
-#                     paste0("BRM_phytoRUE_results_", date_tag))
-# dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
-# 
-# cat("\n Results will be saved to:", outdir, "\n")
-# 
-# # Load model list
-# source("~/GitHub/Phytoplankton-project/phyto_RUE/BRM_260109/2.2.phytoRUE_model_list.R")
-# 
-# # Check it loaded correctly
-# length(model_list)
-# names(model_list[[1]])
+# for phytoplankton RUE models
+# Automatic output folder
+date_tag <- format(Sys.Date(), "%Y%m%d")
+outdir <- file.path("~/GitHub/PlanktonRUE-Project/Results",
+                    paste0("BRM_phytoRUE_results_", date_tag))
+dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
+
+cat("\n Results will be saved to:", outdir, "\n")
+
+# Load model list
+source("~/GitHub/PlanktonRUE-Project/BRM/2.2.phytoRUE_model_list.R")
+
+# Check it loaded correctly
+length(model_list)
+names(model_list[[1]])
 # ===========================================================
 
 # ===========================================================
 # for zooplankton models
 # Automatic output folder
 date_tag <- format(Sys.Date(), "%Y%m%d")
-outdir <- file.path("~/GitHub/Phytoplankton-project/phyto_RUE/Results",
+outdir <- file.path("~/GitHub/PlanktonRUE-Project/Results",
                     paste0("BRM_zoo_results_", date_tag))
 dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
 cat("\n Results will be saved to:", outdir, "\n")
 
 # Load model list
-source("~/GitHub/Phytoplankton-project/phyto_RUE/BRM_260109/2.3.zoo_model_list.R")
+source("~/GitHub/PlanktonRUE-Project/BRM/2.3.zoo_model_list.R")
 
 # Check it loaded correctly
 length(model_list)
@@ -192,14 +192,14 @@ names(model_list[[1]])
 # # for cyanobacteria dominance models
 # # Automatic output folder
 # date_tag <- format(Sys.Date(), "%Y%m%d")
-# outdir <- file.path("~/GitHub/Phytoplankton-project/phyto_RUE/Results",
+# outdir <- file.path("~/GitHub/PlanktonRUE-Project/Results",
 #                     paste0("BRM_cyanodom_results_", date_tag))
 # dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 # 
 # cat("\n Results will be saved to:", outdir, "\n")
 # 
 # # Load model list
-# source("~/GitHub/Phytoplankton-project/phyto_RUE/BRM_260109/2.4.cyanodom_model_list.R")
+# source("~/GitHub/PlanktonRUE-Project/BRM/2.4.cyanodom_model_list.R")
 # 
 # # Check it loaded correctly
 # length(model_list)
@@ -277,8 +277,19 @@ classify_predictor <- function(model, data, var, n = 200) {
   post <- as_draws_df(model)
   
   # Identify linear & quadratic coefficient names
-  b1_name <- grep(paste0("^b_poly", var, "2rawEQTRUE1$"), colnames(post), value = TRUE)
-  b2_name <- grep(paste0("^b_poly", var, "2rawEQTRUE2$"), colnames(post), value = TRUE)
+  coef_names <- colnames(post)
+  
+  # linear term
+  b1_name <- coef_names[
+    coef_names == paste0("b_", var) |
+      grepl(paste0("^b_poly", var, ".*1$"), coef_names)
+  ]
+  
+  # quadratic term
+  b2_name <- coef_names[
+    grepl(paste0("^b_poly", var, ".*2$"), coef_names) |
+      grepl(paste0("^b_I.*", var, ".*2"), coef_names)
+  ]
   
   if (length(b1_name) != 1 | length(b2_name) != 1) {
     stop(paste("Could not find coefficients for", var))
@@ -289,7 +300,8 @@ classify_predictor <- function(model, data, var, n = 200) {
   
   # Derivative for quadratic poly(raw=TRUE)
   # d/dx = b1 + 2*b2*x
-  LpredDeriv <- outer(b1, xgrid, function(b1i, x) b1i + 2 * b2 * x)
+  LpredDeriv <- outer(seq_along(b1), xgrid,
+                      function(i, x) b1[i] + 2 * b2[i] * x)
   
   # classify shapes
   res <- check_beta_trend(LpredDeriv)
@@ -404,7 +416,11 @@ analyze_model <- function(model_file, name, resp = NULL, predictors = NULL,
     coef_names <- rownames(fixef(m))
     post <- as_draws_df(m)
     poly_predictors <- predictors[sapply(predictors, function(var) {
-      any(grepl(paste0("poly", var), colnames(post)))
+      any(
+        grepl(paste0("poly", var), colnames(post)) |      # poly(x,2)
+          grepl(paste0("^b_", var, "$"), colnames(post)) |  # linear term
+          grepl(paste0("I.*", var, ".*2"), colnames(post))  # I(x^2)
+      )
     })]
     
     if (length(poly_predictors) == 0) {
@@ -518,11 +534,20 @@ ggsave(
 
   
   # --- Define predictor color groups ---
-  abiotic_vars <- c("Temperature", "Salinity", "pH", "log_N_P_ratio",
-                    "DOY", "log_N_P_ratio:DOY")
+  abiotic_vars <- c("Temperature", "Salinity", "pH", "MaxDepth", "Zooplankton_MaxDepth",
+                    "DOY", "daylight_hours")
   phyto_vars <- c("genus_richness", "FEve", "FDis", "FEve_selected", 
-                  "FDis_selected", "log_cyano_prop", "cyano_prop")
-  zoo_vars <- c("species_richness", "zoo_FEve", "zoo_FDis")
+                  "FDis_selected", "log_cyano_prop", "cyano_prop",
+                  "genus_richness:Temperature", "genus_richness:Salinity",
+                  "FEve:Temperature", "FEve:Salinity", 
+                  "FDis:Temperature", "FDis:Salinity",
+                  "FEve_selected:Temperature", "FEve_selected:Salinity", 
+                  "FDis_selected:Temperature", "FDis_selected:Salinity",
+                  "cyano_prop:Temperature", "cyano_prop:Salinity")
+  zoo_vars <- c("species_richness", "zoo_FEve", "zoo_FDis",
+                "species_richness:Temperature", "species_richness:Salinity",
+                "zoo_FEve:Temperature", "zoo_FEve:Salinity", 
+                "zoo_FDis:Temperature", "zoo_FDis:Salinity")
   
   group_colors <- c(
     "Abiotic" = "#1f78b4",               

@@ -1,0 +1,63 @@
+========================================
+ Model Summary - Zoo_SR_CD_L_p 
+========================================
+
+ Family: poisson 
+  Links: mu = log 
+Formula: species_richness ~ Temperature + Salinity + pH + Zooplankton_MaxDepth + genus_richness + FEve_selected + FDis_selected + cyano_prop + DOY + daylight_hours + (1 | Year) + (1 | Site_Id) 
+   Data: plankton_RUE_data_scaled (Number of observations: 928) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Multilevel Hyperparameters:
+~Site_Id (Number of levels: 27) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.16      0.03     0.10     0.23 1.00     2461     3632
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.06      0.02     0.01     0.11 1.00     1965     1827
+
+Regression Coefficients:
+                     Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept                2.06      0.11     1.86     2.27 1.00     5942     6025
+Temperature              0.05      0.02     0.00     0.10 1.00     3694     5258
+Salinity                 0.11      0.03     0.04     0.18 1.00     2818     4195
+pH                      -0.02      0.02    -0.05     0.01 1.00     6543     6525
+Zooplankton_MaxDepth     0.01      0.01    -0.01     0.04 1.00    11177     6138
+genus_richness           0.00      0.00    -0.01     0.01 1.00     7492     6023
+FEve_selected            0.14      0.11    -0.08     0.35 1.00     9939     5772
+FDis_selected            0.01      0.22    -0.44     0.46 1.00     9246     6215
+cyano_prop              -0.08      0.08    -0.24     0.07 1.00     6276     6462
+DOY                     -0.00      0.03    -0.05     0.05 1.00     3500     4968
+daylight_hours          -0.00      0.02    -0.04     0.04 1.00     4213     5053
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 928 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo  -2006.9  9.2
+p_loo        13.3  0.8
+looic      4013.7 18.4
+------
+MCSE of elpd_loo is 0.0.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.5, 1.8]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
+
+
+========================================
+ ELPD Summary
+========================================
+elpd_loo = -2006.87 (SE = 9.18)
+LOOIC     = 4013.73

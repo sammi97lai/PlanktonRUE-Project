@@ -1,0 +1,85 @@
+========================================
+ Model Summary - phytoRUEP_P 
+========================================
+
+ Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: log_RUE_B_P ~ genus_richness + FEve + FDis + species_richness + zoo_FEve + zoo_FDis + poly(Temperature, 2, raw = TRUE) + poly(Salinity, 2, raw = TRUE) + poly(pH, 2, raw = TRUE) + poly(MaxDepth, 2, raw = TRUE) + poly(DOY, 2, raw = TRUE) + poly(daylight_hours, 2, raw = TRUE) + (1 | Year) + (1 | Site_Id) 
+   Data: plankton_RUE_data_scaled (Number of observations: 928) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Multilevel Hyperparameters:
+~Site_Id (Number of levels: 27) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     1.72      0.25     1.31     2.28 1.00     1798     3375
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.73      0.13     0.52     1.03 1.00     2381     3829
+
+Regression Coefficients:
+                              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept                         4.41      0.46     3.48     5.29 1.00     2097     3126
+genus_richness                    0.04      0.01     0.03     0.05 1.00     8729     6382
+FEve                             -0.64      0.15    -0.94    -0.34 1.00    10188     6019
+FDis                             -2.48      0.41    -3.29    -1.67 1.00    10600     5928
+species_richness                 -0.01      0.01    -0.03     0.01 1.00    10589     6009
+zoo_FEve                         -0.01      0.09    -0.19     0.18 1.00    10042     5644
+zoo_FDis                          0.39      0.15     0.10     0.69 1.00    10200     5903
+polyTemperature2rawEQTRUE1       -0.04      0.07    -0.17     0.09 1.00     6596     6174
+polyTemperature2rawEQTRUE2        0.09      0.02     0.05     0.14 1.00     8029     5890
+polySalinity2rawEQTRUE1           0.09      0.13    -0.16     0.34 1.00     5337     5164
+polySalinity2rawEQTRUE2           0.03      0.04    -0.04     0.10 1.00     6817     5956
+polypH2rawEQTRUE1                 0.15      0.03     0.09     0.20 1.00     9347     6707
+polypH2rawEQTRUE2                 0.02      0.01    -0.01     0.04 1.00     9685     6416
+polyMaxDepth2rawEQTRUE1          -0.08      0.04    -0.17     0.00 1.00     7923     5921
+polyMaxDepth2rawEQTRUE2           0.02      0.01     0.00     0.04 1.00     8190     5930
+polyDOY2rawEQTRUE1               -2.53      0.55    -3.62    -1.46 1.00     4406     4665
+polyDOY2rawEQTRUE2               -0.79      0.20    -1.19    -0.40 1.00     4428     4858
+polydaylight_hours2rawEQTRUE1    -1.60      0.38    -2.35    -0.87 1.00     4424     4792
+polydaylight_hours2rawEQTRUE2     0.21      0.06     0.10     0.32 1.00     4456     4359
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     0.45      0.01     0.43     0.47 1.00     8368     5201
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 928 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo   -612.2 27.5
+p_loo        71.2  4.6
+looic      1224.3 55.1
+------
+MCSE of elpd_loo is 0.1.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.5, 1.3]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
+
+
+========================================
+ ELPD Summary
+========================================
+elpd_loo = -612.17 (SE = 27.55)
+LOOIC     = 1224.33
+
+Derivative-based Predictor Classification
+Predictor | Pr_positive | Pr_negative | Pr_hump | Pr_Ushape
+-----------------------------------------------------------
+Temperature     |      0.011 |      0.000 |   0.000 |     0.989
+Salinity        |      0.504 |      0.035 |   0.040 |     0.421
+pH              |      0.714 |      0.000 |   0.000 |     0.286
+MaxDepth        |      0.009 |      0.128 |   0.006 |     0.856
+DOY             |      0.000 |      0.004 |   0.996 |     0.000
+daylight_hours  |      0.000 |      1.000 |   0.000 |     0.000

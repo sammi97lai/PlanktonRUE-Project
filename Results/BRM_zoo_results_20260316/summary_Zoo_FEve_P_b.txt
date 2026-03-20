@@ -1,0 +1,82 @@
+========================================
+ Model Summary - Zoo_FEve_P_b 
+========================================
+
+ Family: beta 
+  Links: mu = logit; phi = identity 
+Formula: zoo_FEve ~ poly(Temperature, 2, raw = TRUE) + poly(Salinity, 2, raw = TRUE) + poly(pH, 2, raw = TRUE) + poly(Zooplankton_MaxDepth, 2, raw = TRUE) + genus_richness + FEve_selected + FDis_selected + poly(DOY, 2, raw = TRUE) + poly(daylight_hours, 2, raw = TRUE) + (1 | Year) + (1 | Site_Id) 
+   Data: plankton_RUE_data_scaled (Number of observations: 928) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Multilevel Hyperparameters:
+~Site_Id (Number of levels: 27) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.24      0.07     0.13     0.39 1.00     1936     3603
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.16      0.05     0.07     0.28 1.00     2066     2544
+
+Regression Coefficients:
+                                    Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept                               0.48      0.27    -0.05     1.01 1.00     3969     5138
+polyTemperature2rawEQTRUE1             -0.01      0.07    -0.14     0.13 1.00     4229     4712
+polyTemperature2rawEQTRUE2             -0.06      0.03    -0.12    -0.00 1.00     5826     5380
+polySalinity2rawEQTRUE1                 0.09      0.09    -0.10     0.27 1.00     2411     4148
+polySalinity2rawEQTRUE2                 0.02      0.04    -0.05     0.08 1.00     4328     5724
+polypH2rawEQTRUE1                       0.10      0.04     0.03     0.18 1.00     6779     5301
+polypH2rawEQTRUE2                      -0.02      0.02    -0.05     0.01 1.00     9669     6572
+polyZooplankton_MaxDepth2rawEQTRUE1    -0.26      0.04    -0.35    -0.17 1.00     6440     5884
+polyZooplankton_MaxDepth2rawEQTRUE2     0.05      0.02     0.02     0.09 1.00     6106     5508
+genus_richness                         -0.03      0.01    -0.04    -0.01 1.00     5983     5759
+FEve_selected                          -0.63      0.23    -1.08    -0.17 1.00     8495     5735
+FDis_selected                           0.30      0.42    -0.53     1.12 1.00     8712     5979
+polyDOY2rawEQTRUE1                      0.26      0.52    -0.77     1.27 1.00     2085     3315
+polyDOY2rawEQTRUE2                      0.12      0.20    -0.27     0.50 1.00     2076     3351
+polydaylight_hours2rawEQTRUE1           0.25      0.36    -0.45     0.94 1.00     2077     3421
+polydaylight_hours2rawEQTRUE2          -0.02      0.05    -0.13     0.08 1.00     2105     3315
+
+Further Distributional Parameters:
+    Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+phi     6.48      0.29     5.91     7.05 1.00     7654     5868
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 928 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo    276.2 28.5
+p_loo        49.7  5.5
+looic      -552.5 57.1
+------
+MCSE of elpd_loo is 0.1.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.5, 1.7]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
+
+
+========================================
+ ELPD Summary
+========================================
+elpd_loo = 276.23 (SE = 28.54)
+LOOIC     = -552.45
+
+Derivative-based Predictor Classification
+Predictor | Pr_positive | Pr_negative | Pr_hump | Pr_Ushape
+-----------------------------------------------------------
+Temperature     |      0.000 |      0.172 |   0.825 |     0.002
+Salinity        |      0.514 |      0.040 |   0.110 |     0.336
+pH              |      0.705 |      0.000 |   0.278 |     0.017
+Zooplankton_MaxDepth |      0.000 |      0.218 |   0.000 |     0.782
+DOY             |      0.011 |      0.070 |   0.218 |     0.701
+daylight_hours  |      0.698 |      0.110 |   0.025 |     0.168

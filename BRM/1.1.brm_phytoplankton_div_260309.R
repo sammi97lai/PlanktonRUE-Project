@@ -75,7 +75,7 @@ write.csv(plankton_RUE_data_scaled, "plankton_RUE_data_scaled_260310.csv", row.n
 setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
 load('plankton_RUE_data_scaled_260309.RDATA')
 
-setwd("~/GitHub/PlanktonRUE-Project/BRM")
+setwd("~/GitHub/PlanktonRUE-Project/BRM/RDATA")
 
 #make BRMS model- phytoplankton diversity #-----------------------------------
 #genus richness...............................................................
@@ -152,7 +152,7 @@ save(model, file = "BRM_phyto_GD_L_p_260310.RDATA")
 end_time <- Sys.time()
 elapsed_time <- end_time - start_time
 print(elapsed_time)
-#1 divergent#
+
 #................
 
 start_time <- Sys.time()
@@ -256,7 +256,6 @@ save(model, file = "BRM_phyto_FEve_L_b_260310.RDATA")
 end_time <- Sys.time()
 elapsed_time <- end_time - start_time
 print(elapsed_time)
-#2 divergence
 
 #.................
 
@@ -285,7 +284,6 @@ save(model, file = "BRM_phyto_FEve_P_b_260310.RDATA")
 end_time <- Sys.time()
 elapsed_time <- end_time - start_time
 print(elapsed_time)
-#2 divergence
 
 
 #Functional Dispersion .........................................................

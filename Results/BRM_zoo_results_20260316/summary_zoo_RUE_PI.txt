@@ -1,0 +1,97 @@
+========================================
+ Model Summary - zoo_RUE_PI 
+========================================
+
+ Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: log_RUE_zooplankton ~ pH + I(pH^2) + Zooplankton_MaxDepth + I(Zooplankton_MaxDepth^2) + DOY + I(DOY^2) + daylight_hours + I(daylight_hours^2) + Temperature + I(Temperature^2) + Salinity + I(Salinity^2) + genus_richness * (Temperature + Salinity) + FEve_selected * (Temperature + Salinity) + FDis_selected * (Temperature + Salinity) + species_richness * (Temperature + Salinity) + zoo_FEve * (Temperature + Salinity) + zoo_FDis * (Temperature + Salinity) + (1 | Year) + (1 | Site_Id) 
+   Data: plankton_RUE_data_scaled (Number of observations: 928) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Multilevel Hyperparameters:
+~Site_Id (Number of levels: 27) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     1.09      0.19     0.78     1.50 1.00     2465     3825
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.59      0.12     0.40     0.88 1.00     2504     4194
+
+Regression Coefficients:
+                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept                       -1.64      0.49    -2.63    -0.68 1.00     4230     5270
+pH                              -0.28      0.05    -0.38    -0.17 1.00     8477     5908
+IpHE2                            0.01      0.02    -0.04     0.05 1.00     9120     5990
+Zooplankton_MaxDepth            -0.85      0.07    -0.99    -0.72 1.00     6627     5968
+IZooplankton_MaxDepthE2          0.01      0.02    -0.04     0.06 1.00     7792     6256
+DOY                              0.56      0.68    -0.80     1.87 1.00     3774     4230
+IDOYE2                          -0.09      0.25    -0.60     0.39 1.00     3786     4586
+daylight_hours                   0.08      0.47    -0.85     0.99 1.00     3787     4533
+Idaylight_hoursE2               -0.07      0.07    -0.20     0.08 1.00     3808     4393
+Temperature                      0.83      0.35     0.12     1.52 1.00     5545     5591
+ITemperatureE2                  -0.06      0.05    -0.16     0.03 1.00     6586     5522
+Salinity                        -0.06      0.40    -0.85     0.70 1.00     5560     5289
+ISalinityE2                      0.04      0.07    -0.11     0.18 1.00     4447     5400
+genus_richness                  -0.05      0.01    -0.07    -0.03 1.00     8660     6638
+FEve_selected                    0.19      0.32    -0.43     0.81 1.00     9603     6455
+FDis_selected                   -0.12      0.56    -1.20     1.00 1.00     8954     6540
+species_richness                 0.03      0.02    -0.01     0.07 1.00     8495     6203
+zoo_FEve                        -0.14      0.20    -0.53     0.25 1.00     9691     6354
+zoo_FDis                        -1.66      0.37    -2.37    -0.92 1.00     8664     6314
+Temperature:genus_richness      -0.03      0.01    -0.05    -0.01 1.00     6991     6477
+Salinity:genus_richness         -0.03      0.01    -0.05    -0.01 1.00     7076     6477
+Temperature:FEve_selected       -0.17      0.32    -0.81     0.46 1.00     9163     5799
+Salinity:FEve_selected           0.48      0.32    -0.16     1.10 1.00     9727     5827
+Temperature:FDis_selected       -0.47      0.52    -1.49     0.55 1.00     9126     6145
+Salinity:FDis_selected          -0.74      0.56    -1.83     0.33 1.00     9083     6379
+Temperature:species_richness     0.03      0.02    -0.01     0.06 1.00     8717     6198
+Salinity:species_richness       -0.01      0.02    -0.06     0.03 1.00     6123     6518
+Temperature:zoo_FEve             0.43      0.20     0.05     0.82 1.00     8435     6781
+Salinity:zoo_FEve                0.11      0.21    -0.30     0.51 1.00     8926     6218
+Temperature:zoo_FDis             0.63      0.37    -0.09     1.36 1.00     8149     5658
+Salinity:zoo_FDis                0.46      0.30    -0.12     1.06 1.00     8863     6543
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     0.96      0.02     0.91     1.00 1.00     8447     5827
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 928 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo  -1316.0 27.0
+p_loo        73.3  4.8
+looic      2632.1 54.0
+------
+MCSE of elpd_loo is 0.1.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.5, 1.5]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
+
+
+========================================
+ ELPD Summary
+========================================
+elpd_loo = -1316.03 (SE = 27.00)
+LOOIC     = 2632.05
+
+Derivative-based Predictor Classification
+Predictor | Pr_positive | Pr_negative | Pr_hump | Pr_Ushape
+-----------------------------------------------------------
+Temperature     |      0.922 |      0.005 |   0.069 |     0.004
+Salinity        |      0.280 |      0.358 |   0.084 |     0.279
+pH              |      0.000 |      0.975 |   0.021 |     0.003
+Zooplankton_MaxDepth |      0.000 |      1.000 |   0.000 |     0.000
+DOY             |      0.550 |      0.000 |   0.442 |     0.008
+daylight_hours  |      0.068 |      0.284 |   0.648 |     0.000

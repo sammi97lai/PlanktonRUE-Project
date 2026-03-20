@@ -1,0 +1,66 @@
+========================================
+ Model Summary - Phyto_FEve_L 
+========================================
+
+ Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: FEve ~ Temperature + Salinity + pH + MaxDepth + DOY + daylight_hours + (1 | Year) + (1 | Site_Id) 
+   Data: plankton_RUE_data_scaled (Number of observations: 928) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Multilevel Hyperparameters:
+~Site_Id (Number of levels: 27) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.05      0.01     0.03     0.08 1.00     1677     3103
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.05      0.01     0.04     0.07 1.00     1972     3390
+
+Regression Coefficients:
+               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept          0.43      0.02     0.40     0.46 1.00     1754     3083
+Temperature        0.01      0.01    -0.00     0.02 1.00     3261     4756
+Salinity           0.00      0.01    -0.02     0.03 1.00     2199     2849
+pH                -0.00      0.01    -0.01     0.01 1.00     4740     5634
+MaxDepth           0.00      0.01    -0.01     0.02 1.00     5875     6524
+DOY               -0.01      0.01    -0.02     0.01 1.00     3242     4844
+daylight_hours    -0.01      0.01    -0.03     0.00 1.00     3833     5340
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     0.10      0.00     0.10     0.11 1.00     7831     5669
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 928 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo    774.2 21.6
+p_loo        40.3  2.0
+looic     -1548.4 43.2
+------
+MCSE of elpd_loo is 0.1.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.6, 1.8]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
+
+
+========================================
+ ELPD Summary
+========================================
+elpd_loo = 774.19 (SE = 21.58)
+LOOIC     = -1548.39
+
+Derivative-based Predictor Classification
+No poly() predictors. No derivative trends computed.
