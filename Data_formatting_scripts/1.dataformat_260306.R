@@ -347,7 +347,7 @@ filtered_Phytoplankton_data <- Phytoplankton_data3 %>%
   semi_join(site_sampling_freq_more5, by = c("longitude", "latitude"))
 
 save(filtered_Phytoplankton_data, file = 'RDATA/Phytoplankton_data4.RDATA')
-
+load('RDATA/Phytoplankton_data4.RDATA')
 #plot which years that each site has sampled in#
 # Create a unique site identifier using lat/lon
 timeline_data <- filtered_Phytoplankton_data %>%

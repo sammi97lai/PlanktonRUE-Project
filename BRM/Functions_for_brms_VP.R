@@ -176,6 +176,36 @@ vp_plot <- function(x, col = 'grey80', nm, main, las =1) {
   )
 }
 
+## Conditional VP functions
 
+conditional_lin_term_cov <- function(params, G, g, X, y) {
+  A <- construct_lin_term_mat(params, X, y)
+  
+  K <- t(sapply(G, function(x, A, g) { cov(A[g == x,])}, A, g))
+  dim(K) <- c(length(G), rep(ncol(A), 2))
+  dimnames(K) <- list(condition = G, colnames(A), colnames(A))
+  
+  return(K)
+}
+
+
+
+wit_btw_lin_term_cov <- function(params, H, X, y) {
+  A <- construct_lin_term_mat(params, X, y)
+  
+  A_cm <- H %*% diag(1 / colSums(H)) %*% t(H) %*% A
+  
+  K_wit <- cov(A - A_cm)
+  K_btw <- cov(A_cm)
+  
+  K <- abind::abind(K_wit, K_btw, rev.along = 0)
+  dimnames(K) <- list(
+    rows = colnames(A),
+    cols = colnames(A),
+    partition = c('within', 'between')
+  )
+  
+  return(K)
+}
 ## VP functions adapted from Torsti .............................................
 
