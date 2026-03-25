@@ -23,7 +23,7 @@ digraph Phytoplankton_Diversity {
   FEve [shape=box, fillcolor=green]
   FDis [shape=box, fillcolor=green]
 
-  Salinity -> Cyanobacteria_Dominance [label='β=-2.88(-3.93,-1.81)\nβ²=-0.85(-1.24,-0.46)', color='forestgreen']
+  Salinity -> Cyanobacteria_Dominance [label='β=0.56(0.28,0.85)\nβ²=-0.11(-0.21,-0.02)', color='forestgreen']
   pH -> Cyanobacteria_Dominance [label='U-shaped\nβ²=0.07(0.03,0.11)']
   Max_Depth -> Cyanobacteria_Dominance [label='U-shaped\nβ²=0.04(0.00,0.07)']
   
@@ -127,7 +127,7 @@ Zooplankton_Species_Richness -> RUE_per_P [style=invis]
   Cyanobacteria_Dominance -> RUE_per_P [label='β=1.10(0.88,1.31)',color='forestgreen']
   
   Zooplankton_Species_Richness -> RUE_per_P [label='β=0.01(-0.01,0.03)',color='#90EE90']
-  Zooplankton_FEve -> RUE_per_P [label='β=-0.05(-0.21,0.11)',color='lightred']
+  Zooplankton_FEve -> RUE_per_P [label='β=-0.05(-0.21,0.11)',color='#F08080']
   Zooplankton_FDis -> RUE_per_P [label='β=0.42(0.14,0.70)',color='forestgreen']
   
   Salinity_and_Phytoplankton_FDis -> RUE_per_P [label='β=4.27(3.46,5.07)',color='forestgreen']

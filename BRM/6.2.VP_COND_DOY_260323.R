@@ -1,5 +1,5 @@
 ##############################################################################
-############## Conditional Variance partitioning by Region ###################
+################ Conditional Variance partitioning by DOY ####################
 ##############################################################################
 # manipulating data
 library(lubridate)
@@ -74,78 +74,28 @@ linear_terms <- unname(unlist(groups)) #flattened vector of all variable names
 n_lt <- length(linear_terms)
 n_group <- length(groups)
 
-# --- Define the conditional grouping (e.g., region) ---
-#get site info (Helcome area and coordinates)
+# --- Define the conditional grouping (DOY) ---
 setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
-load('Phytoplankton_data_format.RDATA')
-site_info <- Phytoplankton_data %>%
-  select(Site_Id,
-         HELCOMarea,
-         `Coordinates_ EUREF_WGS84_lat`,
-         `Coordinates_ EUREF_WGS84_long`) %>%
-  distinct()
+load('plankton_RUE_data7_260309.RDATA')
 
-#join site info with model data
 Data_prep <- model$data
+Data_prep$season <- NA
+mu <- mean(plankton_RUE_data7$DOY, na.rm = TRUE)
+sd <- sd(plankton_RUE_data7$DOY, na.rm = TRUE)
 
-Data_prep$Site_Id <- as.character(Data_prep$Site_Id)
-site_info$Site_Id <- as.character(site_info$Site_Id)
+doy_182_scaled <- (182 - mu) / sd
+doy_243_scaled <- (243 - mu) / sd
 
-Data_prep <- Data_prep %>%
-  left_join(site_info, by = "Site_Id")
+Data_prep$season <- cut(
+  Data_prep$DOY,
+  breaks = c(-Inf, doy_182_scaled, doy_243_scaled, Inf),
+  labels = c("Early season", "Summer", "Late season")
+)
 
-# unique(Data_prep$HELCOMarea)
-# unique(Data_prep$Site_Id)
-
-Data_prep$region <- NA
-
-lat <- Data_prep$`Coordinates_ EUREF_WGS84_lat`
-lon <- Data_prep$`Coordinates_ EUREF_WGS84_long`
-
-# 1. Bothnian Bay
-Data_prep$region[lat >= 64] <- "Bothnian Bay"
-
-# 2. Bothnian Sea
-Data_prep$region[lat >= 61 & lat < 64] <- "Bothnian Sea"
-
-# 3. Gulf of Finland
-Data_prep$region[lon >= 24 & lat < 61.5] <- "Gulf of Finland"
-
-# 4. Baltic Proper
-Data_prep$region[lat < 61.5 & lon < 24] <- "Baltic Proper"
-
-# Data_prep %>%
-#   distinct(Site_Id, region) %>%
-#   count(region)
-
-g <- Data_prep$region
+g <- Data_prep$season
 G <- unique(g)
 
 n_cond <- length(G)
-
-#plotting sites and regions
-# get world map data
-world <- map_data("world")
-
-# prepare your site data
-sites <- Data_prep %>%
-  distinct(Site_Id, region, `Coordinates_ EUREF_WGS84_long`, 
-           `Coordinates_ EUREF_WGS84_lat`) %>%
-  rename(lon = `Coordinates_ EUREF_WGS84_long`,
-         lat = `Coordinates_ EUREF_WGS84_lat`)
-
-# plot regions
-# ggplot() +
-#   geom_polygon(data = world, aes(x = long, y = lat, group = group),
-#                fill = "gray90", color = "gray60", size = 0.3) +
-#   geom_point(data = sites, aes(x = lon, y = lat, color = region),
-#              size = 2.5, alpha = 0.8) +
-#   coord_quickmap(xlim = c(19, 31), ylim = c(58, 66)) +
-#   scale_color_brewer(palette = "Set1") +
-#   labs(x = "Longitude", y = "Latitude",
-#        title = "Sampling Sites in Baltic Sea Grouped by Region") +
-#   theme_minimal() +
-#   theme(legend.position = "bottom")
 
 # --- Conditional variance partitioning ---
 # Using Torsti's function (adapted for single-response model)
@@ -182,30 +132,28 @@ data_wide <- data.frame(dim3, dim12)
 data_long <- melt(setDT(data_wide), id.vars = c('rows','condition'), variable.name = 'iteration')
 
 # Keep order of regions
-data_long$condition <- factor(data_long$condition, levels = c("Bothnian Bay", "Bothnian Sea",
-                                                              "Gulf of Finland", "Archipelago Sea",
-                                                              "Baltic Proper"))
+data_long$condition <- factor(data_long$condition, levels = c("Early season", "Summer", "Late season"))
 
 # Plotting
 setwd("~/GitHub/PlanktonRUE-Project/Figures/VP_plots")
 
-vp_RUEP_region <- ggplot(data_long, aes(x = rows, y = value, fill = rows)) +
+vp_RUEP_DOY <- ggplot(data_long, aes(x = rows, y = value, fill = rows)) +
   geom_violin(position="dodge", trim=F, scale="width", draw_quantiles=c(0.25,0.5,0.75), linewidth = 0.25) +
   scale_fill_manual(values=c('royalblue3','#278B9AFF','#1D2645FF','#44A57CFF','#819A7AFF','#58A449FF','#CEC917FF','violetred3','salmon2','gold3')) +
   facet_grid(condition ~ .) +
   coord_cartesian(ylim = c(0, 1)) +
   theme_minimal() +
   theme(axis.text.x=element_text(angle=45, hjust=1))+
-  labs(title = "Phytoplankton RUE per P: Conditional Variance Partitioning by Region")
-vp_RUEP_region
+  labs(title = "Phytoplankton RUE per P: Conditional Variance Partitioning by Season")
+vp_RUEP_DOY
 
-ggsave(filename = "RUEP_vpcond_region.png",
-       plot = vp_RUEP_region,
+ggsave(filename = "RUEP_vpcond_season.png",
+       plot = vp_RUEP_DOY,
        width = 7,
-       height =10,
+       height =8,
        dpi = 300)
 
-#Phytoplankton RUE per N...........................................................
+#Phytoplankton RUE per N ...........................................................
 setwd("~/GitHub/PlanktonRUE-Project/BRM/RDATA")
 load('BRM_phytoRUEN_CD_PI_260311.RDATA')
 
@@ -251,65 +199,28 @@ linear_terms <- unname(unlist(groups)) #flattened vector of all variable names
 n_lt <- length(linear_terms)
 n_group <- length(groups)
 
-# --- Define the conditional grouping (e.g., region) ---
-#get site info (Helcome area and coordinates)
+# --- Define the conditional grouping (DOY) ---
 setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
-load('Phytoplankton_data_format.RDATA')
-site_info <- Phytoplankton_data %>%
-  select(Site_Id,
-         HELCOMarea,
-         `Coordinates_ EUREF_WGS84_lat`,
-         `Coordinates_ EUREF_WGS84_long`) %>%
-  distinct()
+load('plankton_RUE_data7_260309.RDATA')
 
-#join site info with model data
 Data_prep <- model$data
+Data_prep$season <- NA
+mu <- mean(plankton_RUE_data7$DOY, na.rm = TRUE)
+sd <- sd(plankton_RUE_data7$DOY, na.rm = TRUE)
 
-Data_prep$Site_Id <- as.character(Data_prep$Site_Id)
-site_info$Site_Id <- as.character(site_info$Site_Id)
+doy_182_scaled <- (182 - mu) / sd
+doy_243_scaled <- (243 - mu) / sd
 
-Data_prep <- Data_prep %>%
-  left_join(site_info, by = "Site_Id")
+Data_prep$season <- cut(
+  Data_prep$DOY,
+  breaks = c(-Inf, doy_182_scaled, doy_243_scaled, Inf),
+  labels = c("Early season", "Summer", "Late season")
+)
 
-# unique(Data_prep$HELCOMarea)
-# unique(Data_prep$Site_Id)
-
-Data_prep$region <- NA
-
-lat <- Data_prep$`Coordinates_ EUREF_WGS84_lat`
-lon <- Data_prep$`Coordinates_ EUREF_WGS84_long`
-
-# 1. Bothnian Bay
-Data_prep$region[lat >= 64] <- "Bothnian Bay"
-
-# 2. Bothnian Sea
-Data_prep$region[lat >= 61 & lat < 64] <- "Bothnian Sea"
-
-# 3. Gulf of Finland
-Data_prep$region[lon >= 24 & lat < 61.5] <- "Gulf of Finland"
-
-# 4. Baltic Proper
-Data_prep$region[lat < 61.5 & lon < 24] <- "Baltic Proper"
-
-# Data_prep %>%
-#   distinct(Site_Id, region) %>%
-#   count(region)
-
-g <- Data_prep$region
+g <- Data_prep$season
 G <- unique(g)
 
 n_cond <- length(G)
-
-#plotting sites and regions
-# get world map data
-world <- map_data("world")
-
-# prepare your site data
-sites <- Data_prep %>%
-  distinct(Site_Id, region, `Coordinates_ EUREF_WGS84_long`, 
-           `Coordinates_ EUREF_WGS84_lat`) %>%
-  rename(lon = `Coordinates_ EUREF_WGS84_long`,
-         lat = `Coordinates_ EUREF_WGS84_lat`)
 
 # --- Conditional variance partitioning ---
 # Using Torsti's function (adapted for single-response model)
@@ -346,30 +257,28 @@ data_wide <- data.frame(dim3, dim12)
 data_long <- melt(setDT(data_wide), id.vars = c('rows','condition'), variable.name = 'iteration')
 
 # Keep order of regions
-data_long$condition <- factor(data_long$condition, levels = c("Bothnian Bay", "Bothnian Sea",
-                                                              "Gulf of Finland", "Archipelago Sea",
-                                                              "Baltic Proper"))
+data_long$condition <- factor(data_long$condition, levels = c("Early season", "Summer", "Late season"))
 
 # Plotting
 setwd("~/GitHub/PlanktonRUE-Project/Figures/VP_plots")
 
-vp_RUEN_region <- ggplot(data_long, aes(x = rows, y = value, fill = rows)) +
+vp_RUEP_DOY <- ggplot(data_long, aes(x = rows, y = value, fill = rows)) +
   geom_violin(position="dodge", trim=F, scale="width", draw_quantiles=c(0.25,0.5,0.75), linewidth = 0.25) +
   scale_fill_manual(values=c('royalblue3','#278B9AFF','#1D2645FF','#44A57CFF','#819A7AFF','#58A449FF','#CEC917FF','violetred3','salmon2','gold3')) +
   facet_grid(condition ~ .) +
   coord_cartesian(ylim = c(0, 1)) +
   theme_minimal() +
   theme(axis.text.x=element_text(angle=45, hjust=1))+
-  labs(title = "Phytoplankton RUE per N: Conditional Variance Partitioning by Region")
-vp_RUEN_region
+  labs(title = "Phytoplankton RUE per N: Conditional Variance Partitioning by Season")
+vp_RUEP_DOY
 
-ggsave(filename = "RUEN_vpcond_region.png",
-       plot = vp_RUEN_region,
+ggsave(filename = "RUEN_vpcond_season.png",
+       plot = vp_RUEP_DOY,
        width = 7,
-       height =10,
+       height =8,
        dpi = 300)
 
-#Zooplankton RUE ...........................................................
+# Zooplankton RUE ...............................................................
 setwd("~/GitHub/PlanktonRUE-Project/BRM/RDATA")
 load('BRM_zoo_RUE_CD_PI_260313.RDATA')
 
@@ -415,65 +324,28 @@ linear_terms <- unname(unlist(groups)) #flattened vector of all variable names
 n_lt <- length(linear_terms)
 n_group <- length(groups)
 
-# --- Define the conditional grouping (e.g., region) ---
-#get site info (Helcome area and coordinates)
+# --- Define the conditional grouping (DOY) ---
 setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
-load('Phytoplankton_data_format.RDATA')
-site_info <- Phytoplankton_data %>%
-  select(Site_Id,
-         HELCOMarea,
-         `Coordinates_ EUREF_WGS84_lat`,
-         `Coordinates_ EUREF_WGS84_long`) %>%
-  distinct()
+load('plankton_RUE_data7_260309.RDATA')
 
-#join site info with model data
 Data_prep <- model$data
+Data_prep$season <- NA
+mu <- mean(plankton_RUE_data7$DOY, na.rm = TRUE)
+sd <- sd(plankton_RUE_data7$DOY, na.rm = TRUE)
 
-Data_prep$Site_Id <- as.character(Data_prep$Site_Id)
-site_info$Site_Id <- as.character(site_info$Site_Id)
+doy_182_scaled <- (182 - mu) / sd
+doy_243_scaled <- (243 - mu) / sd
 
-Data_prep <- Data_prep %>%
-  left_join(site_info, by = "Site_Id")
+Data_prep$season <- cut(
+  Data_prep$DOY,
+  breaks = c(-Inf, doy_182_scaled, doy_243_scaled, Inf),
+  labels = c("Early season", "Summer", "Late season")
+)
 
-# unique(Data_prep$HELCOMarea)
-# unique(Data_prep$Site_Id)
-
-Data_prep$region <- NA
-
-lat <- Data_prep$`Coordinates_ EUREF_WGS84_lat`
-lon <- Data_prep$`Coordinates_ EUREF_WGS84_long`
-
-# 1. Bothnian Bay
-Data_prep$region[lat >= 64] <- "Bothnian Bay"
-
-# 2. Bothnian Sea
-Data_prep$region[lat >= 61 & lat < 64] <- "Bothnian Sea"
-
-# 3. Gulf of Finland
-Data_prep$region[lon >= 24 & lat < 61.5] <- "Gulf of Finland"
-
-# 4. Baltic Proper
-Data_prep$region[lat < 61.5 & lon < 24] <- "Baltic Proper"
-
-# Data_prep %>%
-#   distinct(Site_Id, region) %>%
-#   count(region)
-
-g <- Data_prep$region
+g <- Data_prep$season
 G <- unique(g)
 
 n_cond <- length(G)
-
-#plotting sites and regions
-# get world map data
-world <- map_data("world")
-
-# prepare your site data
-sites <- Data_prep %>%
-  distinct(Site_Id, region, `Coordinates_ EUREF_WGS84_long`, 
-           `Coordinates_ EUREF_WGS84_lat`) %>%
-  rename(lon = `Coordinates_ EUREF_WGS84_long`,
-         lat = `Coordinates_ EUREF_WGS84_lat`)
 
 # --- Conditional variance partitioning ---
 # Using Torsti's function (adapted for single-response model)
@@ -510,25 +382,24 @@ data_wide <- data.frame(dim3, dim12)
 data_long <- melt(setDT(data_wide), id.vars = c('rows','condition'), variable.name = 'iteration')
 
 # Keep order of regions
-data_long$condition <- factor(data_long$condition, levels = c("Bothnian Bay", "Bothnian Sea",
-                                                              "Gulf of Finland", "Archipelago Sea",
-                                                              "Baltic Proper"))
+data_long$condition <- factor(data_long$condition, levels = c("Early season", "Summer", "Late season"))
 
 # Plotting
 setwd("~/GitHub/PlanktonRUE-Project/Figures/VP_plots")
 
-vp_zooRUE_region <- ggplot(data_long, aes(x = rows, y = value, fill = rows)) +
+vp_RUEP_DOY <- ggplot(data_long, aes(x = rows, y = value, fill = rows)) +
   geom_violin(position="dodge", trim=F, scale="width", draw_quantiles=c(0.25,0.5,0.75), linewidth = 0.25) +
   scale_fill_manual(values=c('royalblue3','#278B9AFF','#1D2645FF','#44A57CFF','#819A7AFF','#58A449FF','#CEC917FF','violetred3','salmon2','gold3')) +
   facet_grid(condition ~ .) +
   coord_cartesian(ylim = c(0, 1)) +
   theme_minimal() +
   theme(axis.text.x=element_text(angle=45, hjust=1))+
-  labs(title = "Zooplankton RUE: Conditional Variance Partitioning by Region")
-vp_zooRUE_region
+  labs(title = "Zooplankton RUE: Conditional Variance Partitioning by Season")
+vp_RUEP_DOY
 
-ggsave(filename = "zooRUE_vpcond_region.png",
-       plot = vp_zooRUE_region,
+ggsave(filename = "zooRUE_vpcond_season.png",
+       plot = vp_RUEP_DOY,
        width = 7,
-       height =10,
+       height =8,
        dpi = 300)
+

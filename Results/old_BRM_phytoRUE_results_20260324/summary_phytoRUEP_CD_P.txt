@@ -1,0 +1,84 @@
+========================================
+ Model Summary - phytoRUEP_CD_P 
+========================================
+
+ Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: log_RUE_B_P ~ genus_richness + FEve + FDis + cyano_prop + poly(Temperature, 2, raw = TRUE) + poly(Salinity, 2, raw = TRUE) + poly(pH, 2, raw = TRUE) + poly(log_N_P_ratio, 2, raw = TRUE) + poly(DOY, 2, raw = TRUE) + (1 | Year) + (1 | Site_Id) + (1 | MaxDepth) 
+   Data: plankton_RUE_data_scaled (Number of observations: 928) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Multilevel Hyperparameters:
+~MaxDepth (Number of levels: 8) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.47      0.18     0.22     0.92 1.00     4040     4858
+
+~Site_Id (Number of levels: 27) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     1.61      0.24     1.22     2.16 1.00     1736     2798
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.55      0.10     0.38     0.78 1.00     2509     4320
+
+Regression Coefficients:
+                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept                        4.14      0.43     3.29     4.99 1.00     2109     3127
+genus_richness                   0.03      0.00     0.02     0.04 1.00     9655     6692
+FEve                            -0.95      0.13    -1.20    -0.70 1.00    11427     6175
+FDis                            -3.56      0.36    -4.26    -2.85 1.00    10160     6077
+cyano_prop                       1.18      0.09     1.00     1.36 1.00    12123     6424
+polyTemperature2rawEQTRUE1      -0.19      0.06    -0.31    -0.08 1.00     5761     5029
+polyTemperature2rawEQTRUE2       0.12      0.02     0.08     0.15 1.00     7355     5774
+polySalinity2rawEQTRUE1          0.42      0.11     0.21     0.63 1.00     4701     5317
+polySalinity2rawEQTRUE2         -0.04      0.03    -0.10     0.02 1.00     6565     6273
+polypH2rawEQTRUE1                0.14      0.02     0.10     0.19 1.00     9898     6161
+polypH2rawEQTRUE2                0.01      0.01    -0.01     0.03 1.00     9609     6622
+polylog_N_P_ratio2rawEQTRUE1     1.16      0.08     1.01     1.31 1.00     8373     5933
+polylog_N_P_ratio2rawEQTRUE2    -0.10      0.04    -0.17    -0.02 1.00     9939     6278
+polyDOY2rawEQTRUE1              -0.22      0.02    -0.27    -0.18 1.00     8614     6596
+polyDOY2rawEQTRUE2               0.03      0.02    -0.00     0.07 1.00     6224     5801
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     0.38      0.01     0.36     0.40 1.00     9670     5740
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 928 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo   -450.6 30.3
+p_loo        74.1  5.3
+looic       901.1 60.6
+------
+MCSE of elpd_loo is 0.1.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.5, 1.2]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
+
+
+========================================
+ ELPD Summary
+========================================
+elpd_loo = -450.56 (SE = 30.30)
+LOOIC     = 901.12
+
+Derivative-based Predictor Classification
+Predictor | Pr_positive | Pr_negative | Pr_hump | Pr_Ushape
+-----------------------------------------------------------
+Temperature     |      0.000 |      0.000 |   0.000 |     1.000
+Salinity        |      0.993 |      0.000 |   0.006 |     0.001
+pH              |      0.868 |      0.000 |   0.000 |     0.132
+log_N_P_ratio   |      1.000 |      0.000 |   0.000 |     0.000
+DOY             |      0.000 |      0.946 |   0.000 |     0.054

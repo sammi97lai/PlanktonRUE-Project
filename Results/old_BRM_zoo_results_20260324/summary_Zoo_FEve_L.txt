@@ -1,0 +1,71 @@
+========================================
+ Model Summary - Zoo_FEve_L 
+========================================
+
+ Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: zoo_FEve ~ Temperature + Salinity + pH + genus_richness + FEve_selected + FDis_selected + DOY + (1 | Year) + (1 | Site_Id) + (1 | Zooplankton_MaxDepth) 
+   Data: plankton_RUE_data_scaled (Number of observations: 928) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Multilevel Hyperparameters:
+~Site_Id (Number of levels: 27) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.08      0.02     0.04     0.12 1.00     2309     4007
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.03      0.01     0.01     0.06 1.01     1642     2111
+
+~Zooplankton_MaxDepth (Number of levels: 99) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.07      0.01     0.05     0.09 1.00     2549     5134
+
+Regression Coefficients:
+               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept          0.61      0.05     0.50     0.71 1.00     5039     5763
+Temperature       -0.01      0.01    -0.03     0.00 1.00     6049     6156
+Salinity          -0.00      0.02    -0.03     0.03 1.00     3410     4594
+pH                 0.02      0.01     0.00     0.03 1.00     7086     6519
+genus_richness    -0.00      0.00    -0.01    -0.00 1.00     7088     6620
+FEve_selected     -0.13      0.05    -0.23    -0.03 1.00     9431     6380
+FDis_selected     -0.07      0.10    -0.26     0.13 1.00     6598     5610
+DOY               -0.01      0.01    -0.03     0.00 1.00     6126     5754
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     0.16      0.00     0.15     0.17 1.00     5877     6040
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 928 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo    356.6 22.9
+p_loo        78.2  3.8
+looic      -713.2 45.8
+------
+MCSE of elpd_loo is 0.1.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.4, 1.6]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
+
+
+========================================
+ ELPD Summary
+========================================
+elpd_loo = 356.60 (SE = 22.91)
+LOOIC     = -713.20
+
+Derivative-based Predictor Classification
+No poly() predictors. No derivative trends computed.

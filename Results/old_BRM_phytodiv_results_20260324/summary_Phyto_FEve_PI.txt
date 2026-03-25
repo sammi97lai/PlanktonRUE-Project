@@ -1,0 +1,84 @@
+========================================
+ Model Summary - Phyto_FEve_PI 
+========================================
+
+ Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: FEve ~ poly(Temperature, 2, raw = TRUE) + poly(Salinity, 2, raw = TRUE) + poly(pH, 2, raw = TRUE) + poly(log_N_P_ratio, 2, raw = TRUE) * poly(DOY, 2, raw = TRUE) + (1 | Year) + (1 | Site_Id) + (1 | MaxDepth) 
+   Data: plankton_RUE_data_scaled (Number of observations: 928) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Multilevel Hyperparameters:
+~MaxDepth (Number of levels: 8) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.03      0.03     0.00     0.09 1.00     1973     3650
+
+~Site_Id (Number of levels: 27) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.04      0.01     0.02     0.07 1.00     2060     3347
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.05      0.01     0.04     0.08 1.00     2040     3831
+
+Regression Coefficients:
+                                                Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept                                           0.41      0.03     0.36     0.46 1.00     2879     3912
+polyTemperature2rawEQTRUE1                         -0.01      0.01    -0.03     0.01 1.00     3422     4607
+polyTemperature2rawEQTRUE2                          0.01      0.00    -0.00     0.02 1.00     4852     5196
+polySalinity2rawEQTRUE1                             0.02      0.01    -0.01     0.05 1.00     3615     5321
+polySalinity2rawEQTRUE2                             0.02      0.01     0.01     0.03 1.00     6599     5911
+polypH2rawEQTRUE1                                   0.00      0.01    -0.01     0.02 1.00     7590     6121
+polypH2rawEQTRUE2                                   0.01      0.00     0.00     0.01 1.00     7078     6130
+polylog_N_P_ratio2rawEQTRUE1                        0.03      0.02    -0.01     0.06 1.00     3527     5159
+polylog_N_P_ratio2rawEQTRUE2                       -0.01      0.01    -0.03     0.01 1.00     5468     5497
+polyDOY2rawEQTRUE1                                  0.02      0.01     0.01     0.04 1.00     6227     6313
+polyDOY2rawEQTRUE2                                  0.00      0.00    -0.01     0.01 1.00     4704     5003
+polylog_N_P_ratio2rawEQTRUE1:polyDOY2rawEQTRUE1    -0.01      0.02    -0.04     0.02 1.00     5124     5414
+polylog_N_P_ratio2rawEQTRUE2:polyDOY2rawEQTRUE1     0.01      0.01    -0.02     0.03 1.00     4923     5765
+polylog_N_P_ratio2rawEQTRUE1:polyDOY2rawEQTRUE2    -0.03      0.01    -0.04    -0.01 1.00     4774     5543
+polylog_N_P_ratio2rawEQTRUE2:polyDOY2rawEQTRUE2     0.02      0.01     0.00     0.03 1.00     4544     5953
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     0.10      0.00     0.10     0.11 1.00     9696     5636
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 928 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo    790.2 22.0
+p_loo        47.2  2.3
+looic     -1580.5 44.0
+------
+MCSE of elpd_loo is 0.1.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.3, 1.5]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
+
+
+========================================
+ ELPD Summary
+========================================
+elpd_loo = 790.25 (SE = 21.99)
+LOOIC     = -1580.49
+
+Derivative-based Predictor Classification
+Predictor | Pr_positive | Pr_negative | Pr_hump | Pr_Ushape
+-----------------------------------------------------------
+Temperature     |      0.057 |      0.070 |   0.046 |     0.826
+Salinity        |      0.028 |      0.000 |   0.000 |     0.972
+pH              |      0.041 |      0.011 |   0.006 |     0.942
+log_N_P_ratio   |      0.351 |      0.016 |   0.612 |     0.020
+DOY             |      0.722 |      0.001 |   0.080 |     0.197

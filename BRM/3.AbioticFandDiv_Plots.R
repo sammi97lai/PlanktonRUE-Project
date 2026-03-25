@@ -366,11 +366,48 @@ zoo_RUE
 combined_plot <- ggarrange(
   RUE_P, RUE_N, zoo_RUE, 
   ncol = 1, nrow = 3,
-  align = "hv"   # aligns horizontally and vertically
+  align = "hv"   
 )
 
 ggsave("Plankton_RUE_maps.png", 
        plot = combined_plot, width = 10, height = 18, dpi = 300)
+
+#average RUE across DOY ..........................................................
+avg_RUE_DOY <- plankton_sf %>%
+  group_by(DOY)%>%
+  summarise(avg_RUE_B_P = mean(log_RUE_B_P, na.rm = TRUE),
+            avg_RUE_B_N = mean(log_RUE_B_N, na.rm = TRUE),
+            avg_zoo_RUE = mean(log_RUE_zooplankton, na.rm = TRUE),
+            .groups = "drop")
+
+# Phyto RUE P
+RUE_P_DOY <- ggplot(avg_RUE_DOY, aes(x = DOY, y = avg_RUE_B_P)) +
+  geom_col(fill = "darkgreen") +
+  labs(x = "Day of Year (DOY)", y = "Avg Phyto RUE P") +
+  theme_minimal()
+RUE_P_DOY
+# Phyto RUE N
+RUE_N_DOY <- ggplot(avg_RUE_DOY, aes(x = DOY, y = avg_RUE_B_N)) +
+  geom_col(fill = "forestgreen") +
+  labs(x = "Day of Year (DOY)", y = "Avg Phyto RUE N") +
+  theme_minimal()
+RUE_N_DOY
+
+# zooplankton RUE
+zoo_RUE_DOY <- ggplot(avg_RUE_DOY, aes(x = DOY, y = avg_zoo_RUE)) +
+  geom_col(fill = "seagreen") +
+  labs(x = "Day of Year (DOY)", y = "Avg Zooplankton RUE") +
+  theme_minimal()
+zoo_RUE_DOY
+
+combined_bar <- ggarrange(
+  RUE_P_bar, RUE_N_bar, zoo_RUE_bar,
+  ncol = 1, nrow = 3,
+  align = "v"
+)
+
+ggsave("Plankton_RUE_DOY_barplots.png", 
+       plot = combined_bar, width = 12, height = 10, dpi = 300)
 
 # Plot sampling frequency for each site over DOY ###############################
 site_order <- plankton_RUE_data6 %>%
@@ -396,15 +433,29 @@ ggsave("Site_freq.png",
        plot = site_freq, width = 10, height = 6, dpi = 300)
 
 #all sites
-site_freq2 <- plankton_RUE_data6 %>%
-  count(DOY) %>%
+# Precompute counts to avoid repeated calculations
+doy_counts <- plankton_RUE_data6 %>% count(DOY)
+
+# Max frequency for positioning labels
+max_n <- max(doy_counts$n)
+
+site_freq2 <- doy_counts %>%
   ggplot(aes(x = DOY, y = n)) +
-  geom_col(width = 1) +
+  geom_col(width = 1, fill = "steelblue") +
+  # vertical lines for July 1 and August 31
+  geom_vline(xintercept = c(182, 243), linetype = "dashed", color = "red", linewidth = 0.8) +
+  # labels
+  annotate("text", x = 182, y = max_n * 1.05,
+           label = "July 1", color = "red", hjust = 0.5) +
+  annotate("text", x = 243, y = max_n * 1.05,
+           label = "Aug 31", color = "red", hjust = 0.5) +
   labs(
     x = "Day of Year (DOY)",
     y = "Sampling frequency (all sites)"
   ) +
-  theme_bw()
+  theme_bw() +
+  coord_cartesian(ylim = c(0, max_n * 1.2)) 
+site_freq2
 
 ggsave("Site_freq2.png", 
        plot = site_freq2, width = 10, height = 6, dpi = 300)

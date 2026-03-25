@@ -1,0 +1,84 @@
+========================================
+ Model Summary - phytoRUEN_CD_PI 
+========================================
+
+ Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: log_RUE_B_N ~ genus_richness + FEve + FDis + cyano_prop + poly(Temperature, 2, raw = TRUE) + poly(Salinity, 2, raw = TRUE) + poly(pH, 2, raw = TRUE) + log_N_P_ratio * DOY + I(log_N_P_ratio^2) * I(DOY^2) + (1 | Year) + (1 | Site_Id) + (1 | MaxDepth) 
+   Data: plankton_RUE_data_scaled (Number of observations: 928) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Multilevel Hyperparameters:
+~MaxDepth (Number of levels: 8) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.44      0.17     0.20     0.86 1.00     4096     5368
+
+~Site_Id (Number of levels: 27) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     1.55      0.24     1.16     2.09 1.00     2067     3524
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.54      0.10     0.38     0.77 1.00     2508     4279
+
+Regression Coefficients:
+                           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept                      2.10      0.40     1.31     2.90 1.00     2116     3678
+genus_richness                 0.03      0.00     0.03     0.04 1.00    10012     6915
+FEve                          -0.95      0.13    -1.21    -0.70 1.00    11339     5856
+FDis                          -3.64      0.36    -4.35    -2.94 1.00    10961     5921
+cyano_prop                     1.21      0.09     1.03     1.40 1.00    10369     6061
+polyTemperature2rawEQTRUE1    -0.20      0.06    -0.31    -0.09 1.00     6272     6095
+polyTemperature2rawEQTRUE2     0.10      0.02     0.06     0.14 1.00     8532     6688
+polySalinity2rawEQTRUE1        0.40      0.10     0.19     0.60 1.00     5335     5329
+polySalinity2rawEQTRUE2       -0.04      0.03    -0.09     0.02 1.00     7713     6514
+polypH2rawEQTRUE1              0.13      0.02     0.09     0.18 1.00     9555     6106
+polypH2rawEQTRUE2              0.01      0.01    -0.01     0.03 1.00    10123     6859
+log_N_P_ratio                  0.20      0.08     0.05     0.34 1.00     9322     6079
+DOY                           -0.26      0.03    -0.31    -0.20 1.00     8572     6444
+Ilog_N_P_ratioE2              -0.09      0.04    -0.16    -0.02 1.00     8823     6401
+IDOYE2                         0.03      0.02    -0.01     0.07 1.00     6101     5305
+log_N_P_ratio:DOY              0.06      0.04    -0.02     0.14 1.00     7322     6068
+Ilog_N_P_ratioE2:IDOYE2       -0.02      0.02    -0.06     0.01 1.00     7854     5773
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     0.38      0.01     0.36     0.39 1.00    10927     6222
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 928 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo   -448.8 30.1
+p_loo        77.0  5.5
+looic       897.5 60.3
+------
+MCSE of elpd_loo is 0.1.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.6, 1.3]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
+
+
+========================================
+ ELPD Summary
+========================================
+elpd_loo = -448.76 (SE = 30.15)
+LOOIC     = 897.52
+
+Derivative-based Predictor Classification
+Predictor | Pr_positive | Pr_negative | Pr_hump | Pr_Ushape
+-----------------------------------------------------------
+Temperature     |      0.000 |      0.000 |   0.000 |     1.000
+Salinity        |      0.992 |      0.000 |   0.007 |     0.001
+pH              |      0.745 |      0.000 |   0.000 |     0.254

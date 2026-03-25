@@ -1,0 +1,81 @@
+========================================
+ Model Summary - Zoo_FDis_CD_P 
+========================================
+
+ Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: zoo_FDis ~ poly(Temperature, 2, raw = TRUE) + poly(Salinity, 2, raw = TRUE) + poly(pH, 2, raw = TRUE) + genus_richness + FEve_selected + FDis_selected + cyano_prop + poly(DOY, 2, raw = TRUE) + (1 | Year) + (1 | Site_Id) + (1 | Zooplankton_MaxDepth) 
+   Data: plankton_RUE_data_scaled (Number of observations: 928) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Multilevel Hyperparameters:
+~Site_Id (Number of levels: 27) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.05      0.01     0.03     0.08 1.00     2400     3680
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.02      0.01     0.01     0.04 1.00     1693     2017
+
+~Zooplankton_MaxDepth (Number of levels: 99) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.08      0.01     0.07     0.10 1.00     2355     4364
+
+Regression Coefficients:
+                           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept                      0.27      0.03     0.21     0.33 1.00     5284     6078
+polyTemperature2rawEQTRUE1     0.02      0.01    -0.00     0.04 1.00     3485     5150
+polyTemperature2rawEQTRUE2    -0.01      0.00    -0.01     0.00 1.00     5384     6389
+polySalinity2rawEQTRUE1        0.01      0.01    -0.01     0.03 1.00     3492     4874
+polySalinity2rawEQTRUE2       -0.00      0.00    -0.01     0.01 1.00     6449     6076
+polypH2rawEQTRUE1             -0.00      0.00    -0.01     0.01 1.00     8301     6782
+polypH2rawEQTRUE2              0.00      0.00    -0.00     0.01 1.00     7983     6756
+genus_richness                 0.00      0.00    -0.00     0.00 1.00     8383     7609
+FEve_selected                  0.01      0.03    -0.05     0.07 1.00    11230     6776
+FDis_selected                 -0.02      0.06    -0.14     0.09 1.00     8605     6327
+cyano_prop                    -0.01      0.02    -0.05     0.04 1.00     7444     6551
+polyDOY2rawEQTRUE1            -0.01      0.00    -0.02     0.00 1.00     8615     5799
+polyDOY2rawEQTRUE2             0.00      0.00    -0.00     0.01 1.00     4494     5536
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     0.08      0.00     0.08     0.09 1.00     7262     6034
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 928 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo    916.3 26.5
+p_loo       101.1  5.2
+looic     -1832.5 53.1
+------
+MCSE of elpd_loo is 0.2.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.3, 1.8]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
+
+
+========================================
+ ELPD Summary
+========================================
+elpd_loo = 916.26 (SE = 26.53)
+LOOIC     = -1832.52
+
+Derivative-based Predictor Classification
+Predictor | Pr_positive | Pr_negative | Pr_hump | Pr_Ushape
+-----------------------------------------------------------
+Temperature     |      0.276 |      0.008 |   0.692 |     0.023
+Salinity        |      0.420 |      0.032 |   0.454 |     0.094
+pH              |      0.038 |      0.247 |   0.126 |     0.589
+DOY             |      0.004 |      0.247 |   0.034 |     0.716

@@ -75,27 +75,8 @@ pd
 # Trace plots for parameters
 plot(model)
 
-#Plot site random effects
-re_site <- ranef(model)$Site_Id[, , "Intercept"]
-
-re_site_df <- data.frame(
-  Site_Id = rownames(re_site),
-  Estimate = re_site[, "Estimate"],
-  Q2.5 = re_site[, "Q2.5"],
-  Q97.5 = re_site[, "Q97.5"]
-)
-
-ggplot(re_site_df,
-       aes(x = Estimate, y = reorder(Site_Id, Estimate))) +
-  geom_point() +
-  geom_errorbarh(aes(xmin = Q2.5, xmax = Q97.5), height = 0) +
-  geom_vline(xintercept = 0, linetype = "dashed") +
-  labs(
-    x = "Site random intercept",
-    y = "Site",
-    title = "Site-level random effects for genus richness"
-  ) +
-  theme_bw()
+#bayes R2
+bayes_R2(model, summary = FALSE)
 
 #check multicollinearity#.................................................
 lm_check <- lm(log_RUE_B_P ~ genus_richness + FEve + FDis + 
@@ -399,16 +380,6 @@ analyze_model <- function(model_file, name, resp = NULL, predictors = NULL,
   cat(" LOO Cross-Validation Results\n")
   cat("========================================\n\n")
   print(loo_res)
-  
-  elpd_val <- loo_res$estimates["elpd_loo", "Estimate"]
-  elpd_se  <- loo_res$estimates["elpd_loo", "SE"]
-  looic_val <- loo_res$estimates["looic", "Estimate"]
-  
-  cat("\n\n========================================\n")
-  cat(" ELPD Summary\n")
-  cat("========================================\n")
-  cat(sprintf("elpd_loo = %.2f (SE = %.2f)\n", elpd_val, elpd_se))
-  cat(sprintf("LOOIC     = %.2f\n", looic_val))
   sink()
   
   # --- Derivative classification (poly terms only) ---
