@@ -1,0 +1,95 @@
+========================================
+ Model Summary - zoo_RUE_CD_PI_NP 
+========================================
+
+ Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: log_RUE_zooplankton ~ Temperature + I(Temperature^2) + pH + I(pH^2) + Zooplankton_MaxDepth + I(Zooplankton_MaxDepth^2) + log_N_P_ratio + I(log_N_P_ratio^2) + s(DOY) + daylight_hours + I(daylight_hours^2) + genus_richness * (Temperature + log_N_P_ratio) + FEve_selected * (Temperature + log_N_P_ratio) + FDis_selected * (Temperature + log_N_P_ratio) + cyano_prop * (Temperature + log_N_P_ratio) + species_richness * (Temperature + log_N_P_ratio) + zoo_FEve * (Temperature + log_N_P_ratio) + zoo_FDis * (Temperature + log_N_P_ratio) + (1 | Year) + (1 | Site_Id) 
+   Data: plankton_RUE_data_scaled (Number of observations: 928) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Smoothing Spline Hyperparameters:
+            Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sds(sDOY_1)     7.81      2.92     3.48    14.81 1.00     2937     4264
+
+Multilevel Hyperparameters:
+~Site_Id (Number of levels: 27) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.87      0.15     0.62     1.22 1.00     2680     4388
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.62      0.12     0.42     0.91 1.00     2591     4323
+
+Regression Coefficients:
+                               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept                         -1.47      0.45    -2.36    -0.61 1.00     5086     5817
+Temperature                        0.72      0.34     0.07     1.39 1.00     5056     5192
+ITemperatureE2                    -0.12      0.05    -0.22    -0.02 1.00     8293     6664
+pH                                -0.26      0.06    -0.37    -0.15 1.00     7778     6439
+IpHE2                              0.04      0.02    -0.01     0.08 1.00     8265     6480
+Zooplankton_MaxDepth              -0.87      0.07    -1.00    -0.74 1.00     7091     6229
+IZooplankton_MaxDepthE2            0.02      0.02    -0.03     0.06 1.00     7580     6209
+log_N_P_ratio                      0.41      0.35    -0.26     1.09 1.00     5798     5515
+Ilog_N_P_ratioE2                  -0.15      0.09    -0.32     0.02 1.00     6785     6069
+daylight_hours                    -1.06      0.45    -1.96    -0.21 1.00     3461     4947
+Idaylight_hoursE2                  0.10      0.06    -0.02     0.23 1.00     3987     5435
+genus_richness                    -0.05      0.01    -0.07    -0.03 1.00     6511     6228
+FEve_selected                      0.26      0.31    -0.36     0.87 1.00     9285     5835
+FDis_selected                      0.77      0.61    -0.43     1.95 1.00     8773     6258
+cyano_prop                        -1.41      0.26    -1.92    -0.91 1.00     7419     6535
+species_richness                   0.01      0.02    -0.03     0.05 1.00     9230     6760
+zoo_FEve                          -0.22      0.20    -0.62     0.17 1.00     9831     6119
+zoo_FDis                          -1.72      0.36    -2.44    -1.02 1.00     9009     6399
+Temperature:genus_richness        -0.02      0.01    -0.04    -0.01 1.00     6151     6074
+log_N_P_ratio:genus_richness       0.02      0.01     0.00     0.04 1.00     8542     6266
+Temperature:FEve_selected          0.30      0.32    -0.31     0.93 1.00     9620     6247
+log_N_P_ratio:FEve_selected       -0.49      0.30    -1.08     0.09 1.00     9683     6340
+Temperature:FDis_selected         -0.78      0.54    -1.83     0.28 1.00     8580     6058
+log_N_P_ratio:FDis_selected        0.59      0.58    -0.55     1.72 1.00     8954     6303
+Temperature:cyano_prop             0.54      0.25     0.05     1.02 1.00     6528     6559
+log_N_P_ratio:cyano_prop          -0.41      0.30    -1.00     0.18 1.00     7315     6451
+Temperature:species_richness       0.01      0.02    -0.02     0.05 1.00     8103     6442
+log_N_P_ratio:species_richness    -0.01      0.02    -0.05     0.04 1.00     7927     6056
+Temperature:zoo_FEve               0.25      0.20    -0.14     0.65 1.00     9222     6387
+log_N_P_ratio:zoo_FEve             0.14      0.19    -0.25     0.54 1.00     9600     5824
+Temperature:zoo_FDis               0.68      0.36    -0.02     1.39 1.00     8753     6483
+log_N_P_ratio:zoo_FDis            -0.47      0.28    -1.01     0.07 1.00    10545     6302
+sDOY_1                             0.30      1.00    -1.65     2.26 1.00    12370     5956
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     0.93      0.02     0.89     0.98 1.00     9896     5611
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 928 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo  -1294.4 26.6
+p_loo        80.9  5.5
+looic      2588.7 53.2
+------
+MCSE of elpd_loo is 0.1.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.5, 1.5]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
+
+Derivative-based Predictor Classification
+Predictor | Pr_positive | Pr_negative | Pr_hump | Pr_Ushape
+-----------------------------------------------------------
+Temperature     |      0.611 |      0.005 |   0.383 |     0.001
+pH              |      0.000 |      0.940 |   0.001 |     0.060
+log_N_P_ratio   |      0.405 |      0.055 |   0.536 |     0.004
+Zooplankton_MaxDepth |      0.000 |      1.000 |   0.000 |     0.000
+daylight_hours  |      0.002 |      0.970 |   0.011 |     0.017

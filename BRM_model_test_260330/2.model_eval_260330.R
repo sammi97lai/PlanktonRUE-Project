@@ -482,7 +482,7 @@ ggsave(
                         theme = theme(plot.title = element_text(size = 8)))
       fname <- paste0("CE_", name, "_", date_tag, ".png")
       ggsave(file.path(outdir, fname),
-             plot = combined_plot, width = 20, height = 14, dpi = 300)
+             plot = combined_plot, width = 25, height = 18, dpi = 300)
       print(combined_plot)
     } else {
       message("No conditional effects plots were created for ", name)

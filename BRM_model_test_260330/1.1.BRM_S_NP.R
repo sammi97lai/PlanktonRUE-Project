@@ -95,6 +95,7 @@ save(model, file = "BRM_phyto_FDis_P_260330_S_NP.RDATA")
 end_time <- Sys.time()
 elapsed_time <- end_time - start_time
 print(elapsed_time)
+#1 divergence
 
 #make BRMS model - Cyanobacteria dominance- zero inflated #--------------------
 start_time <- Sys.time()
