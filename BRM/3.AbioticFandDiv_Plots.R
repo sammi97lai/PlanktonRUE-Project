@@ -12,6 +12,7 @@ library(patchwork)
 library(viridis)
 library(ggpubr)
 library(ggrepel)
+library(scales)
 
 setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
 load('plankton_RUE_data_scaled_260309.RDATA')
@@ -488,3 +489,45 @@ plankton_RUE_data6 %>%
     title = "Overall sampling frequency across all sites per year"
   ) +
   theme_bw()
+
+
+#DOY vs daylight hours and phytoplankton RUE plot ................................
+scale_factor <- max(plankton_RUE_data6$RUE_B_P, na.rm = TRUE) /
+  max(plankton_RUE_data6$daylight_hours, na.rm = TRUE)
+
+p1 <- ggplot(plankton_RUE_data6, aes(x = DOY)) +
+  geom_point(aes(y = daylight_hours, color = "Daylight hours")) +
+  geom_point(aes(y = RUE_B_P / scale_factor, color = "RUE")) +
+  scale_y_continuous(
+    name = "Daylight hours",
+    sec.axis = sec_axis(~ . * scale_factor, name = "RUE")
+  ) +
+  geom_smooth(aes(y = daylight_hours, color = "Daylight hours")) +
+  geom_smooth(aes(y = RUE_B_P / scale_factor, color = "RUE")) +
+  labs(x = "Day of Year", color = NULL) +
+  theme_minimal()
+
+scale_factor <- max(plankton_RUE_data6$genus_richness, na.rm = TRUE) /
+  max(plankton_RUE_data6$daylight_hours, na.rm = TRUE)
+
+p2 <- ggplot(plankton_RUE_data6, aes(x = DOY)) +
+  geom_point(aes(y = daylight_hours, color = "Daylight hours")) +
+  geom_point(aes(y = genus_richness / scale_factor, color = "genus richness")) +
+  scale_y_continuous(
+    name = "Daylight hours",
+    sec.axis = sec_axis(~ . * scale_factor, name = "genus richness")
+  ) +
+  geom_smooth(aes(y = daylight_hours, color = "Daylight hours")) +
+  geom_smooth(aes(y = genus_richness / scale_factor, color = "genus richness")) +
+  labs(x = "Day of Year", color = NULL) +
+  theme_minimal()
+
+combined_plot <- ggarrange(
+  p1, p2, 
+  ncol = 2, nrow = 1,
+  align = "hv"   
+)
+
+ggsave("DOY_DH_RUEdiv.png", 
+       plot = combined_plot, width = 12, height = 4, dpi = 300)
+

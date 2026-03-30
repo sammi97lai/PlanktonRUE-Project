@@ -1,0 +1,95 @@
+========================================
+ Model Summary - phytoRUEP_CD_PI_sDOY 
+========================================
+
+ Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: log_RUE_B_P ~ pH + I(pH^2) + MaxDepth + I(MaxDepth^2) + s(DOY) + daylight_hours + I(daylight_hours^2) + Temperature + I(Temperature^2) + Salinity + I(Salinity^2) + genus_richness * (Temperature + Salinity) + FEve * (Temperature + Salinity) + FDis * (Temperature + Salinity) + cyano_prop * (Temperature + Salinity) + species_richness * (Temperature + Salinity) + zoo_FEve * (Temperature + Salinity) + zoo_FDis * (Temperature + Salinity) + (1 | Year) + (1 | Site_Id) 
+   Data: plankton_RUE_data_scaled (Number of observations: 928) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Smoothing Spline Hyperparameters:
+            Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sds(sDOY_1)     6.29      1.91     3.52    10.79 1.00     3156     4429
+
+Multilevel Hyperparameters:
+~Site_Id (Number of levels: 27) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     1.40      0.21     1.06     1.89 1.00     2312     4174
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.67      0.12     0.48     0.94 1.00     2164     4082
+
+Regression Coefficients:
+                             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept                        3.37      0.36     2.64     4.08 1.00     2143     3375
+pH                               0.12      0.02     0.07     0.17 1.00     9446     6401
+IpHE2                           -0.02      0.01    -0.04     0.00 1.00    10033     5654
+MaxDepth                         0.02      0.04    -0.06     0.09 1.00     8036     6321
+IMaxDepthE2                     -0.02      0.01    -0.03     0.00 1.00     8673     6619
+daylight_hours                   0.01      0.30    -0.61     0.57 1.00     3218     4585
+Idaylight_hoursE2                0.04      0.04    -0.03     0.12 1.00     3464     4630
+Temperature                     -0.26      0.18    -0.62     0.09 1.00     7176     5917
+ITemperatureE2                   0.01      0.02    -0.04     0.05 1.00     9825     6171
+Salinity                        -0.69      0.20    -1.09    -0.29 1.00     7069     6275
+ISalinityE2                     -0.02      0.04    -0.09     0.05 1.00     5501     5903
+genus_richness                   0.05      0.00     0.04     0.06 1.00    10276     7167
+FEve                            -0.51      0.15    -0.80    -0.21 1.00    11393     6607
+FDis                            -2.29      0.39    -3.07    -1.52 1.00     9398     6755
+cyano_prop                       1.17      0.12     0.94     1.39 1.00     8453     6256
+species_richness                 0.01      0.01    -0.01     0.03 1.00    11817     7054
+zoo_FEve                         0.03      0.08    -0.13     0.20 1.00    12458     6297
+zoo_FDis                         0.48      0.14     0.20     0.76 1.00    10742     6654
+Temperature:genus_richness       0.00      0.00    -0.00     0.01 1.00     8875     7201
+Salinity:genus_richness          0.01      0.00     0.00     0.02 1.00    10706     6292
+Temperature:FEve                 0.22      0.15    -0.07     0.52 1.00    10163     6390
+Salinity:FEve                   -0.04      0.14    -0.32     0.23 1.00    10967     6082
+Temperature:FDis                -0.47      0.35    -1.17     0.23 1.00     9413     7100
+Salinity:FDis                    3.90      0.41     3.08     4.71 1.00     9441     6687
+Temperature:cyano_prop           0.15      0.11    -0.07     0.38 1.00     8110     6539
+Salinity:cyano_prop             -0.50      0.14    -0.78    -0.22 1.00     8468     6334
+Temperature:species_richness     0.01      0.01    -0.01     0.02 1.00    10110     6759
+Salinity:species_richness       -0.00      0.01    -0.02     0.02 1.00     8540     6861
+Temperature:zoo_FEve            -0.03      0.09    -0.21     0.14 1.00     8906     6330
+Salinity:zoo_FEve               -0.09      0.09    -0.26     0.08 1.00    11722     6606
+Temperature:zoo_FDis             0.42      0.16     0.09     0.74 1.00    10371     6740
+Salinity:zoo_FDis               -0.02      0.13    -0.27     0.24 1.00    10732     6603
+sDOY_1                          -0.56      0.99    -2.50     1.42 1.00    11903     6061
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     0.38      0.01     0.36     0.40 1.00    10320     6301
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 928 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo   -476.3 29.7
+p_loo        94.0  6.6
+looic       952.5 59.4
+------
+MCSE of elpd_loo is 0.2.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.6, 1.3]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
+
+Derivative-based Predictor Classification
+Predictor | Pr_positive | Pr_negative | Pr_hump | Pr_Ushape
+-----------------------------------------------------------
+Temperature     |      0.040 |      0.838 |   0.043 |     0.079
+Salinity        |      0.000 |      0.996 |   0.003 |     0.000
+pH              |      0.910 |      0.000 |   0.090 |     0.000
+MaxDepth        |      0.020 |      0.134 |   0.837 |     0.009
+daylight_hours  |      0.311 |      0.080 |   0.000 |     0.608

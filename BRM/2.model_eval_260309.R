@@ -17,7 +17,7 @@ library(corrplot)
 rm(list = ls())
 
 setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
-load('plankton_RUE_data_scaled_260309.RDATA')
+load('plankton_RUE_data_scaled_260326.RDATA')
 load('plankton_RUE_data6_260309.RDATA')
 
 setwd("~/GitHub/PlanktonRUE-Project/BRM/RDATA")
@@ -107,14 +107,16 @@ data <- plankton_RUE_data_scaled %>% select(genus_richness, FEve, FDis,
                                             FEve_selected, FDis_selected, cyano_prop,
                                             species_richness, zoo_FEve, zoo_FDis, 
                                             Temperature, Salinity,
-                                            pH, log_N_P_ratio, DOY, daylight_hours, Zooplankton_MaxDepth, MaxDepth,
+                                            pH, log_N_P_ratio, 
+                                            TotalNitrogen_unfiltered, TotalPhosphorus_unfiltered,
+                                            DOY, daylight_hours, Zooplankton_MaxDepth, MaxDepth,
                                             log_RUE_B_P, log_RUE_B_N, log_RUE_zooplankton)
 cor_mat <- cor(data)
 #plot
 corrplot(cor_mat, method= "circle", type="lower", addCoef.col = "black", 
          tl.col = "black",number.cex = 1, tl.cex = 1)  
 
-################# Getting results for all models ################################
+v ################# Getting results for all models ################################
 # ===========================================================
 # for phytoplankton div models
 # Automatic output folder
