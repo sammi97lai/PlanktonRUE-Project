@@ -374,15 +374,15 @@ save(plankton_RUE_data4, file = 'plankton_RUE_data4_260307.RDATA')
 
 #clean the dataset or remove species info, and remove NAs #.................
 load("plankton_RUE_data4_260307.RDATA")
-plankton_RUE_data5 <- plankton_RUE_data4 %>% select(-(c(16:84, 113:152))) #remove species biomass info
+# plankton_RUE_data5 <- plankton_RUE_data4 %>% select(-(c(16:84, 113:152))) #remove species biomass info
 
-colSums(is.na(plankton_RUE_data5)) > 0
-sum(is.na(plankton_RUE_data5$zoo_FEve))
+colSums(is.na(plankton_RUE_data4)) > 0
+sum(is.na(plankton_RUE_data4$zoo_FEve))
 plankton_RUE_data4[is.na(plankton_RUE_data4$zoo_FEve), ]
 #only two species of zooplankton appear in these two rows (Bosmina and Limnocalanus macrurus), found offshore, aug 2003
 
 #remove rows where zoo FEve are found
-plankton_RUE_data5 <- plankton_RUE_data5[!is.na(plankton_RUE_data5$zoo_FEve), ]
+plankton_RUE_data5 <- plankton_RUE_data4[!is.na(plankton_RUE_data4$zoo_FEve), ]
 save(plankton_RUE_data5, file = 'plankton_RUE_data5_260309.RDATA')
 
 #.............................................................................
