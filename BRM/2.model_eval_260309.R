@@ -172,21 +172,21 @@ names(model_list[[1]])
 # ===========================================================
 
 # ===========================================================
-# # for cyanobacteria dominance models
-# # Automatic output folder
-# date_tag <- format(Sys.Date(), "%Y%m%d")
-# outdir <- file.path("~/GitHub/PlanktonRUE-Project/Results",
-#                     paste0("BRM_cyanodom_results_", date_tag))
-# dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
-# 
-# cat("\n Results will be saved to:", outdir, "\n")
-# 
-# # Load model list
-# source("~/GitHub/PlanktonRUE-Project/BRM/2.4.cyanodom_model_list.R")
-# 
-# # Check it loaded correctly
-# length(model_list)
-# names(model_list[[1]])
+# for cyanobacteria dominance models
+# Automatic output folder
+date_tag <- format(Sys.Date(), "%Y%m%d")
+outdir <- file.path("~/GitHub/PlanktonRUE-Project/Results",
+                    paste0("BRM_cyanodom_results_", date_tag))
+dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
+
+cat("\n Results will be saved to:", outdir, "\n")
+
+# Load model list
+source("~/GitHub/PlanktonRUE-Project/BRM/2.4.cyanodom_model_list.R")
+
+# Check it loaded correctly
+length(model_list)
+names(model_list[[1]])
 # ===========================================================
 
 # =============================================================================

@@ -78,7 +78,7 @@ PrepbrmsVP = function(mod){
 #represent specific contributions
 
 ## This functions now autmotically recognize the random effects!!
-construct_lin_term_mat <- function(params, X, y) {
+construct_lin_term_mat <- function(params, X, y, residuals = TRUE) {
   
   ## first we need to differentiate if it a stan or brms model
   if(isTRUE(any(grepl("^r_", colnames(X))))){
@@ -154,7 +154,13 @@ construct_lin_term_mat <- function(params, X, y) {
   
   
   ## Linear term for residuals (omiting the intercept above does not affect variance)
-  A <- cbind(A, residuals = y - rowSums(A))
+  if(isTRUE(residuals)){
+    A <- cbind(A, residuals = y - rowSums(A))
+    
+  }else{
+    A <- A
+    
+  }
   
   return(as.matrix(A))
 }
@@ -163,8 +169,8 @@ construct_lin_term_mat <- function(params, X, y) {
 ## Covariance matrix
 #calculate covariance matrix of linear terms
 #measures relationship between linear terms
-lin_term_cov <- function(params, X, y) {
-  A <- construct_lin_term_mat(params, X, y)
+lin_term_cov <- function(params, X, y, residuals) {
+  A <- construct_lin_term_mat(params, X, y, residuals)
   A <- A[,linear_terms]
   K <- cov(A)
   dimnames(K) <- list(colnames(A), colnames(A))
@@ -172,8 +178,8 @@ lin_term_cov <- function(params, X, y) {
 }
 
 
-conditional_lin_term_cov <- function(params, G, g, X, y) {
-  A <- construct_lin_term_mat(params, X, y)
+conditional_lin_term_cov <- function(params, G, g, X, y, residuals) {
+  A <- construct_lin_term_mat(params, X, y, residuals)
   
   K <- t(sapply(G, function(x, A, g) { cov(A[g == x,])}, A, g))
   dim(K) <- c(length(G), rep(ncol(A), 2))
@@ -222,18 +228,6 @@ vp_plot <- function(x, col = 'grey80', nm, main, las =1) {
     ylim = ylim,
     main = main
   )
-}
-
-## Conditional VP functions
-
-conditional_lin_term_cov <- function(params, G, g, X, y) {
-  A <- construct_lin_term_mat(params, X, y)
-  
-  K <- t(sapply(G, function(x, A, g) { cov(A[g == x,])}, A, g))
-  dim(K) <- c(length(G), rep(ncol(A), 2))
-  dimnames(K) <- list(condition = G, colnames(A), colnames(A))
-  
-  return(K)
 }
 
 

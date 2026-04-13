@@ -29,6 +29,13 @@ options(
 ###############################################################################
 # Testing individual models
 ###############################################################################
+e <- new.env()
+load("BRM_phytoRUEP_CD_LI_260408.RDATA", envir = e)
+ls(e)
+m <- e$model
+m$formula
+conditional_effects(m, effects = "genus_richness:TotalNitrogen_unfiltered")
+names(brms::rhat(m))
 #check multicollinearity#.................................................
 lm_check <- lm(log_RUE_B_P ~ genus_richness + FEve + FDis + 
                  species_richness + zoo_FEve + zoo_FDis +
@@ -72,20 +79,39 @@ corrplot(cor_mat, method= "circle", type="lower", addCoef.col = "black",
          tl.col = "black",number.cex = 0.6, tl.cex = 0.7)  
 dev.off()
 
-v ################# Getting results for all models ################################
+################# Getting results for all models ################################
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
+
 # ===========================================================
-# for phytoplankton div models
+# # for phytoplankton div models
+# # Automatic output folder
+# date_tag <- format(Sys.Date(), "%Y%m%d")
+# outdir <- file.path("~/GitHub/PlanktonRUE-Project/Results",
+#                     paste0("BRM_phytodiv_results_", date_tag))
+# dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
+# 
+# cat("\n Results will be saved to:", outdir, "\n")
+# 
+# # Load model list
+# source("~/GitHub/PlanktonRUE-Project/BRM_final_260401/2.1.phytodiv_model_list.R")
+# 
+# # Check it loaded correctly
+# length(model_list)
+# names(model_list[[1]])
+# ===========================================================
+
+# ===========================================================
+# for phytoplankton RUE models
 # Automatic output folder
 date_tag <- format(Sys.Date(), "%Y%m%d")
 outdir <- file.path("~/GitHub/PlanktonRUE-Project/Results",
-                    paste0("BRM_phytodiv_results_", date_tag))
+                    paste0("BRM_phytoRUE_results_", date_tag))
 dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
 cat("\n Results will be saved to:", outdir, "\n")
 
 # Load model list
-source("~/GitHub/PlanktonRUE-Project/BRM_final_260401/2.1.phytodiv_model_list.R")
+source("~/GitHub/PlanktonRUE-Project/BRM_final_260401/2.2.phytoRUE_model_list.R")
 
 # Check it loaded correctly
 length(model_list)
@@ -93,57 +119,39 @@ names(model_list[[1]])
 # ===========================================================
 
 # ===========================================================
-# # for phytoplankton RUE models
-# # Automatic output folder
-# date_tag <- format(Sys.Date(), "%Y%m%d")
-# outdir <- file.path("~/GitHub/PlanktonRUE-Project/Results",
-#                     paste0("BRM_phytoRUE_results_", date_tag))
-# dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
-# 
-# cat("\n Results will be saved to:", outdir, "\n")
-# 
-# # Load model list
-# source("~/GitHub/PlanktonRUE-Project/BRM_final_260401/2.2.phytoRUE_model_list.R")
-# 
-# # Check it loaded correctly
-# length(model_list)
-# names(model_list[[1]])
+# for zooplankton models
+# Automatic output folder
+date_tag <- format(Sys.Date(), "%Y%m%d")
+outdir <- file.path("~/GitHub/PlanktonRUE-Project/Results",
+                    paste0("BRM_zoo_results_", date_tag))
+dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
+
+cat("\n Results will be saved to:", outdir, "\n")
+
+# Load model list
+source("~/GitHub/PlanktonRUE-Project/BRM_final_260401/2.3.zoo_model_list.R")
+
+# Check it loaded correctly
+length(model_list)
+names(model_list[[1]])
 # ===========================================================
 
 # ===========================================================
-# # for zooplankton models
-# # Automatic output folder
-# date_tag <- format(Sys.Date(), "%Y%m%d")
-# outdir <- file.path("~/GitHub/PlanktonRUE-Project/Results",
-#                     paste0("BRM_zoo_results_", date_tag))
-# dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
-# 
-# cat("\n Results will be saved to:", outdir, "\n")
-# 
-# # Load model list
-# source("~/GitHub/PlanktonRUE-Project/BRM_final_260401/2.3.zoo_model_list.R")
-# 
-# # Check it loaded correctly
-# length(model_list)
-# names(model_list[[1]])
-# ===========================================================
+# for cyanobacteria dominance models
+# Automatic output folder
+date_tag <- format(Sys.Date(), "%Y%m%d")
+outdir <- file.path("~/GitHub/PlanktonRUE-Project/Results",
+                    paste0("BRM_cyanodom_results_", date_tag))
+dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
-# ===========================================================
-# # for cyanobacteria dominance models
-# # Automatic output folder
-# date_tag <- format(Sys.Date(), "%Y%m%d")
-# outdir <- file.path("~/GitHub/PlanktonRUE-Project/Results",
-#                     paste0("BRM_cyanodom_results_", date_tag))
-# dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
-# 
-# cat("\n Results will be saved to:", outdir, "\n")
-# 
-# # Load model list
-# source("~/GitHub/PlanktonRUE-Project/BRM_final_260401/2.4.cyanodom_model_list.R")
-# 
-# # Check it loaded correctly
-# length(model_list)
-# names(model_list[[1]])
+cat("\n Results will be saved to:", outdir, "\n")
+
+# Load model list
+source("~/GitHub/PlanktonRUE-Project/BRM_final_260401/2.4.cyanodom_model_list.R")
+
+# Check it loaded correctly
+length(model_list)
+names(model_list[[1]])
 # ===========================================================
 
 # =============================================================================
@@ -321,12 +329,17 @@ analyze_model <- function(model_file, name, resp = NULL, predictors = NULL,
     }
   }
   
-  # --- LOO --- #changed this so reloo is stopped#
+  # --- LOO ---
   cat("Calculating LOO and ELPD for model:", name, "\n")
   loo_res <- loo(m, moment_match = TRUE)
   
   if (any(loo_res$diagnostics$pareto_k > 0.7, na.rm = TRUE)) {
-    warning("High Pareto-k detected for ", name, " but reloo() is disabled.")
+    message("High Pareto-k detected → running reloo() for ", name)
+    loo_res <- loo(
+      m,
+      reloo = TRUE,
+      cores = 1
+    )
   }
   
   sink(summary_path, append = TRUE)
@@ -459,29 +472,20 @@ analyze_model <- function(model_file, name, resp = NULL, predictors = NULL,
   
   
   # --- Define predictor color groups ---
-  abiotic_vars <- c("Temperature", "Salinity", "pH", "TotalNitrogen_unfiltered",
-                    "MaxDepth", "Zooplankton_MaxDepth", "DOY", "daylight_hours")
+  abiotic_vars <- c("Temperature", "Salinity", "pH", "TotalNitrogen_unfiltered", "MaxDepth", 
+                    "Zooplankton_MaxDepth", "DOY", "daylight_hours")
   phyto_vars <- c("genus_richness", "FEve", "FDis", "FEve_selected", 
-                  "FDis_selected", "cyano_prop",
-                  "genus_richness:Temperature", "genus_richness:Salinity", 
-                  "genus_richness:TotalNitrogen_unfiltered",
-                  "FEve:Temperature", "FEve:Salinity", 
-                  "FEve:TotalNitrogen_unfiltered", 
-                  "FDis:Temperature", "FDis:Salinity",
-                  "FDis:TotalNitrogen_unfiltered",
-                  "FEve_selected:Temperature", "FEve_selected:Salinity", 
-                  "FEve_selected:TotalNitrogen_unfiltered", 
-                  "FDis_selected:Temperature", "FDis_selected:Salinity",
-                  "FDis_selected:TotalNitrogen_unfiltered",
-                  "cyano_prop:Temperature", "cyano_prop:Salinity",
-                  "cyano_prop:TotalNitrogen_unfiltered")
+                  "FDis_selected", "log_cyano_prop", "cyano_prop",
+                  "genus_richness:Temperature", "genus_richness:Salinity", "genus_richness:TotalNitrogen_unfiltered",
+                  "FEve:Temperature", "FEve:Salinity",  "FEve:TotalNitrogen_unfiltered", 
+                  "FDis:Temperature", "FDis:Salinity",  "FDis:TotalNitrogen_unfiltered",
+                  "FEve_selected:Temperature", "FEve_selected:Salinity", "FEve_selected:TotalNitrogen_unfiltered", 
+                  "FDis_selected:Temperature", "FDis_selected:Salinity", "FDis_selected:TotalNitrogen_unfiltered",
+                  "cyano_prop:Temperature", "cyano_prop:Salinity", "cyano_prop:TotalNitrogen_unfiltered")
   zoo_vars <- c("species_richness", "zoo_FEve", "zoo_FDis",
-                "species_richness:Temperature", "species_richness:Salinity",
-                "species_richness:TotalNitrogen_unfiltered",
-                "zoo_FEve:Temperature", "zoo_FEve:Salinity", 
-                "zoo_FEve:TotalNitrogen_unfiltered", 
-                "zoo_FDis:Temperature", "zoo_FDis:Salinity",
-                "zoo_FDis:TotalNitrogen_unfiltered",
+                "species_richness:Temperature", "species_richness:Salinity", "species_richness:TotalNitrogen_unfiltered",
+                "zoo_FEve:Temperature", "zoo_FEve:Salinity", "zoo_FEve:TotalNitrogen_unfiltered",
+                "zoo_FDis:Temperature", "zoo_FDis:Salinity", "zoo_FDis:TotalNitrogen_unfiltered",
                 "mean_edibility_unweighted")
   
   group_colors <- c(
@@ -545,27 +549,10 @@ analyze_model <- function(model_file, name, resp = NULL, predictors = NULL,
     if (length(plots) > 0) {
       combined_plot <- wrap_plots(plots, ncol = ncol_ce) +
         plot_annotation(title = ce_title,
-                        theme = theme(plot.title = element_text(size = 14)))
-      
-      # --- Dynamic sizing ---
-      n_plots <- length(plots)
-      n_rows <- ceiling(n_plots / ncol_ce)
-      
-      panel_width <- 4.5
-      panel_height <- 3.5
-      
-      fig_width <- ncol_ce * panel_width
-      fig_height <- n_rows * panel_height
-      
-      # Save
+                        theme = theme(plot.title = element_text(size = 10)))
       fname <- paste0("CE_", name, "_", date_tag, ".png")
-      
       ggsave(file.path(outdir, fname),
-             plot = combined_plot,
-             width = fig_width,
-             height = fig_height,
-             dpi = 300)
-      
+             plot = combined_plot, width = 14, height = 8, dpi = 300)
       print(combined_plot)
     } else {
       message("No conditional effects plots were created for ", name)
@@ -594,3 +581,4 @@ for (mdl in model_list) {
 }
 
 cat("\n All model analyses completed.\nResults saved in:", outdir, "\n")
+

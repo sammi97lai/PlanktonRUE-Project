@@ -43,7 +43,7 @@ source('Functions_for_brms_VP_Ap26.R')
 
 ##  Cyanobacteria dominance
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load('BRM_cyanodom_P_260330_S_Nit.RDATA')
+load('BRM_cyanodom_P_260408_Z.RDATA')
 
 ## this new function now allow you to extract the quantities in the proper format needed
 modcyanodomP = PrepbrmsVP(model)
@@ -83,7 +83,7 @@ n_group <- length(groups)
 #quantify how much variance each term explains relative to total variance
 
 # A # No grouping
-K <- apply(params, 'iterations', lin_term_cov, X, y)
+K <- apply(params, 'iterations', lin_term_cov, X, y, residuals=FALSE) 
 dim(K) <- c(n_lt, n_lt, n_iter)
 dimnames(K) <- list(rows = linear_terms, cols = linear_terms, iterations = NULL)
 
@@ -148,7 +148,7 @@ dev.off()
 
 ##  Genus richness
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load('BRM_phyto_GD_P_260330_S_Nit.RDATA')
+load('BRM_phyto_GD_P_260408.RDATA')
 
 ## this new function now allow you to extract the quantities in the proper format needed
 modphyto_GD_P = PrepbrmsVP(model)
@@ -188,7 +188,7 @@ n_group <- length(groups)
 #quantify how much variance each term explains relative to total variance
 
 # A # No grouping
-K <- apply(params, 'iterations', lin_term_cov, X, y)
+K <- apply(params, 'iterations', lin_term_cov, X, y, residuals=FALSE) 
 dim(K) <- c(n_lt, n_lt, n_iter)
 dimnames(K) <- list(rows = linear_terms, cols = linear_terms, iterations = NULL)
 
@@ -253,7 +253,7 @@ dev.off()
 ##.....................................................................................................
 ##  phyto FEve
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load('BRM_phyto_FEve_P_260330_S_Nit.RDATA')
+load('BRM_phyto_FEve_P_260408.RDATA')
 
 ## this new function now allow you to extract the quantities in the proper format needed
 modphyto_FEve_P = PrepbrmsVP(model)
@@ -292,7 +292,7 @@ n_group <- length(groups)
 #quantify how much variance each term explains relative to total variance
 
 # A # No grouping
-K <- apply(params, 'iterations', lin_term_cov, X, y)
+K <- apply(params, 'iterations', lin_term_cov, X, y, residuals=FALSE) 
 dim(K) <- c(n_lt, n_lt, n_iter)
 dimnames(K) <- list(rows = linear_terms, cols = linear_terms, iterations = NULL)
 
@@ -357,7 +357,7 @@ dev.off()
 ##.....................................................................................................
 ##  phyto FDis
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load('BRM_phyto_FDis_P_260330_S_Nit.RDATA')
+load('BRM_phyto_FDis_P_260408.RDATA')
 
 ## this new function now allow you to extract the quantities in the proper format needed
 modphyto_FDis_P = PrepbrmsVP(model)
@@ -396,7 +396,7 @@ n_group <- length(groups)
 #quantify how much variance each term explains relative to total variance
 
 # A # No grouping
-K <- apply(params, 'iterations', lin_term_cov, X, y)
+K <- apply(params, 'iterations', lin_term_cov, X, y, residuals=FALSE) 
 dim(K) <- c(n_lt, n_lt, n_iter)
 dimnames(K) <- list(rows = linear_terms, cols = linear_terms, iterations = NULL)
 
@@ -462,7 +462,7 @@ dev.off()
 
 ##  Phyto RUE per P model
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load('BRM_phytoRUEP_CD_PI_260330_S_Nit.RDATA')
+load('BRM_phytoRUEP_CD_PI_260408.RDATA')
 
 ## this new function now allow you to extract the quantities in the proper format needed
 modphytoRUEP_CD_PI = PrepbrmsVP(model)
@@ -508,7 +508,7 @@ n_group <- length(groups)
 #quantify how much variance each term explains relative to total variance
 
 # A # No grouping
-K <- apply(params, 'iterations', lin_term_cov, X, y)
+K <- apply(params, 'iterations', lin_term_cov, X, y, residuals=FALSE) 
 dim(K) <- c(n_lt, n_lt, n_iter)
 dimnames(K) <- list(rows = linear_terms, cols = linear_terms, iterations = NULL)
 
@@ -575,7 +575,7 @@ dev.off()
 
 ##  Phyto RUE per N model
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load('BRM_phytoRUEN_CD_PI_260330_S_Nit.RDATA')
+load('BRM_phytoRUEN_CD_PI_260408.RDATA')
 
 ## this new function now allow you to extract the quantities in the proper format needed
 modphytoRUEN_CD_PI = PrepbrmsVP(model)
@@ -621,7 +621,7 @@ n_group <- length(groups)
 #quantify how much variance each term explains relative to total variance
 
 # A # No grouping
-K <- apply(params, 'iterations', lin_term_cov, X, y)
+K <- apply(params, 'iterations', lin_term_cov, X, y, residuals=FALSE) 
 dim(K) <- c(n_lt, n_lt, n_iter)
 dimnames(K) <- list(rows = linear_terms, cols = linear_terms, iterations = NULL)
 
@@ -686,7 +686,7 @@ dev.off()
 
 ##  Zoo Species Richness model
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load('BRM_zoo_SR_CD_P_260330_S_Nit.RDATA')
+load('BRM_zoo_SR_CD_P_260408.RDATA')
 
 ## this new function now allow you to extract the quantities in the proper format needed
 modZoo_SR_CD = PrepbrmsVP(model)
@@ -729,7 +729,7 @@ n_group <- length(groups)
 #quantify how much variance each term explains relative to total variance
 
 # A # No grouping
-K <- apply(params, 'iterations', lin_term_cov, X, y)
+K <- apply(params, 'iterations', lin_term_cov, X, y, residuals=FALSE) 
 dim(K) <- c(n_lt, n_lt, n_iter)
 dimnames(K) <- list(rows = linear_terms, cols = linear_terms, iterations = NULL)
 
@@ -796,7 +796,7 @@ dev.off()
 
 ##  Zoo Functional Evenness model
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load('BRM_zoo_FE_CD_P_260330_S_Nit.RDATA')
+load('BRM_zoo_FE_CD_P_260408.RDATA')
 
 ## this new function now allow you to extract the quantities in the proper format needed
 modZoo_FEve_CD = PrepbrmsVP(model)
@@ -839,7 +839,7 @@ n_group <- length(groups)
 #quantify how much variance each term explains relative to total variance
 
 # A # No grouping
-K <- apply(params, 'iterations', lin_term_cov, X, y)
+K <- apply(params, 'iterations', lin_term_cov, X, y, residuals=FALSE) 
 dim(K) <- c(n_lt, n_lt, n_iter)
 dimnames(K) <- list(rows = linear_terms, cols = linear_terms, iterations = NULL)
 
@@ -906,7 +906,7 @@ dev.off()
 
 ##  Zoo Functional Dispersion model
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load('BRM_zoo_FD_CD_P_260330_S_Nit.RDATA')
+load('BRM_zoo_FD_CD_P_260408.RDATA')
 
 ## this new function now allow you to extract the quantities in the proper format needed
 modZoo_FDis_CD = PrepbrmsVP(model)
@@ -949,7 +949,7 @@ n_group <- length(groups)
 #quantify how much variance each term explains relative to total variance
 
 # A # No grouping
-K <- apply(params, 'iterations', lin_term_cov, X, y)
+K <- apply(params, 'iterations', lin_term_cov, X, y, residuals=FALSE) 
 dim(K) <- c(n_lt, n_lt, n_iter)
 dimnames(K) <- list(rows = linear_terms, cols = linear_terms, iterations = NULL)
 
@@ -1015,7 +1015,7 @@ dev.off()
 
 ##  Zoo RUE model
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load('BRM_zoo_RUE_CD_PI_260330_S_Nit.RDaTA')
+load('BRM_zoo_RUE_CD_PI_260408.RDATA')
 
 ## this new function now allow you to extract the quantities in the proper format needed
 modZoo_RUE_CD_PI = PrepbrmsVP(model)
@@ -1046,6 +1046,7 @@ groups <- list(
   Zoo_species_richness = c("species_richness", "Temperature:species_richness", "Salinity:species_richness", "TotalNitrogen_unfiltered:species_richness"),
   Zoo_FEve = c("zoo_FEve", "Temperature:zoo_FEve", "Salinity:zoo_FEve", "TotalNitrogen_unfiltered:zoo_FEve"),
   Zoo_FDis = c("zoo_FDis", "Temperature:zoo_FDis", "Salinity:zoo_FDis", "TotalNitrogen_unfiltered:zoo_FDis"),
+  Edibility= c("mean_edibility_unweighted"),
   DOY = c('sDOY_1', 'sDOY'),
   Site = c('Site_Id'),
   Year = c('Year')#,
@@ -1061,7 +1062,7 @@ n_group <- length(groups)
 #quantify how much variance each term explains relative to total variance
 
 # A # No grouping
-K <- apply(params, 'iterations', lin_term_cov, X, y)
+K <- apply(params, 'iterations', lin_term_cov, X, y, residuals=FALSE) 
 dim(K) <- c(n_lt, n_lt, n_iter)
 dimnames(K) <- list(rows = linear_terms, cols = linear_terms, iterations = NULL)
 
@@ -1078,7 +1079,7 @@ vp_summary
 
 setwd("~/GitHub/PlanktonRUE-Project/Figures/VP_plots")
 
-png("Zoo_RUE_ng.png", width = 5000, height = 4000, res = 600)
+png("Zoo_RUE_ng.png", width = 6000, height = 4500, res = 600)
 
 par(mai = c(2.5, 0.8, 0.8, 0.4), # bottom, left, top, right inches
     las = 2,
@@ -1117,7 +1118,7 @@ par(mai = c(2.0, 0.8, 0.8, 0.4), # bottom, left, top, right inches
     cex.axis = 1.1,
     xpd = NA)
 
-vp_plot(P, col = c('royalblue3','#278B9AFF','#44A57CFF','#819A7AFF','#58A449FF', '#403369FF','#5C5992FF','#AE93BEFF','violetred3','salmon2','gold3'),
+vp_plot(P, col = c('royalblue3','#278B9AFF','#44A57CFF','#819A7AFF','#58A449FF', '#403369FF','#5C5992FF','#AE93BEFF','#F7EABDFF', 'violetred3','salmon2','gold3'),
         nm = names(groups), main = 'Zooplankton RUE', las=2)
 
 dev.off()
