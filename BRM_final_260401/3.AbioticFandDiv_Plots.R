@@ -15,14 +15,14 @@ library(ggrepel)
 library(scales)
 
 setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
-load('plankton_RUE_data_scaled_260309.RDATA')
-load('plankton_RUE_data6_260309.RDATA')
+load('plankton_RUE_data_scaled_260408.RDATA')
+load('plankton_RUE_data7_260309.RDATA')
 
 setwd("~/GitHub/PlanktonRUE-Project/Figures")
 
 #...............................................................................
 # Convert your data to sf object
-plankton_sf <- sf::st_as_sf(plankton_RUE_data6, 
+plankton_sf <- sf::st_as_sf(plankton_RUE_data7, 
                             coords = c("longitude", "latitude"),
                             crs = 4326)  # WGS84
 
@@ -117,7 +117,7 @@ ggsave("Plankton_site_map.png",
 
 
 #.................................................................................
-plankton_mean <- plankton_RUE_data6 %>%
+plankton_mean <- plankton_RUE_data7 %>%
   group_by(longitude, latitude) %>%
   summarise(
     Temperature = mean(Temperature, na.rm = TRUE),
@@ -201,19 +201,30 @@ p5 <- ggplot() +
 
 
 # Combine all four maps
+p1 <- p1 + theme(plot.title = element_blank())
+p2 <- p2 + theme(plot.title = element_blank())
+p3 <- p3 + theme(plot.title = element_blank())
+p5 <- p5 + theme(plot.title = element_blank())
+
 combined_plot <- ggarrange(
-  p1, p2, p3, 
-  p4, p5,
-  ncol = 3, nrow = 2,
-  align = "hv"   # aligns horizontally and vertically
+  p1, p2, 
+  p3, p5, 
+  ncol = 2, nrow = 2,
+  align = "hv",
+  labels = c("a", "b", "c", "d"),
+  label.x = 0.02,   # move slightly right
+  label.y = 0.98,   # move slightly down
+  hjust = 0, vjust = 1,
+  font.label = list(size = 14, face = "bold")
 )
+combined_plot
 
 ggsave("Plankton_env_maps.png", 
-       plot = combined_plot, width = 10, height = 6, dpi = 300)
+       plot = combined_plot, width = 9, height = 8, dpi = 300)
 
 #...............................................................................
 #Plot Diversity Metrics and Cyanobacteria Dominance
-plankton_sf <- sf::st_as_sf(plankton_RUE_data6, 
+plankton_sf <- sf::st_as_sf(plankton_RUE_data7, 
                             coords = c("longitude", "latitude"),
                             crs = 4326)  # WGS84
 
@@ -411,14 +422,14 @@ ggsave("Plankton_RUE_DOY_barplots.png",
        plot = combined_bar, width = 12, height = 10, dpi = 300)
 
 # Plot sampling frequency for each site over DOY ###############################
-site_order <- plankton_RUE_data6 %>%
+site_order <- plankton_RUE_data7 %>%
   group_by(Site_Id) %>%
   summarise(latitude = mean(latitude, na.rm = TRUE)) %>%
   arrange(desc(latitude))   # north → south
 
 site_order
 
-site_freq <- plankton_RUE_data6 %>%
+site_freq <- plankton_RUE_data7 %>%
   mutate(Site_Id = factor(Site_Id, levels = site_order$Site_Id)) %>%
   count(Site_Id, DOY) %>%
   ggplot(aes(x = DOY, y = n)) +
@@ -435,7 +446,7 @@ ggsave("Site_freq.png",
 
 #all sites
 # Precompute counts to avoid repeated calculations
-doy_counts <- plankton_RUE_data6 %>% count(DOY)
+doy_counts <- plankton_RUE_data7 %>% count(DOY)
 
 # Max frequency for positioning labels
 max_n <- max(doy_counts$n)
@@ -462,7 +473,7 @@ ggsave("Site_freq2.png",
        plot = site_freq2, width = 10, height = 6, dpi = 300)
 
 # Count samples per site per year
-plankton_RUE_data6 %>%
+plankton_RUE_data7 %>%
   group_by(Site_Id, Year) %>%
   summarise(n_samples = n(), .groups = "drop") %>%
   mutate(Site_Id = factor(Site_Id, levels = site_order$Site_Id)) %>%
@@ -478,7 +489,7 @@ plankton_RUE_data6 %>%
   theme(legend.position = "none")
 
 #Sampling over Year across all sites
-plankton_RUE_data6 %>%
+plankton_RUE_data7 %>%
   group_by(Year) %>%
   summarise(n_samples = n(), .groups = "drop") %>%
   ggplot(aes(x = Year, y = n_samples)) +
@@ -492,10 +503,10 @@ plankton_RUE_data6 %>%
 
 
 #DOY vs daylight hours and phytoplankton RUE plot ................................
-scale_factor <- max(plankton_RUE_data6$RUE_B_P, na.rm = TRUE) /
-  max(plankton_RUE_data6$daylight_hours, na.rm = TRUE)
+scale_factor <- max(plankton_RUE_data7$RUE_B_P, na.rm = TRUE) /
+  max(plankton_RUE_data7$daylight_hours, na.rm = TRUE)
 
-p1 <- ggplot(plankton_RUE_data6, aes(x = DOY)) +
+p1 <- ggplot(plankton_RUE_data7, aes(x = DOY)) +
   geom_point(aes(y = daylight_hours, color = "Daylight hours")) +
   geom_point(aes(y = RUE_B_P / scale_factor, color = "RUE")) +
   scale_y_continuous(
@@ -507,10 +518,10 @@ p1 <- ggplot(plankton_RUE_data6, aes(x = DOY)) +
   labs(x = "Day of Year", color = NULL) +
   theme_minimal()
 
-scale_factor <- max(plankton_RUE_data6$genus_richness, na.rm = TRUE) /
-  max(plankton_RUE_data6$daylight_hours, na.rm = TRUE)
+scale_factor <- max(plankton_RUE_data7$genus_richness, na.rm = TRUE) /
+  max(plankton_RUE_data7$daylight_hours, na.rm = TRUE)
 
-p2 <- ggplot(plankton_RUE_data6, aes(x = DOY)) +
+p2 <- ggplot(plankton_RUE_data7, aes(x = DOY)) +
   geom_point(aes(y = daylight_hours, color = "Daylight hours")) +
   geom_point(aes(y = genus_richness / scale_factor, color = "genus richness")) +
   scale_y_continuous(
@@ -531,3 +542,104 @@ combined_plot <- ggarrange(
 ggsave("DOY_DH_RUEdiv.png", 
        plot = combined_plot, width = 12, height = 4, dpi = 300)
 
+#plot seasonal patterns of abiotic factors#...................................
+
+m1 <- lm(TotalNitrogen_unfiltered ~ DOY, data = plankton_RUE_data7)
+m2 <- lm(TotalNitrogen_unfiltered ~ poly(DOY, 2), data = plankton_RUE_data7)
+
+AIC(m1,m2)
+
+# Temperature
+p_temp <- ggplot(plankton_RUE_data7, aes(x = DOY, y = Temperature)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = TRUE) +
+  theme_bw() +
+  labs(x = "Day of Year (DOY)", y = "Temperature (°C)")
+
+# Salinity
+p_sal <- ggplot(plankton_RUE_data7, aes(x = DOY, y = Salinity)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = TRUE) +
+  theme_bw() +
+  labs(x = "Day of Year (DOY)", y = "Salinity")
+
+# pH
+p_ph <- ggplot(plankton_RUE_data7, aes(x = DOY, y = pH)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", se = TRUE) +
+  theme_bw() +
+  labs(x = "Day of Year (DOY)", y = "pH")
+
+# Total Nitrogen
+p_n <- ggplot(plankton_RUE_data7, aes(x = DOY, y = TotalNitrogen_unfiltered)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = TRUE) +
+  theme_bw() +
+  labs(x = "Day of Year (DOY)", y = "Nitrogen concentrations (µg/L)")
+
+# Combine into one figure (2x2 layout)
+combined_plot <- (p_temp | p_sal) / (p_ph | p_n)+
+  plot_annotation(tag_levels = "a")
+
+# Display
+combined_plot
+
+ggsave("environment_DOY_combined.png", combined_plot,
+       width = 7, height = 6, dpi = 300)
+
+#map of sites across seasons#.................................................
+Data_prep <- plankton_sf
+Data_prep$season <- cut(
+  Data_prep$DOY,
+  breaks = c(-Inf, 182, 243, Inf),
+  labels = c("Early season", "Summer", "Late season")
+)
+
+early_data  <- subset(Data_prep, season == "Early season")
+summer_data <- subset(Data_prep, season == "Summer")
+late_data   <- subset(Data_prep, season == "Late season")
+
+p_early <- ggplot() +
+  geom_sf(data = world, fill = "gray95", color = "gray50") +
+  geom_sf(data = early_data,
+          color = "black",
+          size = 1.5, alpha = 0.8) +
+  coord_sf(xlim = xlim, ylim = ylim) +
+  theme_minimal() +
+  ggtitle("Early Season")
+
+p_early
+
+p_summer <- ggplot() +
+  geom_sf(data = world, fill = "gray95", color = "gray50") +
+  geom_sf(data = summer_data,
+          color = "black",
+          size = 1.5, alpha = 0.8) +
+  coord_sf(xlim = xlim, ylim = ylim) +
+  theme_minimal() +
+  ggtitle("Summer")
+
+p_summer
+
+p_late <- ggplot() +
+  geom_sf(data = world, fill = "gray95", color = "gray50") +
+  geom_sf(data = late_data,
+          color = "black",
+          size = 1.5, alpha = 0.8) +
+  coord_sf(xlim = xlim, ylim = ylim) +
+  theme_minimal() +
+  ggtitle("Late Season")
+
+p_late
+
+# Combine into one figure (1x3 layout)
+combined_plot <- (
+  (p_early | p_summer | p_late) /
+    site_freq2
+) + 
+  plot_annotation(tag_levels = "a")
+
+combined_plot
+
+ggsave("season_sites.png", combined_plot,
+       width = 8, height = 8, dpi = 300)

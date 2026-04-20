@@ -14,7 +14,7 @@ library(lme4)
 library(rstan) 
 library("bayesplot")
 library("rstanarm")
-#library(brms)
+library(brms)
 
 ## plotting
 library("ggplot2")
@@ -141,14 +141,19 @@ vp_RUEP_DOY <- ggplot(data_long, aes(x = rows, y = value, fill = rows)) +
   facet_grid(condition ~ .) +
   coord_cartesian(ylim = c(0, 1)) +
   theme_minimal() +
-  theme(axis.text.x=element_text(angle=45, hjust=1))+
+  theme(axis.text.x=element_text(angle=45, hjust=1),
+        axis.title.x = element_blank(),   # remove x-axis title
+        axis.title.y = element_blank(),   # remove y-axis title
+        legend.position = "none",          # remove colour legend
+        plot.title = element_blank()
+        )+
   labs(title = "Phytoplankton RUE per P: Conditional Variance Partitioning by Season")
 vp_RUEP_DOY
 
 ggsave(filename = "RUEP_vpcond_season.png",
        plot = vp_RUEP_DOY,
-       width = 7,
-       height =8,
+       width = 5,
+       height =6,
        dpi = 300)
 
 #Phytoplankton RUE per N ...........................................................
@@ -258,20 +263,25 @@ data_long$condition <- factor(data_long$condition, levels = c("Early season", "S
 # Plotting
 setwd("~/GitHub/PlanktonRUE-Project/Figures/VP_plots")
 
-vp_RUEP_DOY <- ggplot(data_long, aes(x = rows, y = value, fill = rows)) +
+vp_RUEN_DOY <- ggplot(data_long, aes(x = rows, y = value, fill = rows)) +
   geom_violin(position="dodge", trim=F, scale="width", draw_quantiles=c(0.25,0.5,0.75), linewidth = 0.25) +
   scale_fill_manual(values=c('royalblue3','#278B9AFF','#44A57CFF','#819A7AFF','#58A449FF', '#403369FF','#5C5992FF','#AE93BEFF','violetred3','salmon2','gold3')) +
   facet_grid(condition ~ .) +
   coord_cartesian(ylim = c(0, 1)) +
   theme_minimal() +
-  theme(axis.text.x=element_text(angle=45, hjust=1))+
+  theme(axis.text.x=element_text(angle=45, hjust=1),
+        axis.title.x = element_blank(),   # remove x-axis title
+        axis.title.y = element_blank(),   # remove y-axis title
+        legend.position = "none",          # remove colour legend
+        plot.title = element_blank()
+        )+
   labs(title = "Phytoplankton RUE per N: Conditional Variance Partitioning by Season")
-vp_RUEP_DOY
+vp_RUEN_DOY
 
 ggsave(filename = "RUEN_vpcond_season.png",
-       plot = vp_RUEP_DOY,
-       width = 7,
-       height =8,
+       plot = vp_RUEN_DOY,
+       width = 5,
+       height =6,
        dpi = 300)
 
 # Zooplankton RUE ...............................................................
@@ -383,19 +393,33 @@ data_long$condition <- factor(data_long$condition, levels = c("Early season", "S
 # Plotting
 setwd("~/GitHub/PlanktonRUE-Project/Figures/VP_plots")
 
-vp_RUEP_DOY <- ggplot(data_long, aes(x = rows, y = value, fill = rows)) +
+vp_zooRUE_DOY <- ggplot(data_long, aes(x = rows, y = value, fill = rows)) +
   geom_violin(position="dodge", trim=F, scale="width", draw_quantiles=c(0.25,0.5,0.75), linewidth = 0.25) +
   scale_fill_manual(values=c('royalblue3','#278B9AFF','#44A57CFF','#819A7AFF','#58A449FF', '#403369FF','#5C5992FF','#AE93BEFF','#F7EABDFF', 'violetred3','salmon2','gold3')) +
   facet_grid(condition ~ .) +
   coord_cartesian(ylim = c(0, 1)) +
   theme_minimal() +
-  theme(axis.text.x=element_text(angle=45, hjust=1))+
+  theme(axis.text.x=element_text(angle=45, hjust=1),
+        axis.title.x = element_blank(),   # remove x-axis title
+        axis.title.y = element_blank(),   # remove y-axis title
+        legend.position = "none",          # remove colour legend
+        plot.title = element_blank()
+        )+
   labs(title = "Zooplankton RUE: Conditional Variance Partitioning by Season")
-vp_RUEP_DOY
+vp_zooRUE_DOY
 
 ggsave(filename = "zooRUE_vpcond_season.png",
-       plot = vp_RUEP_DOY,
-       width = 7,
-       height =8,
+       plot = vp_zooRUE_DOY,
+       width = 5,
+       height =6,
        dpi = 300)
 
+#one big figure.............................................................
+combined_plot <- (vp_RUEP_DOY | vp_RUEN_DOY | vp_zooRUE_DOY) +
+  plot_annotation(tag_levels = "a")
+
+combined_plot
+
+ggsave("VP_DOY_combined.png",
+       plot = combined_plot,
+       width = 13, height = 6, dpi = 300)

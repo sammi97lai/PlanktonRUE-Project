@@ -14,13 +14,14 @@ library(lme4)
 library(rstan) 
 library("bayesplot")
 library("rstanarm")
-#library(brms)
+library(brms)
 
 ## plotting
 library("ggplot2")
 library(vioplot)
 library(ggpubr)
 library(maps)
+library(patchwork)
 
 ##...........................................................................................................
 
@@ -121,31 +122,36 @@ G <- unique(g)
 
 n_cond <- length(G)
 
-# #plotting sites and regions
+#plotting sites and regions
 # # get world map data
 # world <- map_data("world")
 # 
 # # prepare your site data
 # sites <- Data_prep %>%
-#   distinct(Site_Id, region, `Coordinates_ EUREF_WGS84_long`, 
+#   distinct(Site_Id, region, `Coordinates_ EUREF_WGS84_long`,
 #            `Coordinates_ EUREF_WGS84_lat`) %>%
 #   rename(lon = `Coordinates_ EUREF_WGS84_long`,
 #          lat = `Coordinates_ EUREF_WGS84_lat`)
 # 
-# plot regions
-# ggplot() +
+# #plot regions
+# regions <- ggplot() +
 #   geom_polygon(data = world, aes(x = long, y = lat, group = group),
 #                fill = "gray90", color = "gray60", size = 0.3) +
 #   geom_point(data = sites, aes(x = lon, y = lat, color = region),
 #              size = 2.5, alpha = 0.8) +
 #   coord_quickmap(xlim = c(19, 31), ylim = c(58, 66)) +
 #   scale_color_brewer(palette = "Set1") +
-#   labs(x = "Longitude", y = "Latitude",
-#        title = "Sampling Sites in Baltic Sea Grouped by Region") +
+#   labs(x = "Longitude", y = "Latitude") +
 #   theme_minimal() +
 #   theme(legend.position = "bottom")
+# regions
+# 
+# setwd("~/GitHub/PlanktonRUE-Project/Figures")
+# ggsave("region_COND_VP.png", 
+#        plot = regions, width = 6, height = 8, dpi = 300)
 
 # --- Conditional variance partitioning ---
+setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
 # Using Torsti's function (adapted for single-response model)
 K_V <- apply(params, 'iterations', conditional_lin_term_cov, G, g, X, y, residuals = FALSE)
 
@@ -193,14 +199,19 @@ vp_RUEP_region <- ggplot(data_long, aes(x = rows, y = value, fill = rows)) +
   facet_grid(condition ~ .) +
   coord_cartesian(ylim = c(0, 1)) +
   theme_minimal() +
-  theme(axis.text.x=element_text(angle=45, hjust=1))+
+  theme(axis.text.x=element_text(angle=45, hjust=1),
+        axis.title.x = element_blank(),   # remove x-axis title
+        axis.title.y = element_blank(),   # remove y-axis title
+        legend.position = "none",          # remove colour legend
+        plot.title = element_blank()
+        )+
   labs(title = "Phytoplankton RUE per P: Conditional Variance Partitioning by Region")
 vp_RUEP_region
 
 ggsave(filename = "RUEP_vpcond_region.png",
        plot = vp_RUEP_region,
-       width = 7,
-       height =10,
+       width = 5,
+       height =7,
        dpi = 300)
 
 #Phytoplankton RUE per N...........................................................
@@ -355,14 +366,19 @@ vp_RUEN_region <- ggplot(data_long, aes(x = rows, y = value, fill = rows)) +
   facet_grid(condition ~ .) +
   coord_cartesian(ylim = c(0, 1)) +
   theme_minimal() +
-  theme(axis.text.x=element_text(angle=45, hjust=1))+
+  theme(axis.text.x=element_text(angle=45, hjust=1),
+        axis.title.x = element_blank(),   # remove x-axis title
+        axis.title.y = element_blank(),   # remove y-axis title
+        legend.position = "none",          # remove colour legend
+        plot.title = element_blank()
+        )+
   labs(title = "Phytoplankton RUE per N: Conditional Variance Partitioning by Region")
 vp_RUEN_region
 
 ggsave(filename = "RUEN_vpcond_region.png",
        plot = vp_RUEN_region,
-       width = 7,
-       height =10,
+       width = 5,
+       height =7,
        dpi = 300)
 
 #Zooplankton RUE ...........................................................
@@ -518,12 +534,27 @@ vp_zooRUE_region <- ggplot(data_long, aes(x = rows, y = value, fill = rows)) +
   facet_grid(condition ~ .) +
   coord_cartesian(ylim = c(0, 1)) +
   theme_minimal() +
-  theme(axis.text.x=element_text(angle=45, hjust=1))+
+  theme(axis.text.x=element_text(angle=45, hjust=1),
+        axis.title.x = element_blank(),   # remove x-axis title
+        axis.title.y = element_blank(),   # remove y-axis title
+        legend.position = "none",          # remove colour legend
+        plot.title = element_blank()
+        )+
   labs(title = "Zooplankton RUE: Conditional Variance Partitioning by Region")
 vp_zooRUE_region
 
 ggsave(filename = "zooRUE_vpcond_region.png",
        plot = vp_zooRUE_region,
-       width = 7,
-       height =10,
+       width = 5,
+       height =7,
        dpi = 300)
+
+#one big figure.............................................................
+combined_plot <- (vp_RUEP_region | vp_RUEN_region | vp_zooRUE_region) +
+  plot_annotation(tag_levels = "a")
+
+combined_plot
+
+ggsave("VP_region_combined.png",
+       plot = combined_plot,
+       width = 13, height = 7, dpi = 300)
