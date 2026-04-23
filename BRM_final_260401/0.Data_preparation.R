@@ -46,8 +46,6 @@ plankton_RUE_data8$log_cyano_prop <- log(plankton_RUE_data8$cyano_prop+0.0001)
 # hist(plankton_RUE_data8$N_P_ratio)
 plankton_RUE_data8$log_N_P_ratio <- log(plankton_RUE_data8$N_P_ratio)
 # hist(plankton_RUE_data8$log_N_P_ratio)
-# hist(plankton_RUE_data8$mean_edibility_weighted)
-# hist(plankton_RUE_data8$mean_edibility_unweighted)
 
 # plankton_RUE_data8$MaxDepth <- as.factor(plankton_RUE_data8$MaxDepth)
 
@@ -71,8 +69,7 @@ load('plankton_RUE_data8_260408.RDATA')
 
 plankton_RUE_data_scaled <- plankton_RUE_data8 %>%
   mutate(across(c(Temperature, Salinity, pH, log_N_P_ratio, TotalNitrogen_unfiltered, 
-                  MaxDepth, Zooplankton_MaxDepth, DOY, daylight_hours,
-                  mean_edibility_weighted, mean_edibility_unweighted),
+                  MaxDepth, Zooplankton_MaxDepth, DOY, daylight_hours),
                 ~ as.numeric(scale(.))))
 
 save(plankton_RUE_data_scaled, file = 'plankton_RUE_data_scaled_260408.RDATA')

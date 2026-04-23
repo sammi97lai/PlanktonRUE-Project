@@ -68,7 +68,6 @@ data <- plankton_RUE_data_scaled %>% select(genus_richness, FEve, FDis,
                                             pH, log_N_P_ratio, 
                                             TotalNitrogen_unfiltered, TotalPhosphorus_unfiltered,
                                             DOY, daylight_hours, Zooplankton_MaxDepth, MaxDepth,
-                                            mean_edibility_weighted, mean_edibility_unweighted,
                                             log_RUE_B_P, log_RUE_B_N, log_RUE_zooplankton)
 cor_mat <- cor(data)
 
@@ -137,21 +136,21 @@ names(model_list[[1]])
 # ===========================================================
 
 # ===========================================================
-# for cyanobacteria dominance models
-# Automatic output folder
-date_tag <- format(Sys.Date(), "%Y%m%d")
-outdir <- file.path("~/GitHub/PlanktonRUE-Project/Results",
-                    paste0("BRM_cyanodom_results_", date_tag))
-dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
-
-cat("\n Results will be saved to:", outdir, "\n")
-
-# Load model list
-source("~/GitHub/PlanktonRUE-Project/BRM_final_260401/2.4.cyanodom_model_list.R")
-
-# Check it loaded correctly
-length(model_list)
-names(model_list[[1]])
+# # for cyanobacteria dominance models
+# # Automatic output folder
+# date_tag <- format(Sys.Date(), "%Y%m%d")
+# outdir <- file.path("~/GitHub/PlanktonRUE-Project/Results",
+#                     paste0("BRM_cyanodom_results_", date_tag))
+# dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
+# 
+# cat("\n Results will be saved to:", outdir, "\n")
+# 
+# # Load model list
+# source("~/GitHub/PlanktonRUE-Project/BRM_final_260401/2.4.cyanodom_model_list.R")
+# 
+# # Check it loaded correctly
+# length(model_list)
+# names(model_list[[1]])
 # ===========================================================
 
 # =============================================================================

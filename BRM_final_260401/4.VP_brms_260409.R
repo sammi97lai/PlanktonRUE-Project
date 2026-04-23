@@ -1015,7 +1015,7 @@ dev.off()
 
 ##  Zoo RUE model
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load('BRM_zoo_RUE_CD_PI_260408.RDATA')
+load('BRM_zoo_RUE_CD_PI_260422.RDATA')
 
 ## this new function now allow you to extract the quantities in the proper format needed
 modZoo_RUE_CD_PI = PrepbrmsVP(model)
@@ -1046,7 +1046,6 @@ groups <- list(
   Zoo_species_richness = c("species_richness", "Temperature:species_richness", "Salinity:species_richness", "TotalNitrogen_unfiltered:species_richness"),
   Zoo_FEve = c("zoo_FEve", "Temperature:zoo_FEve", "Salinity:zoo_FEve", "TotalNitrogen_unfiltered:zoo_FEve"),
   Zoo_FDis = c("zoo_FDis", "Temperature:zoo_FDis", "Salinity:zoo_FDis", "TotalNitrogen_unfiltered:zoo_FDis"),
-  Edibility= c("mean_edibility_unweighted"),
   DOY = c('sDOY_1', 'sDOY'),
   Site = c('Site_Id'),
   Year = c('Year')#,
@@ -1081,7 +1080,7 @@ setwd("~/GitHub/PlanktonRUE-Project/Figures/VP_plots")
 
 png("Zoo_RUE_ng.png", width = 6000, height = 4500, res = 600)
 
-par(mai = c(2.5, 0.8, 0.8, 0.4), # bottom, left, top, right inches
+par(mai = c(4, 0.8, 0.8, 0.4), # bottom, left, top, right inches
     las = 2,
     cex.axis = 1.1,
     xpd = NA)
@@ -1118,7 +1117,7 @@ par(mai = c(2.0, 0.8, 0.8, 0.4), # bottom, left, top, right inches
     cex.axis = 1.1,
     xpd = NA)
 
-vp_plot(P, col = c('royalblue3','#278B9AFF','#44A57CFF','#819A7AFF','#58A449FF', '#403369FF','#5C5992FF','#AE93BEFF','#F7EABDFF', 'violetred3','salmon2','gold3'),
+vp_plot(P, col = c('royalblue3','#278B9AFF','#44A57CFF','#819A7AFF','#58A449FF', '#403369FF','#5C5992FF','#AE93BEFF', 'violetred3','salmon2','gold3'),
         nm = names(groups), main = 'Zooplankton RUE', las=2)
 
 dev.off()

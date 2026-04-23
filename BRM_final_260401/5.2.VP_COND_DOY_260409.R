@@ -18,6 +18,7 @@ library(brms)
 
 ## plotting
 library("ggplot2")
+library(patchwork)
 library(vioplot)
 library(ggpubr)
 library(maps)
@@ -122,6 +123,12 @@ dimnames(K_V) <- list(
 
 # Compute conditional VP (sum(diag) normalization)
 V_cond <- apply(K_V, c('condition', 'iterations'), function(x) diag(x)/sum(diag(x)))
+
+#get vp summary 
+vp_group_DOY_mean <- apply(V_cond, c(1, 2), mean)
+RUEp_vp_group_DOY_df <- as.data.frame(as.table(vp_group_DOY_mean))
+colnames(RUEp_vp_group_DOY_df) <- c("Group", "season", "MeanVP")
+RUEp_vp_group_DOY_df
 
 # --- Prepare data for plotting ---
 dim3 <- apply(V_cond, 3L, c)
@@ -251,6 +258,12 @@ dimnames(K_V) <- list(
 # Compute conditional VP (sum(diag) normalization)
 V_cond <- apply(K_V, c('condition', 'iterations'), function(x) diag(x)/sum(diag(x)))
 
+#get vp summary 
+vp_group_DOY_mean <- apply(V_cond, c(1, 2), mean)
+RUEn_vp_group_DOY_df <- as.data.frame(as.table(vp_group_DOY_mean))
+colnames(RUEn_vp_group_DOY_df) <- c("Group", "season", "MeanVP")
+RUEn_vp_group_DOY_df
+
 # --- Prepare data for plotting ---
 dim3 <- apply(V_cond, 3L, c)
 dim12 <- expand.grid(dimnames(V_cond)[1:2])
@@ -286,7 +299,7 @@ ggsave(filename = "RUEN_vpcond_season.png",
 
 # Zooplankton RUE ...............................................................
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load('BRM_zoo_RUE_CD_PI_260408.RDATA')
+load('BRM_zoo_RUE_CD_PI_260422.RDATA')
 
 ## this new function now allow you to extract the quantities in the proper format needed
 modZoo_RUE_CD_PI = PrepbrmsVP(model)
@@ -317,7 +330,6 @@ groups <- list(
   Zoo_species_richness = c("species_richness", "Temperature:species_richness", "Salinity:species_richness", "TotalNitrogen_unfiltered:species_richness"),
   Zoo_FEve = c("zoo_FEve", "Temperature:zoo_FEve", "Salinity:zoo_FEve", "TotalNitrogen_unfiltered:zoo_FEve"),
   Zoo_FDis = c("zoo_FDis", "Temperature:zoo_FDis", "Salinity:zoo_FDis", "TotalNitrogen_unfiltered:zoo_FDis"),
-  Edibility= c("mean_edibility_unweighted"),
   DOY = c('sDOY_1', 'sDOY'),
   Site = c('Site_Id'),
   Year = c('Year')#,
@@ -381,6 +393,12 @@ dimnames(K_V) <- list(
 # Compute conditional VP (sum(diag) normalization)
 V_cond <- apply(K_V, c('condition', 'iterations'), function(x) diag(x)/sum(diag(x)))
 
+#get vp summary 
+vp_group_DOY_mean <- apply(V_cond, c(1, 2), mean)
+zoo_vp_group_DOY_df <- as.data.frame(as.table(vp_group_DOY_mean))
+colnames(zoo_vp_group_DOY_df) <- c("Group", "season", "MeanVP")
+zoo_vp_group_DOY_df
+
 # --- Prepare data for plotting ---
 dim3 <- apply(V_cond, 3L, c)
 dim12 <- expand.grid(dimnames(V_cond)[1:2])
@@ -395,7 +413,7 @@ setwd("~/GitHub/PlanktonRUE-Project/Figures/VP_plots")
 
 vp_zooRUE_DOY <- ggplot(data_long, aes(x = rows, y = value, fill = rows)) +
   geom_violin(position="dodge", trim=F, scale="width", draw_quantiles=c(0.25,0.5,0.75), linewidth = 0.25) +
-  scale_fill_manual(values=c('royalblue3','#278B9AFF','#44A57CFF','#819A7AFF','#58A449FF', '#403369FF','#5C5992FF','#AE93BEFF','#F7EABDFF', 'violetred3','salmon2','gold3')) +
+  scale_fill_manual(values=c('royalblue3','#278B9AFF','#44A57CFF','#819A7AFF','#58A449FF', '#403369FF','#5C5992FF','#AE93BEFF', 'violetred3','salmon2','gold3')) +
   facet_grid(condition ~ .) +
   coord_cartesian(ylim = c(0, 1)) +
   theme_minimal() +
@@ -423,3 +441,4 @@ combined_plot
 ggsave("VP_DOY_combined.png",
        plot = combined_plot,
        width = 13, height = 6, dpi = 300)
+
