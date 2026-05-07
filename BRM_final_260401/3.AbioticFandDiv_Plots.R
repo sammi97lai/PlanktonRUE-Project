@@ -17,6 +17,7 @@ library(scales)
 setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
 load('plankton_RUE_data_scaled_260408.RDATA')
 load('plankton_RUE_data7_260309.RDATA')
+load('plankton_RUE_data8_260408.RDATA') #without species info
 
 setwd("~/GitHub/PlanktonRUE-Project/Figures")
 
@@ -127,6 +128,25 @@ plankton_mean <- plankton_RUE_data7 %>%
     TotalNitrogen_unfiltered = mean(TotalNitrogen_unfiltered, na.rm = TRUE),
     .groups = "drop"
   )
+
+plankton_mean2 <- plankton_mean %>%
+  mutate(
+    NE_score = scale(latitude) + scale(longitude),
+    SE_score = -scale(latitude) + scale(longitude)
+  )
+
+ne_site <- plankton_mean2 %>%
+  arrange(desc(NE_score)) %>%
+  slice(1) %>%
+  select(latitude, longitude, Temperature, Salinity)
+
+se_site <- plankton_mean2 %>%
+  arrange(desc(SE_score)) %>%
+  slice(1) %>%
+  select(latitude, longitude, Temperature, Salinity)
+
+ne_site
+se_site
 
 plankton_sf <- st_as_sf(plankton_mean,
                         coords = c("longitude", "latitude"),
@@ -541,6 +561,20 @@ combined_plot <- ggarrange(
 
 ggsave("DOY_DH_RUEdiv.png", 
        plot = combined_plot, width = 12, height = 4, dpi = 300)
+
+#calculate monthly daylight hours
+plankton_RUE_data7_2 <- plankton_RUE_data7 %>%
+  mutate(month = month(Date))
+daylight_summary <- plankton_RUE_data7_2 %>%
+  group_by(month) %>%
+  summarise(
+    min_daylight = min(daylight_hours, na.rm = TRUE),
+    max_daylight = max(daylight_hours, na.rm = TRUE),
+    .groups = "drop"
+  )
+daylight_summary %>% filter(month == 4)
+daylight_summary %>% filter(month == 6)
+daylight_summary %>% filter(month == 9)
 
 #plot seasonal patterns of abiotic factors#...................................
 

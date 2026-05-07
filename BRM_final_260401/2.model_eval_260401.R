@@ -65,7 +65,7 @@ data <- plankton_RUE_data_scaled %>% select(genus_richness, FEve, FDis,
                                             FEve_selected, FDis_selected, cyano_prop,
                                             species_richness, zoo_FEve, zoo_FDis, 
                                             Temperature, Salinity,
-                                            pH, log_N_P_ratio, 
+                                            pH, 
                                             TotalNitrogen_unfiltered, TotalPhosphorus_unfiltered,
                                             DOY, daylight_hours, Zooplankton_MaxDepth, MaxDepth,
                                             log_RUE_B_P, log_RUE_B_N, log_RUE_zooplankton)
@@ -75,7 +75,7 @@ cor_mat <- cor(data)
 setwd("~/GitHub/PlanktonRUE-Project/Figures")
 png("corrplot.png", width = 3000, height = 3000, res = 300)
 corrplot(cor_mat, method= "circle", type="lower", addCoef.col = "black", 
-         tl.col = "black",number.cex = 0.6, tl.cex = 0.7)  
+         tl.col = "black",number.cex = 0.7, tl.cex = 0.7)  
 dev.off()
 
 ################# Getting results for all models ################################

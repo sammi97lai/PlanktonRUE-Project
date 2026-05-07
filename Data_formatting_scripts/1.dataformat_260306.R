@@ -140,7 +140,8 @@ Phytoplankton_data <- bind_rows(Phytoplankton_data, merged_inner_coastal)
 
 setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
 save(Phytoplankton_data, file = 'Phytoplankton_data_format.RDATA')
-
+load('Phytoplankton_data_format.RDATA')
+sum(is.na(Phytoplankton_data$AmmoniumNitrogen_unfiltered))
 #data selection and formatting#
 Phytoplankton_data2<- Phytoplankton_data%>%
   select(Site_Id, Sampling_Id, SettledSample_Id, Station, Date, Time,`Coordinates_ EUREF_WGS84_lat`,
