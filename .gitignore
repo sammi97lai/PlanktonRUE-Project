@@ -5,6 +5,7 @@
 *.png
 old_files/
 Data/misc_data/
+Data/Phytoplankton/PEG biovolume
 Data/Phytoplankton/Phytoplankton_functional_traits/Klais_et_al
 Data/Phytoplankton/Phytoplankton_functional_traits/Thomas_et_al
 Data/Phytoplankton/Phytoplankton_functional_traits/Klais_et_al
