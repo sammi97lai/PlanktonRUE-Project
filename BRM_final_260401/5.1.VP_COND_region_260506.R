@@ -30,6 +30,21 @@ rm(list = ls())
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401")
 source('Functions_for_brms_VP_Ap26.R')
 
+# cleaner x axis labels
+label_names <- c(
+  Abiotic = "Abiotic",
+  Phyto_genus_richness = "Phytoplankton\nGenus\nRichness",
+  Phyto_FEve = "Phytoplankton\nFEve",
+  Phyto_FDis = "Phytoplankton\nFDis",
+  Cyano_dom = "Cyanobacteria\nDominance",
+  Zoo_species_richness = "Zooplankton\nSpecies\nRichness",
+  Zoo_FEve = "Zooplankton\nFEve",
+  Zoo_FDis = "Zooplankton\nFDis",
+  DOY = "DOY",
+  Site = "Site",
+  Year = "Year"
+)
+
 #Phytoplankton RUE per P...........................................................
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
 load('BRM_phytoRUEP_CD_PI_260408.RDATA')
@@ -213,17 +228,18 @@ setwd("~/GitHub/PlanktonRUE-Project/Figures/VP_plots")
 
 vp_RUEP_regionW <- ggplot(dataW_long, aes(x = rows, y = value, fill = rows)) +
   geom_violin(position="dodge", trim=F, scale="width", draw_quantiles=c(0.25,0.5,0.75), linewidth = 0.25) +
+  scale_x_discrete(labels = label_names, guide = guide_axis(n.dodge = 2)) +
   scale_fill_manual(values=c('royalblue3','#278B9AFF','#44A57CFF','#819A7AFF','#58A449FF', '#403369FF','#5C5992FF','#AE93BEFF','violetred3','salmon2','gold3')) +
   facet_grid(condition ~ .) +
   coord_cartesian(ylim = c(0, 1)) +
-  theme_minimal() +
-  theme(axis.text.x=element_text(angle=45, hjust=1),
-        axis.title.x = element_blank(),   # remove x-axis title
-        axis.title.y = element_blank(),   # remove y-axis title
-        legend.position = "none",          # remove colour legend
-        plot.title = element_blank()
-        )+
-  labs(title = "Phytoplankton RUE per P: Conditional Variance Partitioning by Region")
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 1, size = 8, lineheight = 0.85),
+    axis.title.x = element_blank(),   # remove x-axis title
+    axis.title.y = element_blank(),   # remove y-axis title
+    legend.position = "none",          # remove colour legend
+    plot.title = element_blank()
+  )
 vp_RUEP_regionW
 
 ggsave(filename = "RUEP_vpcond_region_r2.png",
@@ -397,17 +413,18 @@ setwd("~/GitHub/PlanktonRUE-Project/Figures/VP_plots")
 
 vp_RUEN_regionW <- ggplot(dataW_long, aes(x = rows, y = value, fill = rows)) +
   geom_violin(position="dodge", trim=F, scale="width", draw_quantiles=c(0.25,0.5,0.75), linewidth = 0.25) +
+  scale_x_discrete(labels = label_names, guide = guide_axis(n.dodge = 2)) +
   scale_fill_manual(values=c('royalblue3','#278B9AFF','#44A57CFF','#819A7AFF','#58A449FF', '#403369FF','#5C5992FF','#AE93BEFF','violetred3','salmon2','gold3')) +
   facet_grid(condition ~ .) +
   coord_cartesian(ylim = c(0, 1)) +
   theme_minimal() +
-  theme(axis.text.x=element_text(angle=45, hjust=1),
-        axis.title.x = element_blank(),   # remove x-axis title
-        axis.title.y = element_blank(),   # remove y-axis title
-        legend.position = "none",          # remove colour legend
-        plot.title = element_blank()
-        )+
-  labs(title = "Phytoplankton RUE per N: Conditional Variance Partitioning by Region")
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 1, size = 8, lineheight = 0.85),
+    axis.title.x = element_blank(),   # remove x-axis title
+    axis.title.y = element_blank(),   # remove y-axis title
+    legend.position = "none",          # remove colour legend
+    plot.title = element_blank()
+  )
 vp_RUEN_regionW
 
 ggsave(filename = "RUEN_vpcond_region_r2.png",
@@ -582,13 +599,18 @@ setwd("~/GitHub/PlanktonRUE-Project/Figures/VP_plots")
 
 vp_zooRUE_regionW <- ggplot(dataW_long, aes(x = rows, y = value, fill = rows)) +
   geom_violin(position="dodge", trim=F, scale="width", draw_quantiles=c(0.25,0.5,0.75), linewidth = 0.25) +
+  scale_x_discrete(labels = label_names, guide = guide_axis(n.dodge = 2)) +
   scale_fill_manual(values=c('royalblue3','#278B9AFF','#44A57CFF','#819A7AFF','#58A449FF', '#403369FF','#5C5992FF','#AE93BEFF','#F7EABDFF', 'violetred3','salmon2','gold3')) +
   facet_grid(condition ~ .) +
   coord_cartesian(ylim = c(0, 1)) +
   theme_minimal() +
-  theme(axis.text.x=element_text(angle=45, hjust=1))+
-  labs(title = "Zooplankton RUE: Conditional Variance Partitioning by Region")
-
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 1, size = 8, lineheight = 0.85),
+    axis.title.x = element_blank(),   # remove x-axis title
+    axis.title.y = element_blank(),   # remove y-axis title
+    legend.position = "none",          # remove colour legend
+    plot.title = element_blank()
+  )
 vp_zooRUE_regionW
 
 ggsave(filename = "zooRUE_vpcond_region_r2.png",
@@ -605,4 +627,4 @@ combined_plot
 
 ggsave("VP_region_combined_r2.png",
        plot = combined_plot,
-       width = 13, height = 7, dpi = 300)
+       width = 16, height = 7, dpi = 300)

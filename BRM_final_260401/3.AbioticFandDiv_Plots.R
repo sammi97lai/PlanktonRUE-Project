@@ -152,84 +152,113 @@ plankton_sf <- st_as_sf(plankton_mean,
                         coords = c("longitude", "latitude"),
                         crs = 4326)
 
+sea_labels <- data.frame(
+  basin = c(
+    "Bothnian Bay",
+    "Bothnian Sea",
+    "Archipelago Sea",
+    "Gulf of Finland"
+  ),
+  longitude = c(23.5, 19.5, 21.5, 27.0),
+  latitude = c(65.5, 61.8, 60.3, 60.2),
+  angle = c(45, 75, 0, 15)
+)
+
 # Plot abiotic factors#
+sea_labels <- data.frame(
+  basin = c(
+    "Bothnian Bay",
+    "Bothnian Sea",
+    "Archipelago Sea",
+    "Gotland Basin",
+    "Gulf of Finland"
+  ),
+  longitude = c(23.0, 19.5, 21.3, 19.8, 24.3),
+  latitude = c(64.5, 61.8, 59.3, 58.0, 59.8),
+  angle = c(45, 75, 0, 80,15)
+)
+
 # Temperature map
 p1 <- ggplot() +
   geom_sf(data = world, fill = "gray95", color = "gray20") +
+  geom_text(data = sea_labels,
+    aes(x = longitude, y = latitude, label = basin, angle = angle), 
+    colour = "gray60", size = 2.5, fontface = "italic", alpha = 0.7
+  ) +
   geom_sf(data = plankton_sf, aes(color = Temperature), size = 1.5, alpha = 0.7) +
   scale_color_viridis_c(option = "plasma") +
   coord_sf(xlim = xlim, ylim = ylim) +
   theme_minimal() +
   ggtitle("Temperature") +
-  theme(legend.position = "right") +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal"
+  ) +
   theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 5))
 
 # Salinity map
 p2 <- ggplot() +
   geom_sf(data = world, fill = "gray95", color = "gray20") +
+  geom_text(data = sea_labels,
+            aes(x = longitude, y = latitude, label = basin, angle = angle), 
+            colour = "gray60", size = 2.5, fontface = "italic", alpha = 0.7
+  ) +
   geom_sf(data = plankton_sf, aes(color = Salinity), size = 1.5, alpha = 0.7) +
   scale_color_viridis_c(option = "cividis") +
   coord_sf(xlim = xlim, ylim = ylim) +
   theme_minimal() +
   ggtitle("Salinity") +
-  theme(legend.position = "right") +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal"
+  ) +
   theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 5))
 
 # pH map
 p3 <- ggplot() +
   geom_sf(data = world, fill = "gray95", color = "gray20") +
+  geom_text(data = sea_labels,
+            aes(x = longitude, y = latitude, label = basin, angle = angle), 
+            colour = "gray60", size = 2.5, fontface = "italic", alpha = 0.7
+  ) +
   geom_sf(data = plankton_sf, aes(color = pH), size = 1.5, alpha = 0.7) +
   scale_color_viridis_c(option = "mako") +
   coord_sf(xlim = xlim, ylim = ylim) +
   theme_minimal() +
   ggtitle("pH") +
-  theme(legend.position = "right") +
-  theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 5))
-
-# Phosphorus concentration map
-p4 <- ggplot() +
-  geom_sf(data = world, fill = "gray95", color = "gray20") +
-  geom_sf(data = plankton_sf, aes(color = TotalPhosphorus_unfiltered), size = 1.5, alpha = 0.7) +
-  scale_color_viridis_c(option = "rocket", name = "Total Phosphorus (µg/L)") +
-  coord_sf(xlim = xlim, ylim = ylim) +
-  theme_minimal() +
-  ggtitle("Phosphorus concetrations") +
-  theme(legend.position = "right") +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal"
+  ) +
   theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 5))
 
 # Nitrogen concentration map
-p5 <- ggplot() +
+p4 <- ggplot() +
   geom_sf(data = world, fill = "gray95", color = "gray20") +
+  geom_text(data = sea_labels,
+            aes(x = longitude, y = latitude, label = basin, angle = angle), 
+            colour = "gray60", size = 2.5, fontface = "italic", alpha = 0.7
+  ) +
   geom_sf(data = plankton_sf, aes(color = TotalNitrogen_unfiltered), size = 1.5, alpha = 0.7) +
-  scale_color_viridis_c(option = "rocket", name = "Total Nitrogen (µg/L)") +
+  scale_color_viridis_c(option = "rocket", name = expression("Total Nitrogen ("*mu*"g L"^{-1}*")")) +
   coord_sf(xlim = xlim, ylim = ylim) +
   theme_minimal() +
   ggtitle("Nitrogen concentrations") +
-  theme(legend.position = "right") +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal"
+  ) +
   theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 5))
-
-# N:P ratio map
-# p6 <- ggplot() +
-#   geom_sf(data = world, fill = "gray95", color = "gray20") +
-#   geom_sf(data = plankton_sf, aes(color = N_P_ratio), size = 1.5, alpha = 0.7) +
-#   scale_color_viridis_c(option = "rocket", name = "N:P ratio") +
-#   coord_sf(xlim = xlim, ylim = ylim) +
-#   theme_minimal() +
-#   ggtitle("N:P ratio") +
-#   theme(legend.position = "right") +
-#   theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 5))
-
 
 # Combine all four maps
 p1 <- p1 + theme(plot.title = element_blank())
 p2 <- p2 + theme(plot.title = element_blank())
 p3 <- p3 + theme(plot.title = element_blank())
-p5 <- p5 + theme(plot.title = element_blank())
+p4 <- p4 + theme(plot.title = element_blank())
 
 combined_plot <- ggarrange(
-  p1, p2, 
-  p3, p5, 
-  ncol = 2, nrow = 2,
+  p1, p2, p3, p4, 
+  ncol = 4, nrow = 1,
   align = "hv",
   labels = c("a", "b", "c", "d"),
   label.x = 0.02,   # move slightly right
@@ -240,7 +269,7 @@ combined_plot <- ggarrange(
 combined_plot
 
 ggsave("Plankton_env_maps.png", 
-       plot = combined_plot, width = 9, height = 8, dpi = 300)
+       plot = combined_plot, width = 14, height = 5, dpi = 300)
 
 #...............................................................................
 #Plot Diversity Metrics and Cyanobacteria Dominance
@@ -578,17 +607,75 @@ daylight_summary %>% filter(month == 9)
 
 #plot seasonal patterns of abiotic factors#...................................
 
-m1 <- lm(TotalNitrogen_unfiltered ~ DOY, data = plankton_RUE_data7)
-m2 <- lm(TotalNitrogen_unfiltered ~ poly(DOY, 2), data = plankton_RUE_data7)
+# m1 <- lm(TotalNitrogen_unfiltered ~ DOY, data = plankton_RUE_data7)
+# m2 <- lm(TotalNitrogen_unfiltered ~ poly(DOY, 2), data = plankton_RUE_data7)
+# 
+# AIC(m1,m2)
 
-AIC(m1,m2)
+Data_prep <- plankton_sf
+
+#get site info (Helcome area and coordinates)
+setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
+load('Phytoplankton_data_format.RDATA')
+site_info <- Phytoplankton_data %>%
+  select(Site_Id,
+         HELCOMarea,
+         `Coordinates_ EUREF_WGS84_lat`,
+         `Coordinates_ EUREF_WGS84_long`) %>%
+  distinct()
+
+#join site info with model data
+Data_prep$Site_Id <- as.character(Data_prep$Site_Id)
+site_info$Site_Id <- as.character(site_info$Site_Id)
+
+Data_prep <- Data_prep %>%
+  left_join(site_info, by = "Site_Id")
+
+# unique(Data_prep$HELCOMarea)
+# unique(Data_prep$Site_Id)
+
+Data_prep$region <- NA
+
+lat <- Data_prep$`Coordinates_ EUREF_WGS84_lat`
+lon <- Data_prep$`Coordinates_ EUREF_WGS84_long`
+
+# 1. Bothnian Bay
+Data_prep$region[lat >= 64] <- "Bothnian Bay"
+
+# 2. Bothnian Sea
+Data_prep$region[lat >= 61 & lat < 64] <- "Bothnian Sea"
+
+# 3. Gulf of Finland
+Data_prep$region[lon >= 24 & lat < 61.5] <- "Gulf of Finland"
+
+# 4. Baltic Proper
+Data_prep$region[lat < 61.5 & lon < 24] <- "Baltic Proper"
+
 
 # Temperature
-p_temp <- ggplot(plankton_RUE_data7, aes(x = DOY, y = Temperature)) +
+p_temp <- ggplot(Data_prep, aes(x = DOY, y = Temperature)) +
   geom_point(alpha = 0.3) +
-  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = TRUE) +
+  geom_smooth(method = "lm",
+              formula = y ~ poly(x, 2),
+              se = TRUE) +
+  facet_wrap(~region) +
   theme_bw() +
-  labs(x = "Day of Year (DOY)", y = "Temperature (°C)")
+  labs(x = "Day of Year (DOY)",
+       y = "Temperature (°C)")
+p_temp
+p_temp <- ggplot(Data_prep,
+                 aes(x = DOY,
+                     y = Temperature,
+                     colour = region)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm",
+              formula = y ~ poly(x, 2),
+              se = FALSE) +
+  theme_bw() +
+  labs(x = "Day of Year (DOY)",
+       y = "Temperature (°C)",
+       colour = "Region")
+p_temp
 
 # Salinity
 p_sal <- ggplot(plankton_RUE_data7, aes(x = DOY, y = Salinity)) +
@@ -609,7 +696,7 @@ p_n <- ggplot(plankton_RUE_data7, aes(x = DOY, y = TotalNitrogen_unfiltered)) +
   geom_point(alpha = 0.3) +
   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = TRUE) +
   theme_bw() +
-  labs(x = "Day of Year (DOY)", y = "Nitrogen concentrations (µg/L)")
+  labs(x = "Day of Year (DOY)", y = expression("Total Nitrogen ("*mu*"g L"^{-1}*")"))
 
 # Combine into one figure (2x2 layout)
 combined_plot <- (p_temp | p_sal) / (p_ph | p_n)+
@@ -618,8 +705,80 @@ combined_plot <- (p_temp | p_sal) / (p_ph | p_n)+
 # Display
 combined_plot
 
+setwd("~/GitHub/PlanktonRUE-Project/Figures")
 ggsave("environment_DOY_combined.png", combined_plot,
        width = 7, height = 6, dpi = 300)
+
+#regional differences........
+Data_prep$region <- factor(
+  Data_prep$region,
+  levels = c(
+    "Baltic Proper",
+    "Bothnian Sea",
+    "Bothnian Bay",
+    "Gulf of Finland"
+  )
+)
+
+env_long <- Data_prep %>%
+  select(DOY, region,
+         Temperature,
+         Salinity,
+         pH,
+         TotalNitrogen_unfiltered) %>%
+  pivot_longer(
+    cols = c(Temperature,
+             Salinity,
+             pH,
+             TotalNitrogen_unfiltered),
+    names_to = "Variable",
+    values_to = "Value"
+  ) %>%
+  mutate(
+    Variable = factor(
+      Variable,
+      levels = c(
+        "Temperature",
+        "Salinity",
+        "pH",
+        "TotalNitrogen_unfiltered"
+      ),
+      labels = c(
+        "Temperature",
+        "Salinity",
+        "pH",
+        "Total Nitrogen"
+      )
+    )
+  )
+
+env_plot <- ggplot(env_long,
+                   aes(x = DOY,
+                       y = Value,
+                       colour = region)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(method = "lm",
+              formula = y ~ poly(x, 2),
+              se = FALSE) +
+  facet_wrap(~Variable, scales = "free_y") +
+  scale_colour_manual(
+    values = c(
+      "Baltic Proper" = "#E41A1C",
+      "Bothnian Bay" = "#377EB8",
+      "Bothnian Sea" = "#4DAF4A",
+      "Gulf of Finland" = "#984EA3"
+    )
+  ) +
+  theme_bw() +
+  labs(x = "Day of Year (DOY)",
+       y = NULL,
+       colour = "Region")
+
+env_plot 
+
+ggsave("environment_DOY_region.png", env_plot,
+       width = 10, height = 6, dpi = 300)
+
 
 #map of sites across seasons#.................................................
 Data_prep <- plankton_sf

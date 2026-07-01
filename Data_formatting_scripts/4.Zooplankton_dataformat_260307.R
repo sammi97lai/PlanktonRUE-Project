@@ -75,9 +75,9 @@ zoo_sf <- Zooplankton_biomass_data %>%
   st_as_sf(coords = c("longitude", "latitude"), crs = 3067) %>%
   st_transform(crs = 3857)
 
-# 3. Spatial join: keep all env points and attach zoo whenever within 3m radius
+# 3. Spatial join: keep all env points and attach zoo whenever within 9m radius
 # --- Conditional joins ---
-## Coastal sites (3 km radius) #min distance between site with same habitat type
+## Coastal sites (9 km radius) #min distance between site with same habitat type
 coastal_env <- env_sf %>% filter(EnvironmentType == "Coastal")
 coastal_zoo <- zoo_sf %>% filter(EnvironmentType == "Coastal")
 coastal_joined_env_to_zoo <- st_join(
