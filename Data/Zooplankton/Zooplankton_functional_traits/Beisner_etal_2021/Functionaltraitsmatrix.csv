@@ -1,0 +1,161 @@
+﻿Species name;mean length_mm;feeding.type;habitat;trophic.group;Sample
+Acanthocyclops.robustus;0.44267168814433;Raptorial;Interm;Omnivore/Carnivore;Pelagic
+Acanthocyclops.sp.;0.84875;Raptorial;Interm;Omnivore/Carnivore;Pelagic
+Acanthodiaptomus.denticornis;1.11889889643464;Stationary Suspension;Pelagic;Omnivore;Pelagic
+Acantholebris.cruvirostris;0.63;S-Filtration;Littoral;Herbivore;Sediments
+Acroperus.harpae;0.3569225;C-Filtration;Littoral;Herbivore;Pelagic
+Acroperus.harpae;0.3569225;C-Filtration;Littoral;Herbivore;Sediments
+Aglaodiaptomus.clavipes;2.10078;Stationary Suspension;Interm;Omnivore;Pelagic
+Aglaodiaptomus.forbesi;0.94479;Stationary Suspension;Interm;Omnivore;Pelagic
+Aglaodiaptomus.leptopus;1.39176820588235;Stationary Suspension;Interm;Omnivore;Pelagic
+Aglaodiaptomus.spatulocrenatus;0.840487857142857;Stationary Suspension;Interm;Omnivore;Pelagic
+Alona.affinis;0.2229225;C-Filtration;Littoral;Herbivore;Pelagic
+Alona.affinis;0.8;C-Filtration;Littoral;Herbivore;Sediments
+Alona.barbulata;0.32;C-Filtration;Littoral;Herbivore;Sediments
+Alona.bicolor;0.32;C-Filtration;Littoral;Herbivore;Sediments
+Alona.circumfimbriata;0.35;C-Filtration;Littoral;Herbivore;Sediments
+Alona.costata;0.13837;C-Filtration;Littoral;Herbivore;Pelagic
+Alona.costata;0.13837;C-Filtration;Littoral;Herbivore;Sediments
+Alona.guttata;0.103647692307692;C-Filtration;Littoral;Herbivore;Pelagic
+Alona.guttata;0.103647692307692;C-Filtration;Littoral;Herbivore;Sediments
+Alona.intermedia;0.03762;C-Filtration;Littoral;Herbivore;Pelagic
+Alona.intermedia;0.4;C-Filtration;Littoral;Herbivore;Sediments
+Alona.quadrangularis;0.0495;C-Filtration;Littoral;Herbivore;Pelagic
+Alona.quadrangularis;0.7;C-Filtration;Littoral;Herbivore;Sediments
+Alona.rustica;0.32;C-Filtration;Littoral;Herbivore;Sediments
+Alona.setulosa;0.32;C-Filtration;Littoral;Herbivore;Sediments
+Alona.spp.;0.0980353333333333;C-Filtration;Littoral;Herbivore;Pelagic
+Alona.spp.;0.12937;C-Filtration;Littoral;Herbivore;Sediments
+Alonella.acutirostris;0.03465;C-Filtration;Littoral;Herbivore;Pelagic
+Alonella.excisa;0.26;C-Filtration;Littoral;Herbivore;Sediments
+Alonella.exigua;0.26;C-Filtration;Littoral;Herbivore;Sediments
+Alonella.nana;0.10918;C-Filtration;Littoral;Herbivore;Pelagic
+Alonella.nana;0.10918;C-Filtration;Littoral;Herbivore;Sediments
+Alonella.pulchella;0.26;C-Filtration;Littoral;Herbivore;Sediments
+Alonopsis.americana;1;C-Filtration;Littoral;Herbivore;Sediments
+Anchistropus.minor;0.36;C-Filtration;Littoral;Carnivore;Sediments
+Bosmina.coregoni;0.270085087719298;B-Filtration;Pelagic;Herbivore;Sediments
+Bosmina.longirostris;0.226584852994228;B-Filtration;Pelagic;Herbivore;Pelagic
+Bosmina.longirostris;0.226584852994228;B-Filtration;Pelagic;Herbivore;Sediments
+Bosmina.longispina;0.283254369565217;B-Filtration;Pelagic;Herbivore;Sediments
+calanoid.copepodid;0.633418690730023;Stationary Suspension;Pelagic;Omnivore;Pelagic
+Camptocercus.spp.;0.065142;C-Filtration;Littoral;Herbivore;Pelagic
+Camptocercus.spp.;0.78;C-Filtration;Littoral;Herbivore;Sediments
+Ceriodaphnia.lacustris;0.403715833333333;D-Filtration;Pelagic;Herbivore;Pelagic
+Ceriodaphnia.quadrangula;0.49203;D-Filtration;Pelagic;Herbivore;Pelagic
+Ceriodaphnia.spp.;0.267694511251758;D-Filtration;Pelagic;Herbivore;Pelagic
+Ceriodaphnia.spp.;0.38781344819503;D-Filtration;Pelagic;Herbivore;Sediments
+Chydorus.bicornatus;0.5;C-Filtration;Littoral;Herbivore;Sediments
+Chydorus.biovatus;0.226282280701754;C-Filtration;Interm;Herbivore;Sediments
+Chydorus.brevilabris;0.145189281045752;C-Filtration;Littoral;Herbivore;Sediments
+Chydorus.faviformis;0.29;C-Filtration;Interm;Herbivore;Sediments
+Chydorus.linguilabris;0.226282280701754;C-Filtration;Interm;Herbivore;Sediments
+Chydorus.sphaericus;0.145189281045752;C-Filtration;Interm;Herbivore;Pelagic
+cyclopoid.copepodid;0.473809320214669;Stationary Suspension;Pelagic;Omnivore;Pelagic
+Cyclops.columbianus;0.896144117647059;Raptorial;Pelagic;Carnivore;Pelagic
+Cyclops.scutifer;0.779736785714286;Raptorial;Pelagic;Omnivore;Pelagic
+Daphnia.ambigua;0.770704444444445;D-Filtration;Pelagic;Herbivore;Pelagic
+Daphnia.catawba;0.87813;D-Filtration;Pelagic;Herbivore;Pelagic
+Daphnia.dentifera;0.994981785714286;D-Filtration;Pelagic;Herbivore;Pelagic
+Daphnia.dubia;1.52757;D-Filtration;Pelagic;Herbivore;Pelagic
+Daphnia.galeata.mendotae;0.933242948717949;D-Filtration;Pelagic;Herbivore;Pelagic
+Daphnia.longiremis;0.704620125;D-Filtration;Pelagic;Herbivore;Pelagic
+Daphnia.longispina;0.968328273998826;D-Filtration;Pelagic;Herbivore;Sediments
+Daphnia.magna;0.891;D-Filtration;Pelagic;Herbivore;Pelagic
+Daphnia.middendorffiana;0.9089025;D-Filtration;Pelagic;Herbivore;Pelagic
+Daphnia.parvula;0.628259333333333;D-Filtration;Pelagic;Herbivore;Pelagic
+Daphnia.pulex;0.894491534899749;D-Filtration;Pelagic;Herbivore;Sediments
+Daphnia.pulicaria;1.19602039473684;D-Filtration;Pelagic;Herbivore;Pelagic
+Daphnia.retrocurva;0.753317946428572;D-Filtration;Pelagic;Herbivore;Pelagic
+Daphnia.similis;1.01673;D-Filtration;Pelagic;Herbivore;Pelagic
+Daphnia.spp.;0.518692529467233;D-Filtration;Pelagic;Herbivore;Pelagic
+Daphnia.spp.;0.900770949842995;D-Filtration;Pelagic;Herbivore;Sediments
+Daphnia.thorata;1.227699;D-Filtration;Pelagic;Herbivore;Pelagic
+Diacyclops.navus;0.80685;Raptorial;Pelagic;Omnivore/Carnivore;Pelagic
+Diacyclops.thomasi;0.665649178767661;Raptorial;Pelagic;Omnivore/Carnivore;Pelagic
+Diaphanosoma.birgei;0.545260393939394;S-Filtration;Interm;Herbivore;Pelagic
+Diaphanosoma.brachyurum;0.477062409751523;S-Filtration;Interm;Herbivore;Pelagic
+Diaphanosoma.spp.;0.3437;S-Filtration;Interm;Herbivore;Pelagic
+Diaphanosoma.spp.;0.455340934563639;S-Filtration;Interm;Herbivore;Sediments
+Disparalona.acutirostris;0.25443;C-Filtration;Littoral;Herbivore;Sediments
+Dunhevedia.crassa;0.04554;C-Filtration;Littoral;Herbivore;Pelagic
+Epischura.lacustris;0.768383961433532;current-cruiser;Pelagic;Omnivore/Carnivore;Pelagic
+Epischura.nevadensis;0.7627455;Stationary Suspension;Pelagic;Omnivore/Carnivore;Pelagic
+Epischura.nordenskioldi;0.86008725;Stationary Suspension;Pelagic;Omnivore/Carnivore;Pelagic
+Epischura.spp.;0.3795695;Stationary Suspension;Pelagic;Omnivore/Carnivore;Pelagic
+Ergasilus.spp.;0.310997755102041;Parasite;Pelagic;Carnivore;Pelagic
+Eubosmina.coregoni;0.270085087719298;B-Filtration;Pelagic;Herbivore;Pelagic
+Eubosmina.longispina;0.283254369565217;B-Filtration;Pelagic;Herbivore;Pelagic
+Eubosmina.spp.;0.38313;B-Filtration;Pelagic;Herbivore;Pelagic
+Eubosmina.tubicen;0.246054415584416;B-Filtration;Pelagic;Herbivore;Pelagic
+Eucyclops.elegans;0.1188;Raptorial;Littoral;Omnivore/Herbivore;Pelagic
+Eucyclops.pectinifer;0.44499625;Raptorial;Littoral;Omnivore/Herbivore;Pelagic
+Eucyclops.spp.;0.237543333333333;Raptorial;Littoral;Omnivore/Herbivore;Pelagic
+Eurycercus.spp.;0.0858;C-Filtration;Littoral;Herbivore;Pelagic
+Eurycercus.spp.;0.68;C-Filtration;Littoral;Herbivore;Sediments
+Graptoleberis.testudinaria;0.104445;C-Filtration;Littoral;Herbivore;Pelagic
+Graptoleberis.testudinaria;0.104445;C-Filtration;Littoral;Herbivore;Sediments
+harpacticoid;0.13600875;Raptorial;Interm;Omnivore;Pelagic
+Hesperodiaptomus.arcticus;0.32175;Stationary Suspension;Pelagic;Omnivore;Pelagic
+Hesperodiaptomus.eiseni;3.35907;Stationary Suspension;Pelagic;Omnivore;Pelagic
+Hesperodiaptomus.franciscanus;0.99581625;Stationary Suspension;Pelagic;Omnivore;Pelagic
+Hesperodiaptomus.kenai;1.32957;Stationary Suspension;Pelagic;Omnivore;Pelagic
+Hesperodiaptomus.nevadensis;1.277496;Stationary Suspension;Pelagic;Omnivore;Pelagic
+Hesperodiaptomus.spp.;0.28017;Stationary Suspension;Pelagic;Omnivore;Pelagic
+Heterocope.septentrionalis;0.818863269230769;Raptorial;Interm;Carnivore;Pelagic
+Holopedium.glacialis;0.580509949109415;S-Filtration;Pelagic;Herbivore;Pelagic
+Holopedium.glacialis;0.580509949109415;S-Filtration;Pelagic;Herbivore;Sediments
+Ilyocryptus.spp.;0.050985;S-Filtration;Littoral;Herbivore;Pelagic
+Ilyocryptus.spp.;0.4;S-Filtration;Littoral;Herbivore;Sediments
+Kurzia.lattissima;0.5;C-Filtration;Littoral;Herbivore;Sediments
+Latona.parviremis;2.5;S-Filtration;Pelagic;Herbivore;Sediments
+Latona.setifera;0.96;S-Filtration;Pelagic;Herbivore;Sediments
+Latona.sp.;0.546975;S-Filtration;Pelagic;Herbivore;Pelagic
+Latona.spp.;0.43527;S-Filtration;Pelagic;Herbivore;Sediments
+Leptodiaptomus.ashlandi;0.5942475;Stationary Suspension;Pelagic;Herbivore;Pelagic
+Leptodiaptomus.minutus;0.675856750524109;Stationary Suspension;Pelagic;Herbivore;Pelagic
+Leptodiaptomus.nudus;1.02085648148148;Stationary Suspension;Pelagic;Herbivore;Pelagic
+Leptodiaptomus.pribilofensis;0.981556442307693;Stationary Suspension;Pelagic;Herbivore;Pelagic
+Leptodiaptomus.sicilis;0.949577194148936;Stationary Suspension;Pelagic;Omnivore;Pelagic
+Leptodiaptomus.siciloides;0.806137256097561;Stationary Suspension;Pelagic;Herbivore;Pelagic
+Leptodiaptomus.tyrrelli;0.895307988721804;Stationary Suspension;Pelagic;Herbivore;Pelagic
+Leptodora.kindti;3.8;Raptorial;Pelagic;Carnivore;Sediments
+Leydigia.spp.;0.75;C-Filtration;Littoral;Herbivore;Sediments
+Limnocalanus.macrurus;2.45447;Raptorial;Pelagic;Omnivore/Carnivore;Pelagic
+Macrocyclops.albidus;0.171765;Raptorial;Littoral;Carnivore;Pelagic
+Macrothrix.sp.;0.131383333333333;S-Filtration;Littoral;Herbivore;Pelagic
+Mesocyclops.americanus;0.2289375;Raptorial;Pelagic;Omnivore/Carnivore;Pelagic
+Mesocyclops.edax;0.572492212194914;Raptorial;Pelagic;Omnivore/Carnivore;Pelagic
+Microcyclops.spp.;0.343035;Raptorial;Pelagic;Omnivore;Pelagic
+Moina.spp.;0.69432;S-Filtration;Interm;Herbivore;Pelagic
+Monospilus.dispar;0.45;C-Filtration;Littoral;Herbivore;Sediments
+Onychodiaptomus.hesperus;1.30383;Stationary Suspension;Pelagic;Herbivore;Pelagic
+Onychodiaptomus.singuienus;0.62733;Stationary Suspension;Pelagic;Herbivore;Pelagic
+Ophryoxus.gracilis;0.99;S-Filtration;Littoral;Herbivore;Sediments
+Orthocyclops.modestus;0.579725;Raptorial;Littoral;Carnivore;Pelagic
+ostracod;0.0890928947368421;C-Filtration;Littoral;Omnivore;Pelagic
+Paralona.pigra;0.29;C-Filtration;Littoral;Herbivore;Sediments
+Picripleuroxus.denticulatus;0.1230075;C-Filtration;Littoral;Herbivore;Pelagic
+Pleuroxus.denticulatus;0.1230075;C-Filtration;Littoral;Herbivore;Sediments
+Pleuroxus.laevis;0.6;C-Filtration;Littoral;Herbivore;Sediments
+Pleuroxus.procurvus;0.050655;C-Filtration;Littoral;Herbivore;Pelagic
+Pleuroxus.procurvus;0.27;C-Filtration;Littoral;Herbivore;Sediments
+Pleuroxus.spp.;0.36;C-Filtration;Littoral;Herbivore;Sediments
+Pleuroxus.straminius;0.58;C-Filtration;Littoral;Herbivore;Sediments
+Pleuroxus.trigonellus;0.6;C-Filtration;Littoral;Herbivore;Sediments
+Pleuroxus.uncinatus;0.56;C-Filtration;Littoral;Herbivore;Sediments
+Polyphemus.pediculus;0.1883475;Raptorial;Interm;Carnivore;Pelagic
+Polyphemus.pediculus;0.1883475;Raptorial;Interm;Carnivore;Sediments
+Rynchotalona.falcata;0.793514166666667;C-Filtration;Littoral;Herbivore;Sediments
+Scapholeberis.spp.;0.252285;C-Filtration;Littoral;Herbivore;Pelagic
+Senecella.calanoides;0.76824;Stationary Suspension;Pelagic;Omnivore/Herbivore;Pelagic
+Sida.crystallina;0.793514166666667;S-Filtration;Interm;Herbivore;Pelagic
+Sida.crystallina;1.07185;S-Filtration;Interm;Herbivore;Sediments
+Simocephalus.spp.;0.169785;D-Filtration;Littoral;Herbivore;Pelagic
+Skistodiaptomus.oregonensis;0.873119283137497;Stationary Suspension;Pelagic;Omnivore;Pelagic
+Skistodiaptomus.pallidus;0.924733333333333;Stationary Suspension;Interm;Omnivore;Pelagic
+Skistodiaptomus.pygmaeus;0.68124375;Stationary Suspension;Pelagic;Omnivore;Pelagic
+Skistodiaptomus.reighardi;0.72508;Stationary Suspension;Pelagic;Omnivore;Pelagic
+Skistodiaptomus.spp.;0.612805;Stationary Suspension;Pelagic;Omnivore;Pelagic
+Tropocyclops.prasinus;0.338507730791703;Raptorial;Pelagic;Omnivore/Herbivore;Pelagic
+Unapertura.latens;0.404;C-Filtration;Littoral;Herbivore;Sediments
