@@ -1,0 +1,77 @@
+========================================
+ Model Summary - Phyto_FEve_P 
+========================================
+
+ Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: FEve ~ poly(Temperature, 2, raw = TRUE) + poly(Salinity, 2, raw = TRUE) + poly(pH, 2, raw = TRUE) + poly(TotalNitrogen_unfiltered, 2, raw = TRUE) + poly(MaxDepth, 2, raw = TRUE) + s(DOY) + poly(daylight_hours, 2, raw = TRUE) + (1 | Year) + (1 | Site_Id) 
+   Data: plankton_RUE_data_scaled (Number of observations: 972) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Smoothing Spline Hyperparameters:
+            Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sds(sDOY_1)     0.69      0.30     0.27     1.42 1.00     2330     4042
+
+Multilevel Hyperparameters:
+~Site_Id (Number of levels: 30) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.05      0.01     0.03     0.08 1.00     1819     3329
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.06      0.01     0.04     0.08 1.00     2342     4189
+
+Regression Coefficients:
+                                        Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept                                   0.39      0.02     0.35     0.43 1.00     2632     3746
+polyTemperature2rawEQTRUE1                 -0.02      0.01    -0.04     0.00 1.00     3283     4814
+polyTemperature2rawEQTRUE2                  0.01      0.01     0.00     0.03 1.00     3941     5794
+polySalinity2rawEQTRUE1                     0.01      0.01    -0.02     0.04 1.00     3482     4282
+polySalinity2rawEQTRUE2                     0.02      0.01     0.01     0.03 1.00     5319     5781
+polypH2rawEQTRUE1                           0.00      0.01    -0.01     0.01 1.00     7623     6416
+polypH2rawEQTRUE2                           0.00      0.00    -0.00     0.01 1.00     8922     6570
+polyTotalNitrogen_unfiltered2rawEQTRUE1     0.01      0.01    -0.00     0.02 1.00     6327     5444
+polyTotalNitrogen_unfiltered2rawEQTRUE2     0.00      0.00    -0.01     0.01 1.00     7689     6650
+polyMaxDepth2rawEQTRUE1                     0.01      0.01    -0.01     0.03 1.00     3793     5420
+polyMaxDepth2rawEQTRUE2                    -0.00      0.00    -0.00     0.00 1.00     4681     6206
+polydaylight_hours2rawEQTRUE1               0.02      0.05    -0.08     0.13 1.00     2803     3827
+polydaylight_hours2rawEQTRUE2              -0.01      0.01    -0.03     0.00 1.00     2883     4053
+sDOY_1                                      0.24      0.64    -1.07     1.47 1.00     3752     4733
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     0.10      0.00     0.09     0.10 1.00     6975     5651
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 972 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo    841.2 22.1
+p_loo        49.5  2.2
+looic     -1682.5 44.3
+------
+MCSE of elpd_loo is 0.1.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.5, 1.6]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
+
+Derivative-based Predictor Classification
+Predictor | Pr_positive | Pr_negative | Pr_hump | Pr_Ushape
+-----------------------------------------------------------
+Temperature     |      0.009 |      0.001 |   0.000 |     0.989
+Salinity        |      0.014 |      0.000 |   0.000 |     0.986
+pH              |      0.102 |      0.048 |   0.045 |     0.804
+TotalNitrogen_unfiltered |      0.568 |      0.004 |   0.223 |     0.205
+MaxDepth        |      0.535 |      0.036 |   0.217 |     0.211
+daylight_hours  |      0.157 |      0.177 |   0.662 |     0.004

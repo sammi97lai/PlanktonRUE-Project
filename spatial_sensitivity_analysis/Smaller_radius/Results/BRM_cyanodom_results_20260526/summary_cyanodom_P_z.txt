@@ -1,0 +1,79 @@
+========================================
+ Model Summary - cyanodom_P_z 
+========================================
+
+ Family: zero_one_inflated_beta 
+  Links: mu = logit; phi = identity; zoi = identity; coi = identity 
+Formula: cyano_prop ~ poly(Temperature, 2, raw = TRUE) + poly(Salinity, 2, raw = TRUE) + poly(pH, 2, raw = TRUE) + poly(TotalNitrogen_unfiltered, 2, raw = TRUE) + poly(MaxDepth, 2, raw = TRUE) + s(DOY) + poly(daylight_hours, 2, raw = TRUE) + (1 | Year) + (1 | Site_Id) 
+   Data: plankton_RUE_data_scaled (Number of observations: 890) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Smoothing Spline Hyperparameters:
+            Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sds(sDOY_1)     9.52      2.61     5.75    15.90 1.00     3514     5220
+
+Multilevel Hyperparameters:
+~Site_Id (Number of levels: 27) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.87      0.16     0.61     1.23 1.00     2330     4368
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.60      0.11     0.41     0.86 1.00     2834     4226
+
+Regression Coefficients:
+                                        Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept                                  -1.45      0.26    -1.96    -0.94 1.00     2186     3383
+polyTemperature2rawEQTRUE1                  0.03      0.12    -0.20     0.26 1.00     5096     5798
+polyTemperature2rawEQTRUE2                 -0.00      0.05    -0.09     0.09 1.00     7030     6456
+polySalinity2rawEQTRUE1                     0.33      0.16     0.02     0.64 1.00     3481     4924
+polySalinity2rawEQTRUE2                    -0.03      0.05    -0.12     0.07 1.00     5394     5841
+polypH2rawEQTRUE1                           0.11      0.04     0.02     0.19 1.00     7898     6454
+polypH2rawEQTRUE2                           0.10      0.02     0.06     0.14 1.00     9716     5842
+polyTotalNitrogen_unfiltered2rawEQTRUE1     0.29      0.06     0.17     0.42 1.00     7637     5966
+polyTotalNitrogen_unfiltered2rawEQTRUE2    -0.09      0.03    -0.16    -0.03 1.00     9793     6467
+polyMaxDepth2rawEQTRUE1                     0.14      0.07     0.00     0.29 1.00     6684     6156
+polyMaxDepth2rawEQTRUE2                     0.03      0.02    -0.01     0.06 1.00     6761     6138
+polydaylight_hours2rawEQTRUE1              -0.81      0.50    -1.78     0.17 1.00     3166     4249
+polydaylight_hours2rawEQTRUE2               0.00      0.07    -0.14     0.14 1.00     3833     5311
+sDOY_1                                      0.03      0.98    -1.89     1.94 1.00    11045     6045
+
+Further Distributional Parameters:
+    Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+phi     8.93      0.46     8.04     9.85 1.00     8791     5978
+zoi     0.02      0.00     0.01     0.03 1.00    12576     6023
+coi     0.05      0.05     0.00     0.17 1.00     9055     4247
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 890 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo    774.5 46.0
+p_loo        66.6  6.1
+looic     -1549.0 91.9
+------
+MCSE of elpd_loo is 0.2.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.5, 1.5]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
+
+Derivative-based Predictor Classification
+Predictor | Pr_positive | Pr_negative | Pr_hump | Pr_Ushape
+-----------------------------------------------------------
+Temperature     |      0.208 |      0.106 |   0.347 |     0.340
+Salinity        |      0.835 |      0.004 |   0.110 |     0.050
+pH              |      0.000 |      0.000 |   0.000 |     1.000
+TotalNitrogen_unfiltered |      0.076 |      0.000 |   0.924 |     0.000
+MaxDepth        |      0.723 |      0.000 |   0.000 |     0.277
+daylight_hours  |      0.003 |      0.821 |   0.175 |     0.001
