@@ -60,7 +60,7 @@ plankton_RUE_data8 <- plankton_RUE_data7
 
 save(plankton_RUE_data8, file = 'plankton_RUE_data8_260408.RDATA')
 
-#### make everything scaled and add poly terms .................................
+#### make everything scaled .................................
 load('plankton_RUE_data8_260408.RDATA')
 
 plankton_RUE_data_scaled <- plankton_RUE_data8 %>%

@@ -1,4 +1,4 @@
-####################### Calculate Degree Days and Dalight hours ##################
+####################### Calculate Daylight hours ###########################
 library(suncalc)
 library(dplyr)
 
