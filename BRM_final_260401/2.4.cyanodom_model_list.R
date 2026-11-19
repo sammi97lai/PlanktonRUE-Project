@@ -6,18 +6,14 @@ model_list <- list(
   # ---------------------------------------------------------
   # CYANOBACTERIA DOMINANCE MODELS - zero inflated
   # ---------------------------------------------------------
-  list(file = "~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA/BRM_cyanodom_L_260604_Z.RDATA",
+  list(file = "~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA/BRM_cyanodom_L_261009_z.RDATA",
        name = "cyanodom_L_z",
        resp = "cyano_prop",
-       predictors = c("Temperature", "Salinity", "pH", "TotalNitrogen_unfiltered", "MaxDepth", "daylight_hours"),
-       ncol_ce = 3,
-       ce_title = "Marginal Effects of Abiotic Variables for Cyanobacteria Dominance (Linear)- zeroinflated"),
+       predictors = c("Temperature", "Salinity", "pH", "TotalNitrogen_unfiltered", "MaxDepth", "daylight_hours")),
   
-  list(file = "~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA/BRM_cyanodom_P_260604_Z.RDATA",
+  list(file = "~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA/BRM_cyanodom_P_261009_z.RDATA",
        name = "cyanodom_P_z",
        resp = "cyano_prop",
-       predictors = c("Temperature", "Salinity", "pH", "TotalNitrogen_unfiltered", "MaxDepth", "daylight_hours"),
-       ncol_ce = 3,
-       ce_title = "Marginal Effects of Abiotic Variables for Cyanobacteria Dominance (Quadratic)- zeroinflated")
+       predictors = c("Temperature", "Salinity", "pH", "TotalNitrogen_unfiltered", "MaxDepth", "daylight_hours"))
 )
 

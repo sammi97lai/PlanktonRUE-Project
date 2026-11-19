@@ -13,17 +13,17 @@ library(viridis)
 library(ggpubr)
 library(ggrepel)
 library(scales)
+library(lubridate)
 
 setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
-load('plankton_RUE_data_scaled_260408.RDATA')
-load('plankton_RUE_data7_260309.RDATA')
-load('plankton_RUE_data8_260408.RDATA') #without species info
+load('plankton_RUE_data_scaled_260916.RDATA')
+load('plankton_RUE_data8_260916.RDATA') #without species info
 
 setwd("~/GitHub/PlanktonRUE-Project/Figures")
 
 #...............................................................................
 # Convert your data to sf object
-plankton_sf <- sf::st_as_sf(plankton_RUE_data7, 
+plankton_sf <- sf::st_as_sf(plankton_RUE_data8, 
                             coords = c("longitude", "latitude"),
                             crs = 4326)  # WGS84
 
@@ -118,7 +118,22 @@ ggsave("Plankton_site_map.png",
 
 
 #.................................................................................
-plankton_mean <- plankton_RUE_data7 %>%
+monthly_samples <- plankton_RUE_data8 %>%
+  mutate(Month = month(Date, label = TRUE, abbr = FALSE)) %>%
+  count(Month, sort = TRUE)
+
+monthly_samples
+
+# Identify the most sampled month
+top_month <- as.character(monthly_samples$Month[1])
+top_month
+
+# Filter to the most sampled month
+plankton_month <- plankton_RUE_data8 %>%
+  mutate(Month = month(Date, label = TRUE, abbr = FALSE)) %>%
+  filter(Month == top_month)
+
+plankton_mean <- plankton_month %>%
   group_by(longitude, latitude) %>%
   summarise(
     Temperature = mean(Temperature, na.rm = TRUE),
@@ -126,6 +141,7 @@ plankton_mean <- plankton_RUE_data7 %>%
     pH = mean(pH, na.rm = TRUE),
     TotalPhosphorus_unfiltered = mean(TotalPhosphorus_unfiltered, na.rm = TRUE),
     TotalNitrogen_unfiltered = mean(TotalNitrogen_unfiltered, na.rm = TRUE),
+    n_samples = n(),
     .groups = "drop"
   )
 
@@ -273,7 +289,7 @@ ggsave("Plankton_env_maps.png",
 
 #...............................................................................
 #Plot Diversity Metrics and Cyanobacteria Dominance
-plankton_sf <- sf::st_as_sf(plankton_RUE_data7, 
+plankton_sf <- sf::st_as_sf(plankton_RUE_data8, 
                             coords = c("longitude", "latitude"),
                             crs = 4326)  # WGS84
 
@@ -471,14 +487,14 @@ ggsave("Plankton_RUE_DOY_barplots.png",
        plot = combined_bar, width = 12, height = 10, dpi = 300)
 
 # Plot sampling frequency for each site over DOY ###############################
-site_order <- plankton_RUE_data7 %>%
+site_order <- plankton_RUE_data8 %>%
   group_by(Site_Id) %>%
   summarise(latitude = mean(latitude, na.rm = TRUE)) %>%
   arrange(desc(latitude))   # north → south
 
 site_order
 
-site_freq <- plankton_RUE_data7 %>%
+site_freq <- plankton_RUE_data8 %>%
   mutate(Site_Id = factor(Site_Id, levels = site_order$Site_Id)) %>%
   count(Site_Id, DOY) %>%
   ggplot(aes(x = DOY, y = n)) +
@@ -495,7 +511,7 @@ ggsave("Site_freq.png",
 
 #all sites
 # Precompute counts to avoid repeated calculations
-doy_counts <- plankton_RUE_data7 %>% count(DOY)
+doy_counts <- plankton_RUE_data8 %>% count(DOY)
 
 # Max frequency for positioning labels
 max_n <- max(doy_counts$n)
@@ -522,7 +538,7 @@ ggsave("Site_freq2.png",
        plot = site_freq2, width = 10, height = 6, dpi = 300)
 
 # Count samples per site per year
-plankton_RUE_data7 %>%
+plankton_RUE_data8 %>%
   group_by(Site_Id, Year) %>%
   summarise(n_samples = n(), .groups = "drop") %>%
   mutate(Site_Id = factor(Site_Id, levels = site_order$Site_Id)) %>%
@@ -538,7 +554,7 @@ plankton_RUE_data7 %>%
   theme(legend.position = "none")
 
 #Sampling over Year across all sites
-plankton_RUE_data7 %>%
+plankton_RUE_data8 %>%
   group_by(Year) %>%
   summarise(n_samples = n(), .groups = "drop") %>%
   ggplot(aes(x = Year, y = n_samples)) +
@@ -552,10 +568,10 @@ plankton_RUE_data7 %>%
 
 
 #DOY vs daylight hours and phytoplankton RUE plot ................................
-scale_factor <- max(plankton_RUE_data7$RUE_B_P, na.rm = TRUE) /
-  max(plankton_RUE_data7$daylight_hours, na.rm = TRUE)
+scale_factor <- max(plankton_RUE_data8$RUE_B_P, na.rm = TRUE) /
+  max(plankton_RUE_data8$daylight_hours, na.rm = TRUE)
 
-p1 <- ggplot(plankton_RUE_data7, aes(x = DOY)) +
+p1 <- ggplot(plankton_RUE_data8, aes(x = DOY)) +
   geom_point(aes(y = daylight_hours, color = "Daylight hours")) +
   geom_point(aes(y = RUE_B_P / scale_factor, color = "RUE")) +
   scale_y_continuous(
@@ -567,10 +583,10 @@ p1 <- ggplot(plankton_RUE_data7, aes(x = DOY)) +
   labs(x = "Day of Year", color = NULL) +
   theme_minimal()
 
-scale_factor <- max(plankton_RUE_data7$genus_richness, na.rm = TRUE) /
-  max(plankton_RUE_data7$daylight_hours, na.rm = TRUE)
+scale_factor <- max(plankton_RUE_data8$genus_richness, na.rm = TRUE) /
+  max(plankton_RUE_data8$daylight_hours, na.rm = TRUE)
 
-p2 <- ggplot(plankton_RUE_data7, aes(x = DOY)) +
+p2 <- ggplot(plankton_RUE_data8, aes(x = DOY)) +
   geom_point(aes(y = daylight_hours, color = "Daylight hours")) +
   geom_point(aes(y = genus_richness / scale_factor, color = "genus richness")) +
   scale_y_continuous(
@@ -592,9 +608,9 @@ ggsave("DOY_DH_RUEdiv.png",
        plot = combined_plot, width = 12, height = 4, dpi = 300)
 
 #calculate monthly daylight hours
-plankton_RUE_data7_2 <- plankton_RUE_data7 %>%
+plankton_RUE_data8_2 <- plankton_RUE_data8 %>%
   mutate(month = month(Date))
-daylight_summary <- plankton_RUE_data7_2 %>%
+daylight_summary <- plankton_RUE_data8_2 %>%
   group_by(month) %>%
   summarise(
     min_daylight = min(daylight_hours, na.rm = TRUE),
@@ -607,8 +623,8 @@ daylight_summary %>% filter(month == 9)
 
 #plot seasonal patterns of abiotic factors#...................................
 
-# m1 <- lm(TotalNitrogen_unfiltered ~ DOY, data = plankton_RUE_data7)
-# m2 <- lm(TotalNitrogen_unfiltered ~ poly(DOY, 2), data = plankton_RUE_data7)
+# m1 <- lm(TotalNitrogen_unfiltered ~ DOY, data = plankton_RUE_data8)
+# m2 <- lm(TotalNitrogen_unfiltered ~ poly(DOY, 2), data = plankton_RUE_data8)
 # 
 # AIC(m1,m2)
 
@@ -678,21 +694,21 @@ p_temp <- ggplot(Data_prep,
 p_temp
 
 # Salinity
-p_sal <- ggplot(plankton_RUE_data7, aes(x = DOY, y = Salinity)) +
+p_sal <- ggplot(plankton_RUE_data8, aes(x = DOY, y = Salinity)) +
   geom_point(alpha = 0.3) +
   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = TRUE) +
   theme_bw() +
   labs(x = "Day of Year (DOY)", y = "Salinity")
 
 # pH
-p_ph <- ggplot(plankton_RUE_data7, aes(x = DOY, y = pH)) +
+p_ph <- ggplot(plankton_RUE_data8, aes(x = DOY, y = pH)) +
   geom_point(alpha = 0.3) +
   geom_smooth(method = "lm", se = TRUE) +
   theme_bw() +
   labs(x = "Day of Year (DOY)", y = "pH")
 
 # Total Nitrogen
-p_n <- ggplot(plankton_RUE_data7, aes(x = DOY, y = TotalNitrogen_unfiltered)) +
+p_n <- ggplot(plankton_RUE_data8, aes(x = DOY, y = TotalNitrogen_unfiltered)) +
   geom_point(alpha = 0.3) +
   geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = TRUE) +
   theme_bw() +

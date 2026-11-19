@@ -34,19 +34,20 @@ source('Functions_for_brms_VP_260605.R')
 label_names <- c(
   Abiotic = "Abiotic",
   Phyto_genus_richness = "Phytoplankton\nGenus\nRichness",
+  Phyto_evenness = "Phytoplankton\nEvenness",
   Phyto_FEve = "Phytoplankton\nFEve",
   Phyto_FDis = "Phytoplankton\nFDis",
   Cyano_dom = "Cyanobacteria\nDominance",
   Zoo_species_richness = "Zooplankton\nSpecies\nRichness",
+  Zoo_evenness = "Zooplankton\nEvenness",
   Zoo_FEve = "Zooplankton\nFEve",
   Zoo_FDis = "Zooplankton\nFDis",
-  Site = "Site",
-  Year = "Year"
+  Random = "Random Effect"
 )
 
 #Phytoplankton RUE per P...........................................................
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load('BRM_phytoRUEP_CD_PI_260604.RDATA')
+load('BRM_phytoRUEP_CD_PI_261013_All.RDATA')
 
 ## this new function now allow you to extract the quantities in the proper format needed
 modphytoRUEP_CD_PI = PrepbrmsVP(model)
@@ -71,16 +72,38 @@ groups <- list(
               "MaxDepth",  "IMaxDepthE2",
               'daylight_hours','Idaylight_hoursE2'),  ## 
   Phyto_genus_richness = c("genus_richness", "Temperature:genus_richness", "Salinity:genus_richness", "TotalNitrogen_unfiltered:genus_richness"),
-  Phyto_FEve = c("FEve", "Temperature:FEve", "Salinity:FEve", "TotalNitrogen_unfiltered:FEve"),
-  Phyto_FDis = c("FDis", "Temperature:FDis", "Salinity:FDis", "TotalNitrogen_unfiltered:FDis"),
+  Phyto_evenness = c("phyto_evenness", "Temperature:phyto_evenness", "Salinity:phyto_evenness", "TotalNitrogen_unfiltered:phyto_evenness"),
+  Phyto_FEve = c("phyto_FEve_PRUE", "Temperature:phyto_FEve_PRUE", "Salinity:phyto_FEve_PRUE", "TotalNitrogen_unfiltered:phyto_FEve_PRUE"),
+  Phyto_FDis = c("phyto_FDis_PRUE", "Temperature:phyto_FDis_PRUE", "Salinity:phyto_FDis_PRUE", "TotalNitrogen_unfiltered:phyto_FDis_PRUE"),
   Cyano_dom = c("cyano_prop", "Temperature:cyano_prop", "Salinity:cyano_prop", "TotalNitrogen_unfiltered:cyano_prop"),
   Zoo_species_richness = c("species_richness", "Temperature:species_richness", "Salinity:species_richness", "TotalNitrogen_unfiltered:species_richness"),
+  Zoo_evenness = c("zoo_evenness", "Temperature:zoo_evenness", "Salinity:zoo_evenness", "TotalNitrogen_unfiltered:zoo_evenness"),
   Zoo_FEve = c("zoo_FEve", "Temperature:zoo_FEve", "Salinity:zoo_FEve", "TotalNitrogen_unfiltered:zoo_FEve"),
   Zoo_FDis = c("zoo_FDis", "Temperature:zoo_FDis", "Salinity:zoo_FDis", "TotalNitrogen_unfiltered:zoo_FDis"),
-  Site = c('Site_Id'),
-  Year = c('Year')#,
+  Random = c('Site_Id', 'Year')#,
   # Residuals = 'residuals'
 ) #group variables into categories#
+
+# Groups used ONLY for the detailed table
+groups_table <- list(
+  Temperature = c("Temperature", "ITemperatureE2"),
+  Salinity = c("Salinity", "ISalinityE2"),
+  pH = c("pH", "IpHE2"),
+  Total_Nitrogen = c("TotalNitrogen_unfiltered", "ITotalNitrogen_unfilteredE2"),
+  MaxDepth = c("MaxDepth", "IMaxDepthE2"),
+  Daylight_hours = c("daylight_hours", "Idaylight_hoursE2"),
+  Phyto_genus_richness = c("genus_richness", "Temperature:genus_richness", "Salinity:genus_richness", "TotalNitrogen_unfiltered:genus_richness"),
+  Phyto_evenness = c("phyto_evenness", "Temperature:phyto_evenness", "Salinity:phyto_evenness", "TotalNitrogen_unfiltered:phyto_evenness" ),
+  Phyto_FEve = c("phyto_FEve_PRUE", "Temperature:phyto_FEve_PRUE",  "Salinity:phyto_FEve_PRUE", "TotalNitrogen_unfiltered:phyto_FEve_PRUE"),
+  Phyto_FDis = c("phyto_FDis_PRUE", "Temperature:phyto_FDis_PRUE", "Salinity:phyto_FDis_PRUE", "TotalNitrogen_unfiltered:phyto_FDis_PRUE"),
+  Cyano_dom = c("cyano_prop", "Temperature:cyano_prop", "Salinity:cyano_prop", "TotalNitrogen_unfiltered:cyano_prop"),
+  Zoo_species_richness = c("species_richness", "Temperature:species_richness", "Salinity:species_richness", "TotalNitrogen_unfiltered:species_richness"),
+  Zoo_evenness = c("zoo_evenness", "Temperature:zoo_evenness", "Salinity:zoo_evenness", "TotalNitrogen_unfiltered:zoo_evenness"),
+  Zoo_FEve = c("zoo_FEve", "Temperature:zoo_FEve", "Salinity:zoo_FEve", "TotalNitrogen_unfiltered:zoo_FEve"),
+  Zoo_FDis = c("zoo_FDis", "Temperature:zoo_FDis", "Salinity:zoo_FDis", "TotalNitrogen_unfiltered:zoo_FDis"),
+  Site = "Site_Id",
+  Year = "Year"
+)
 
 # define some needed parameters
 linear_terms <- unname(unlist(groups)) #flattened vector of all variable names
@@ -320,6 +343,108 @@ dimnames(K_V) <- list(
   iterations = NULL
 )
 
+# Detailed VP table
+# Map individual terms to the detailed table groups
+B_table <- sapply(
+  groups_table,
+  function(x) as.integer(linear_terms %in% x)
+)
+
+dimnames(B_table) <- list(
+  linear_terms = linear_terms,
+  groups = names(groups_table)
+)
+
+n_table_groups <- length(groups_table)
+
+# Grouped variance proportions:
+# group x region x iteration
+V_table <- array(
+  NA_real_,
+  dim = c(n_table_groups, n_cond, n_iter),
+  dimnames = list(
+    Group = names(groups_table),
+    Region = G,
+    Iteration = NULL
+  )
+)
+
+for (r in seq_len(n_cond)) {
+  for (i in seq_len(n_iter)) {
+    
+    K <- K_V[r, , , i]
+    
+    # Combine terms according to the TABLE grouping
+    K_group <- t(B_table) %*% K %*% B_table
+    
+    V_table[, r, i] <- diag(K_group) / sum(diag(K_group))
+  }
+}
+
+# Weight by model R², following your existing approach
+R2_model <- bayes_R2(model)
+R2_draws <- R2_model[, 1]
+
+V_table_weighted <- sweep(
+  V_table,
+  MARGIN = 3,
+  STATS = R2_draws,
+  FUN = "*"
+)
+
+# Summarise posterior draws
+vp_detailed_table <- expand.grid(
+  Group = names(groups_table),
+  Region = G,
+  KEEP.OUT.ATTRS = FALSE,
+  stringsAsFactors = FALSE
+)
+
+vp_detailed_table$MeanVP <- c(
+  apply(V_table_weighted, c(1, 2), mean, na.rm = TRUE)
+)
+
+vp_detailed_table$PosteriorSD <- c(
+  apply(V_table_weighted, c(1, 2), sd, na.rm = TRUE)
+)
+
+vp_detailed_table$Lower95 <- c(
+  apply(
+    V_table_weighted, c(1, 2),
+    quantile, probs = 0.025, na.rm = TRUE
+  )
+)
+
+vp_detailed_table$Upper95 <- c(
+  apply(
+    V_table_weighted, c(1, 2),
+    quantile, probs = 0.975, na.rm = TRUE
+  )
+)
+
+# Preserve the order specified in groups_table
+vp_detailed_table <- vp_detailed_table %>%
+  mutate(
+    Group = factor(Group, levels = names(groups_table)),
+    MeanVP = round(MeanVP, 4),
+    PosteriorSD = round(PosteriorSD, 4),
+    Lower95 = round(Lower95, 4),
+    Upper95 = round(Upper95, 4)
+  ) %>%
+  arrange(Region, Group)
+
+# Print table
+options(na.print = "NA")
+print(as.data.frame(vp_detailed_table), row.names = FALSE)
+
+# Export table
+setwd("~/GitHub/PlanktonRUE-Project/Results")
+write.csv(
+  vp_detailed_table,
+  "Region_VP_RUEp.csv",
+  row.names = FALSE
+)
+
 # Collapse by group
 B <- sapply(groups, function(x) as.integer(linear_terms %in% x))
 dimnames(B) <- list(linear_terms = linear_terms, groups = colnames(B))
@@ -340,11 +465,11 @@ V_cond <- apply(K_V, c('condition', 'iterations'), function(x) diag(x)/sum(diag(
 R2_model = bayes_R2(model)
 R2_model[,1]  # we keep only the estimate although the uncertainy can be sometimes interesting it would be a bit complex and out of subject for you I guess
 
-dim(V_cond) #  covar   10    cond  4     mcmc samples 8000
+dim(V_cond) #  covar   11    cond  4     mcmc samples 8000
 
 # create a weighting matrix of same dimension as you data (particularly good if you have also multiple species but here it is ok still)
-varr <- aperm(array(R2_model[,1], dim = c(8000L, 4L, 10L)), perm = c(3L, 2L, 1L)) # check the dimensions carefully 10 covar (1L) 4 conditions (4L) for 8000 samples (2L)
-dim(varr)  # [1]   10   4 8000
+varr <- aperm(array(R2_model[,1], dim = c(8000L, 4L, 11L)), perm = c(3L, 2L, 1L)) # check the dimensions carefully 11 covar (1L) 4 conditions (4L) for 8000 samples (2L)
+dim(varr)  # [1]   11   4 8000
 
 V_condweighted = V_cond*varr
 
@@ -382,9 +507,9 @@ setwd("~/GitHub/PlanktonRUE-Project/Figures/VP_plots")
 vp_RUEP_regionW <- ggplot(dataW_long, aes(x = rows, y = value, fill = rows)) +
   geom_violin(position="dodge", trim=F, scale="width", draw_quantiles=c(0.25,0.5,0.75), linewidth = 0.25) +
   scale_x_discrete(labels = label_names, guide = guide_axis(n.dodge = 2)) +
-  scale_fill_manual(values=c('royalblue3','#278B9AFF','#44A57CFF','#819A7AFF','#58A449FF', '#403369FF','#5C5992FF','#AE93BEFF','salmon2','gold3')) +
+  scale_fill_manual(values=c("royalblue3", "#278B9AFF", "#274637FF", "#44A57CFF", "#819A7AFF", "#58A449FF", "#403369FF", "#9F99B5FF", "#5C5992FF", "#AE93BEFF", "gold3")) +
   facet_grid(condition ~ .) +
-  coord_cartesian(ylim = c(0, 1)) +
+  coord_cartesian(ylim = c(0, 0.8)) +
   theme_minimal(base_size = 12) +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 1, size = 8, lineheight = 0.85),
@@ -403,7 +528,7 @@ ggsave(filename = "RUEP_vpcond_region_r2.png",
 
 #Phytoplankton RUE per N...........................................................
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load('BRM_phytoRUEN_CD_PI_260604.RDATA')
+load('BRM_phytoRUEN_CD_PI_261013_All.RDATA')
 
 ## this new function now allow you to extract the quantities in the proper format needed
 modphytoRUEN_CD_PI = PrepbrmsVP(model)
@@ -428,16 +553,38 @@ groups <- list(
               "MaxDepth",  "IMaxDepthE2",
               'daylight_hours','Idaylight_hoursE2'),  ## 
   Phyto_genus_richness = c("genus_richness", "Temperature:genus_richness", "Salinity:genus_richness", "TotalNitrogen_unfiltered:genus_richness"),
-  Phyto_FEve = c("FEve", "Temperature:FEve", "Salinity:FEve", "TotalNitrogen_unfiltered:FEve"),
-  Phyto_FDis = c("FDis", "Temperature:FDis", "Salinity:FDis", "TotalNitrogen_unfiltered:FDis"),
+  Phyto_evenness = c("phyto_evenness", "Temperature:phyto_evenness", "Salinity:phyto_evenness", "TotalNitrogen_unfiltered:phyto_evenness"),
+  Phyto_FEve = c("phyto_FEve_PRUE", "Temperature:phyto_FEve_PRUE", "Salinity:phyto_FEve_PRUE", "TotalNitrogen_unfiltered:phyto_FEve_PRUE"),
+  Phyto_FDis = c("phyto_FDis_PRUE", "Temperature:phyto_FDis_PRUE", "Salinity:phyto_FDis_PRUE", "TotalNitrogen_unfiltered:phyto_FDis_PRUE"),
   Cyano_dom = c("cyano_prop", "Temperature:cyano_prop", "Salinity:cyano_prop", "TotalNitrogen_unfiltered:cyano_prop"),
   Zoo_species_richness = c("species_richness", "Temperature:species_richness", "Salinity:species_richness", "TotalNitrogen_unfiltered:species_richness"),
+  Zoo_evenness = c("zoo_evenness", "Temperature:zoo_evenness", "Salinity:zoo_evenness", "TotalNitrogen_unfiltered:zoo_evenness"),
   Zoo_FEve = c("zoo_FEve", "Temperature:zoo_FEve", "Salinity:zoo_FEve", "TotalNitrogen_unfiltered:zoo_FEve"),
   Zoo_FDis = c("zoo_FDis", "Temperature:zoo_FDis", "Salinity:zoo_FDis", "TotalNitrogen_unfiltered:zoo_FDis"),
-  Site = c('Site_Id'),
-  Year = c('Year')#,
+  Random = c('Site_Id', 'Year')#,
   # Residuals = 'residuals'
 ) #group variables into categories#
+# Groups used ONLY for the detailed table
+
+groups_table <- list(
+  Temperature = c("Temperature", "ITemperatureE2"),
+  Salinity = c("Salinity", "ISalinityE2"),
+  pH = c("pH", "IpHE2"),
+  Total_Nitrogen = c("TotalNitrogen_unfiltered", "ITotalNitrogen_unfilteredE2"),
+  MaxDepth = c("MaxDepth", "IMaxDepthE2"),
+  Daylight_hours = c("daylight_hours", "Idaylight_hoursE2"),
+  Phyto_genus_richness = c("genus_richness", "Temperature:genus_richness", "Salinity:genus_richness", "TotalNitrogen_unfiltered:genus_richness"),
+  Phyto_evenness = c("phyto_evenness", "Temperature:phyto_evenness", "Salinity:phyto_evenness", "TotalNitrogen_unfiltered:phyto_evenness" ),
+  Phyto_FEve = c("phyto_FEve_PRUE", "Temperature:phyto_FEve_PRUE",  "Salinity:phyto_FEve_PRUE", "TotalNitrogen_unfiltered:phyto_FEve_PRUE"),
+  Phyto_FDis = c("phyto_FDis_PRUE", "Temperature:phyto_FDis_PRUE", "Salinity:phyto_FDis_PRUE", "TotalNitrogen_unfiltered:phyto_FDis_PRUE"),
+  Cyano_dom = c("cyano_prop", "Temperature:cyano_prop", "Salinity:cyano_prop", "TotalNitrogen_unfiltered:cyano_prop"),
+  Zoo_species_richness = c("species_richness", "Temperature:species_richness", "Salinity:species_richness", "TotalNitrogen_unfiltered:species_richness"),
+  Zoo_evenness = c("zoo_evenness", "Temperature:zoo_evenness", "Salinity:zoo_evenness", "TotalNitrogen_unfiltered:zoo_evenness"),
+  Zoo_FEve = c("zoo_FEve", "Temperature:zoo_FEve", "Salinity:zoo_FEve", "TotalNitrogen_unfiltered:zoo_FEve"),
+  Zoo_FDis = c("zoo_FDis", "Temperature:zoo_FDis", "Salinity:zoo_FDis", "TotalNitrogen_unfiltered:zoo_FDis"),
+  Site = "Site_Id",
+  Year = "Year"
+)
 
 # define some needed parameters
 linear_terms <- unname(unlist(groups)) #flattened vector of all variable names
@@ -516,6 +663,108 @@ dimnames(K_V) <- list(
   iterations = NULL
 )
 
+# Detailed VP table
+# Map individual terms to the detailed table groups
+B_table <- sapply(
+  groups_table,
+  function(x) as.integer(linear_terms %in% x)
+)
+
+dimnames(B_table) <- list(
+  linear_terms = linear_terms,
+  groups = names(groups_table)
+)
+
+n_table_groups <- length(groups_table)
+
+# Grouped variance proportions:
+# group x region x iteration
+V_table <- array(
+  NA_real_,
+  dim = c(n_table_groups, n_cond, n_iter),
+  dimnames = list(
+    Group = names(groups_table),
+    Region = G,
+    Iteration = NULL
+  )
+)
+
+for (r in seq_len(n_cond)) {
+  for (i in seq_len(n_iter)) {
+    
+    K <- K_V[r, , , i]
+    
+    # Combine terms according to the TABLE grouping
+    K_group <- t(B_table) %*% K %*% B_table
+    
+    V_table[, r, i] <- diag(K_group) / sum(diag(K_group))
+  }
+}
+
+# Weight by model R², following your existing approach
+R2_model <- bayes_R2(model)
+R2_draws <- R2_model[, 1]
+
+V_table_weighted <- sweep(
+  V_table,
+  MARGIN = 3,
+  STATS = R2_draws,
+  FUN = "*"
+)
+
+# Summarise posterior draws
+vp_detailed_table <- expand.grid(
+  Group = names(groups_table),
+  Region = G,
+  KEEP.OUT.ATTRS = FALSE,
+  stringsAsFactors = FALSE
+)
+
+vp_detailed_table$MeanVP <- c(
+  apply(V_table_weighted, c(1, 2), mean, na.rm = TRUE)
+)
+
+vp_detailed_table$PosteriorSD <- c(
+  apply(V_table_weighted, c(1, 2), sd, na.rm = TRUE)
+)
+
+vp_detailed_table$Lower95 <- c(
+  apply(
+    V_table_weighted, c(1, 2),
+    quantile, probs = 0.025, na.rm = TRUE
+  )
+)
+
+vp_detailed_table$Upper95 <- c(
+  apply(
+    V_table_weighted, c(1, 2),
+    quantile, probs = 0.975, na.rm = TRUE
+  )
+)
+
+# Preserve the order specified in groups_table
+vp_detailed_table <- vp_detailed_table %>%
+  mutate(
+    Group = factor(Group, levels = names(groups_table)),
+    MeanVP = round(MeanVP, 4),
+    PosteriorSD = round(PosteriorSD, 4),
+    Lower95 = round(Lower95, 4),
+    Upper95 = round(Upper95, 4)
+  ) %>%
+  arrange(Region, Group)
+
+# Print table
+options(na.print = "NA")
+print(as.data.frame(vp_detailed_table), row.names = FALSE)
+
+# Export table
+setwd("~/GitHub/PlanktonRUE-Project/Results")
+write.csv(
+  vp_detailed_table,
+  "Region_VP_RUEn.csv",
+  row.names = FALSE
+)
+
 # Collapse by group
 B <- sapply(groups, function(x) as.integer(linear_terms %in% x))
 dimnames(B) <- list(linear_terms = linear_terms, groups = colnames(B))
@@ -536,11 +785,11 @@ V_cond <- apply(K_V, c('condition', 'iterations'), function(x) diag(x)/sum(diag(
 R2_model = bayes_R2(model)
 R2_model[,1]  # we keep only the estimate although the uncertainy can be sometimes interesting it would be a bit complex and out of subject for you I guess
 
-dim(V_cond) #  covar   10    cond  4     mcmc samples 8000
+dim(V_cond) #  covar   11    cond  4     mcmc samples 8000
 
 # create a weighting matrix of same dimension as you data (particularly good if you have also multiple species but here it is ok still)
-varr <- aperm(array(R2_model[,1], dim = c(8000L, 4L, 10L)), perm = c(3L, 2L, 1L)) # check the dimensions carefully 10 covar (1L) 4 conditions (4L) for 8000 samples (2L)
-dim(varr)  # [1]   10   4 8000
+varr <- aperm(array(R2_model[,1], dim = c(8000L, 4L, 11L)), perm = c(3L, 2L, 1L)) # check the dimensions carefully 11 covar (1L) 4 conditions (4L) for 8000 samples (2L)
+dim(varr)  # [1]   11   4 8000
 
 V_condweighted = V_cond*varr
 
@@ -577,9 +826,9 @@ setwd("~/GitHub/PlanktonRUE-Project/Figures/VP_plots")
 vp_RUEN_regionW <- ggplot(dataW_long, aes(x = rows, y = value, fill = rows)) +
   geom_violin(position="dodge", trim=F, scale="width", draw_quantiles=c(0.25,0.5,0.75), linewidth = 0.25) +
   scale_x_discrete(labels = label_names, guide = guide_axis(n.dodge = 2)) +
-  scale_fill_manual(values=c('royalblue3','#278B9AFF','#44A57CFF','#819A7AFF','#58A449FF', '#403369FF','#5C5992FF','#AE93BEFF','salmon2','gold3')) +
+  scale_fill_manual(values=c("royalblue3", "#278B9AFF", "#274637FF", "#44A57CFF", "#819A7AFF", "#58A449FF", "#403369FF", "#9F99B5FF", "#5C5992FF", "#AE93BEFF", "gold3")) +
   facet_grid(condition ~ .) +
-  coord_cartesian(ylim = c(0, 1)) +
+  coord_cartesian(ylim = c(0, 0.8)) +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 1, size = 8, lineheight = 0.85),
@@ -598,7 +847,7 @@ ggsave(filename = "RUEN_vpcond_region_r2.png",
 
 #Zooplankton RUE ...........................................................
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load('BRM_zoo_RUE_CD_PI_260604.RDATA')
+load('BRM_zoo_RUE_CD_PI_261013_All.RDATA')
 
 ## this new function now allow you to extract the quantities in the proper format needed
 modZoo_RUE_CD_PI = PrepbrmsVP(model)
@@ -623,16 +872,37 @@ groups <- list(
               "Zooplankton_MaxDepth",  "IZooplankton_MaxDepthE2",
               'daylight_hours','Idaylight_hoursE2'),  ## 
   Phyto_genus_richness = c("genus_richness", "Temperature:genus_richness", "Salinity:genus_richness", "TotalNitrogen_unfiltered:genus_richness"),
-  Phyto_FEve = c("FEve", "Temperature:FEve", "Salinity:FEve", "TotalNitrogen_unfiltered:FEve"),
-  Phyto_FDis = c("FDis", "Temperature:FDis", "Salinity:FDis", "TotalNitrogen_unfiltered:FDis"),
+  Phyto_evenness = c("phyto_evenness", "Temperature:phyto_evenness", "Salinity:phyto_evenness", "TotalNitrogen_unfiltered:phyto_evenness"),
+  Phyto_FEve = c("phyto_FEve_ZRUE", "Temperature:phyto_FEve_ZRUE", "Salinity:phyto_FEve_ZRUE", "TotalNitrogen_unfiltered:phyto_FEve_ZRUE"),
+  Phyto_FDis = c("phyto_FDis_ZRUE", "Temperature:phyto_FDis_ZRUE", "Salinity:phyto_FDis_ZRUE", "TotalNitrogen_unfiltered:phyto_FDis_ZRUE"),
   Cyano_dom = c("cyano_prop", "Temperature:cyano_prop", "Salinity:cyano_prop", "TotalNitrogen_unfiltered:cyano_prop"),
   Zoo_species_richness = c("species_richness", "Temperature:species_richness", "Salinity:species_richness", "TotalNitrogen_unfiltered:species_richness"),
+  Zoo_evenness = c("zoo_evenness", "Temperature:zoo_evenness", "Salinity:zoo_evenness", "TotalNitrogen_unfiltered:zoo_evenness"),
   Zoo_FEve = c("zoo_FEve", "Temperature:zoo_FEve", "Salinity:zoo_FEve", "TotalNitrogen_unfiltered:zoo_FEve"),
   Zoo_FDis = c("zoo_FDis", "Temperature:zoo_FDis", "Salinity:zoo_FDis", "TotalNitrogen_unfiltered:zoo_FDis"),
-  Site = c('Site_Id'),
-  Year = c('Year')#,
+  Random = c('Site_Id', 'Year')#,
   # Residuals = 'residuals'
 ) #group variables into categories#
+
+groups_table <- list(
+  Temperature = c("Temperature", "ITemperatureE2"),
+  Salinity = c("Salinity", "ISalinityE2"),
+  pH = c("pH", "IpHE2"),
+  Total_Nitrogen = c("TotalNitrogen_unfiltered", "ITotalNitrogen_unfilteredE2"),
+  MaxDepth = c("MaxDepth", "IMaxDepthE2"),
+  Daylight_hours = c("daylight_hours", "Idaylight_hoursE2"),
+  Phyto_genus_richness = c("genus_richness", "Temperature:genus_richness", "Salinity:genus_richness", "TotalNitrogen_unfiltered:genus_richness"),
+  Phyto_evenness = c("phyto_evenness", "Temperature:phyto_evenness", "Salinity:phyto_evenness", "TotalNitrogen_unfiltered:phyto_evenness" ),
+  Phyto_FEve = c("phyto_FEve_ZRUE", "Temperature:phyto_FEve_ZRUE", "Salinity:phyto_FEve_ZRUE", "TotalNitrogen_unfiltered:phyto_FEve_ZRUE"),
+  Phyto_FDis = c("phyto_FDis_ZRUE", "Temperature:phyto_FDis_ZRUE", "Salinity:phyto_FDis_ZRUE", "TotalNitrogen_unfiltered:phyto_FDis_ZRUE"),
+  Cyano_dom = c("cyano_prop", "Temperature:cyano_prop", "Salinity:cyano_prop", "TotalNitrogen_unfiltered:cyano_prop"),
+  Zoo_species_richness = c("species_richness", "Temperature:species_richness", "Salinity:species_richness", "TotalNitrogen_unfiltered:species_richness"),
+  Zoo_evenness = c("zoo_evenness", "Temperature:zoo_evenness", "Salinity:zoo_evenness", "TotalNitrogen_unfiltered:zoo_evenness"),
+  Zoo_FEve = c("zoo_FEve", "Temperature:zoo_FEve", "Salinity:zoo_FEve", "TotalNitrogen_unfiltered:zoo_FEve"),
+  Zoo_FDis = c("zoo_FDis", "Temperature:zoo_FDis", "Salinity:zoo_FDis", "TotalNitrogen_unfiltered:zoo_FDis"),
+  Site = "Site_Id",
+  Year = "Year"
+)
 
 # define some needed parameters
 linear_terms <- unname(unlist(groups)) #flattened vector of all variable names
@@ -711,6 +981,108 @@ dimnames(K_V) <- list(
   iterations = NULL
 )
 
+# Detailed VP table
+# Map individual terms to the detailed table groups
+B_table <- sapply(
+  groups_table,
+  function(x) as.integer(linear_terms %in% x)
+)
+
+dimnames(B_table) <- list(
+  linear_terms = linear_terms,
+  groups = names(groups_table)
+)
+
+n_table_groups <- length(groups_table)
+
+# Grouped variance proportions:
+# group x region x iteration
+V_table <- array(
+  NA_real_,
+  dim = c(n_table_groups, n_cond, n_iter),
+  dimnames = list(
+    Group = names(groups_table),
+    Region = G,
+    Iteration = NULL
+  )
+)
+
+for (r in seq_len(n_cond)) {
+  for (i in seq_len(n_iter)) {
+    
+    K <- K_V[r, , , i]
+    
+    # Combine terms according to the TABLE grouping
+    K_group <- t(B_table) %*% K %*% B_table
+    
+    V_table[, r, i] <- diag(K_group) / sum(diag(K_group))
+  }
+}
+
+# Weight by model R², following your existing approach
+R2_model <- bayes_R2(model)
+R2_draws <- R2_model[, 1]
+
+V_table_weighted <- sweep(
+  V_table,
+  MARGIN = 3,
+  STATS = R2_draws,
+  FUN = "*"
+)
+
+# Summarise posterior draws
+vp_detailed_table <- expand.grid(
+  Group = names(groups_table),
+  Region = G,
+  KEEP.OUT.ATTRS = FALSE,
+  stringsAsFactors = FALSE
+)
+
+vp_detailed_table$MeanVP <- c(
+  apply(V_table_weighted, c(1, 2), mean, na.rm = TRUE)
+)
+
+vp_detailed_table$PosteriorSD <- c(
+  apply(V_table_weighted, c(1, 2), sd, na.rm = TRUE)
+)
+
+vp_detailed_table$Lower95 <- c(
+  apply(
+    V_table_weighted, c(1, 2),
+    quantile, probs = 0.025, na.rm = TRUE
+  )
+)
+
+vp_detailed_table$Upper95 <- c(
+  apply(
+    V_table_weighted, c(1, 2),
+    quantile, probs = 0.975, na.rm = TRUE
+  )
+)
+
+# Preserve the order specified in groups_table
+vp_detailed_table <- vp_detailed_table %>%
+  mutate(
+    Group = factor(Group, levels = names(groups_table)),
+    MeanVP = round(MeanVP, 4),
+    PosteriorSD = round(PosteriorSD, 4),
+    Lower95 = round(Lower95, 4),
+    Upper95 = round(Upper95, 4)
+  ) %>%
+  arrange(Region, Group)
+
+# Print table
+options(na.print = "NA")
+print(as.data.frame(vp_detailed_table), row.names = FALSE)
+
+# Export table
+setwd("~/GitHub/PlanktonRUE-Project/Results")
+write.csv(
+  vp_detailed_table,
+  "Region_VP_zooRUE.csv",
+  row.names = FALSE
+)
+
 # Collapse by group
 B <- sapply(groups, function(x) as.integer(linear_terms %in% x))
 dimnames(B) <- list(linear_terms = linear_terms, groups = colnames(B))
@@ -731,11 +1103,11 @@ V_cond <- apply(K_V, c('condition', 'iterations'), function(x) diag(x)/sum(diag(
 R2_model = bayes_R2(model)
 R2_model[,1]  # we keep only the estimate although the uncertainy can be sometimes interesting it would be a bit complex and out of subject for you I guess
 
-dim(V_cond) #  covar   10    cond  4     mcmc samples 8000
+dim(V_cond) #  covar   11    cond  4     mcmc samples 8000
 
 # create a weighting matrix of same dimension as you data (particularly good if you have also multiple species but here it is ok still)
-varr <- aperm(array(R2_model[,1], dim = c(8000L, 4L, 10L)), perm = c(3L, 2L, 1L)) # check the dimensions carefully 10 covar (1L) 4 conditions (4L) for 8000 samples (2L)
-dim(varr)  # [1]   10   4 8000
+varr <- aperm(array(R2_model[,1], dim = c(8000L, 4L, 11L)), perm = c(3L, 2L, 1L)) # check the dimensions carefully 11 covar (1L) 4 conditions (4L) for 8000 samples (2L)
+dim(varr)  # [1]   11   4 8000
 
 V_condweighted = V_cond*varr
 
@@ -774,9 +1146,9 @@ setwd("~/GitHub/PlanktonRUE-Project/Figures/VP_plots")
 vp_zooRUE_regionW <- ggplot(dataW_long, aes(x = rows, y = value, fill = rows)) +
   geom_violin(position="dodge", trim=F, scale="width", draw_quantiles=c(0.25,0.5,0.75), linewidth = 0.25) +
   scale_x_discrete(labels = label_names, guide = guide_axis(n.dodge = 2)) +
-  scale_fill_manual(values=c('royalblue3','#278B9AFF','#44A57CFF','#819A7AFF','#58A449FF', '#403369FF','#5C5992FF','#AE93BEFF','#F7EABDFF','salmon2','gold3')) +
+  scale_fill_manual(values=c("royalblue3", "#278B9AFF", "#274637FF", "#44A57CFF", "#819A7AFF", "#58A449FF", "#403369FF", "#9F99B5FF", "#5C5992FF", "#AE93BEFF", "gold3")) +
   facet_grid(condition ~ .) +
-  coord_cartesian(ylim = c(0, 1)) +
+  coord_cartesian(ylim = c(0, 0.8)) +
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 1, size = 8, lineheight = 0.85),
@@ -801,4 +1173,4 @@ combined_plot
 
 ggsave("VP_region_combined_r2.png",
        plot = combined_plot,
-       width = 16, height = 7, dpi = 300)
+       width = 16, height = 10, dpi = 300)

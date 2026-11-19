@@ -3,7 +3,7 @@ library(suncalc)
 library(dplyr)
 
 setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
-load('plankton_RUE_data5_260309.RDATA')
+load('plankton_RUE_data5_260916.RDATA')
 
 #calculate Daylight hours ...............................................
 plankton_RUE_data6 <- plankton_RUE_data5
@@ -20,5 +20,5 @@ sun$daylight_hours <- as.numeric(
 
 plankton_RUE_data6$daylight_hours <- sun$daylight_hours
 
-save(plankton_RUE_data6, file = 'plankton_RUE_data6_260309.RDATA')
+save(plankton_RUE_data6, file = 'plankton_RUE_data6_260916.RDATA')
 

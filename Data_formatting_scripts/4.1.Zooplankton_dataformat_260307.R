@@ -19,7 +19,7 @@ rm(list = ls())
 setwd("~/GitHub/PlanktonRUE-Project/Data/Zooplankton/Zooplankton_data_Syke")
 
 setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/RDATA")
-load('RUE_biomass_com_260307.RDATA')
+load('RUE_biomass_com_260915.RDATA')
 load('Zooplankton_REC_clean3_260307.RDATA')
 
 ################################################################################
@@ -176,7 +176,7 @@ n_sites
 
 #calculate total Btot for zooplankton#........................................
 filtered_plankton_data2<-final_df
-filtered_plankton_data2$zoo_Btot <- rowSums(filtered_plankton_data2[, 109:159]) 
+filtered_plankton_data2$zoo_Btot <- rowSums(filtered_plankton_data2[, 112:162]) 
 
 #RUE calculation
 filtered_plankton_data2 <- filtered_plankton_data2 %>%
@@ -194,13 +194,13 @@ plankton_RUE_data <- filtered_plankton_data2 %>%
   select(-c(Date_zoo)) %>%
   rename(Date = Date_env)
 
-save(plankton_RUE_data, file = 'plankton_RUE_data_260307.RDATA')
+save(plankton_RUE_data, file = 'plankton_RUE_data_260915.RDATA')
 
 #remove species with zero biomass #.............................................
-load("plankton_RUE_data_260307.RDATA")
+load("plankton_RUE_data_260915.RDATA")
 # Columns you want to always keep (metadata + Btot etc.)
-keep_cols <- 1:107
-extra_cols <- 159:163
+keep_cols <- 1:110
+extra_cols <- 162:166
 
 # Define species columns (everything else except keep_cols and extra_cols)
 species_cols <- setdiff(1:ncol(plankton_RUE_data), c(keep_cols, extra_cols))
@@ -215,9 +215,15 @@ plankton_RUE_data_filtered <- plankton_RUE_data[, c(keep_cols, extra_cols, nonze
 removed_species <- species_cols[!(species_cols %in% nonzero_species)]
 removed_species_names <- colnames(plankton_RUE_data)[removed_species]
 removed_species_names
+# [1] "Mysidae higher_taxonomic_level_z" "Mysis spp._z"                    
+# [3] "Mysis relicta_z"                  "Mysis mixta_z"                   
+# [5] "Alona spp._z"                     "Centropages spp._z"              
+# [7] "Aurelia aurita_z"                 "Diaphanosoma spp._z"             
+# [9] "Thermocyclops dybowskii_z"        "Mesocyclops leuckarti_z"         
+# [11] "Thermocyclops oithonoides_z"     
 
 plankton_RUE_data2 <- plankton_RUE_data_filtered
-save(plankton_RUE_data2, file = 'plankton_RUE_data2_260307.RDATA')
+save(plankton_RUE_data2, file = 'plankton_RUE_data2_260915.RDATA')
 
 ### plot data ############......................................................
 ###plot points##

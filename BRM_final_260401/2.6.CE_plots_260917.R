@@ -75,14 +75,19 @@ plot_ce_simple <- function(var, model, resp = NULL,
 }
 
 abiotic_vars <- c("Temperature", "Salinity", "pH", "TotalNitrogen_unfiltered", "MaxDepth", 
-                  "Zooplankton_MaxDepth", "daylight_hours")
-phyto_vars <- c("genus_richness", "FEve", "FDis", "cyano_prop",
+                  "Zooplankton_MaxDepth", "DOY", "daylight_hours")
+phyto_vars <- c("genus_richness", "phyto_evenness", "phyto_FEve_ZD", "phyto_FDis_ZD", "phyto_FEve_PRUE", 
+                "phyto_FDis_PRUE", "phyto_FEve_ZRUE", "phyto_FDis_ZRUE", "cyano_prop",
                 "genus_richness:Temperature", "genus_richness:Salinity", "genus_richness:TotalNitrogen_unfiltered",
-                "FEve:Temperature", "FEve:Salinity",  "FEve:TotalNitrogen_unfiltered", 
-                "FDis:Temperature", "FDis:Salinity",  "FDis:TotalNitrogen_unfiltered",
+                "phyto_evenness:Temperature", "phyto_evenness:Salinity", "phyto_evenness:TotalNitrogen_unfiltered",
+                "phyto_FEve_PRUE:Temperature", "phyto_FEve_PRUE:Salinity",  "phyto_FEve_PRUE:TotalNitrogen_unfiltered", 
+                "phyto_FDis_PRUE:Temperature", "phyto_FDis_PRUE:Salinity",  "phyto_FDis_PRUE:TotalNitrogen_unfiltered",
+                "phyto_FEve_ZRUE:Temperature", "phyto_FEve_ZRUE:Salinity",  "phyto_FEve_ZRUE:TotalNitrogen_unfiltered", 
+                "phyto_FDis_ZRUE:Temperature", "phyto_FDis_ZRUE:Salinity",  "phyto_FDis_ZRUE:TotalNitrogen_unfiltered",
                 "cyano_prop:Temperature", "cyano_prop:Salinity", "cyano_prop:TotalNitrogen_unfiltered")
-zoo_vars <- c("species_richness", "zoo_FEve", "zoo_FDis",
+zoo_vars <- c("species_richness", "zoo_evenness", "zoo_FEve", "zoo_FDis",
               "species_richness:Temperature", "species_richness:Salinity", "species_richness:TotalNitrogen_unfiltered",
+              "zoo_evenness:Temperature", "zoo_evenness:Salinity", "zoo_evenness:TotalNitrogen_unfiltered",
               "zoo_FEve:Temperature", "zoo_FEve:Salinity", "zoo_FEve:TotalNitrogen_unfiltered",
               "zoo_FDis:Temperature", "zoo_FDis:Salinity", "zoo_FDis:TotalNitrogen_unfiltered")
 
@@ -101,21 +106,21 @@ get_group_color <- function(var) {
 
 #Phyto genus richness #--------------------------------------------------
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load("BRM_phyto_GD_P_260604.RDATA")
+load("BRM_phyto_GD_P_260916.RDATA")
 
 p1 <- plot_ce_simple("Temperature", model, "genus_richness", xlab = "Temperature", 
-                     ylab = "Phytoplankton genus richness", title = "Temperature")
+                     ylab = "Phytoplankton Genus Richness", title = "Temperature")
 p2 <- plot_ce_simple("Salinity", model, "genus_richness", xlab = "Salinity", 
-                     ylab = "Phytoplankton genus richness", title = "Salinity")
+                     ylab = "Phytoplankton Genus Richness", title = "Salinity")
 p3 <- plot_ce_simple("pH", model, "genus_richness",xlab = "pH", 
-                     ylab = "Phytoplankton genus richness", title = "pH")
+                     ylab = "Phytoplankton Genus Richness", title = "pH")
 p4 <- plot_ce_simple("TotalNitrogen_unfiltered", model, "genus_richness",
                      xlab = "Nitrogen concentrations", 
-                     ylab = "Phytoplankton genus richness", title = "Nitrogen concentrations")
+                     ylab = "Phytoplankton Genus Richness", title = "Nitrogen concentrations")
 p5 <- plot_ce_simple("MaxDepth", model, "genus_richness", xlab = "Depth", 
-                      ylab = "Phytoplankton genus richness", title = "Depth")
+                     ylab = "Phytoplankton Genus Richness", title = "Depth")
 p6 <- plot_ce_simple("daylight_hours", model, "genus_richness", xlab = "Daylight Hours", 
-                      ylab = "Phytoplankton genus richness", title = "Daylight Hours")
+                     ylab = "Phytoplankton Genus Richness", title = "Daylight Hours")
 
 combined_plot <- wrap_plots(
   p1, p2, p3, p4,
@@ -127,25 +132,56 @@ combined_plot <- wrap_plots(
 combined_plot
 
 setwd("~/GitHub/PlanktonRUE-Project/Figures/CE_plots")
-ggsave("CE_Phyto_GD.png", 
+ggsave("CE_Phyto_Genus_Richness.png", 
+       plot = combined_plot, width = 20, height = 8, dpi = 300, device = ragg::agg_png)
+
+#Phyto shannon evenness #--------------------------------------------------
+setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
+load("BRM_phyto_SE_P_260916.RDATA")
+
+p1 <- plot_ce_simple("Temperature", model, "phyto_evenness", xlab = "Temperature", 
+                     ylab = "Phytoplankton Evenness", title = "Temperature")
+p2 <- plot_ce_simple("Salinity", model, "phyto_evenness", xlab = "Salinity", 
+                     ylab = "Phytoplankton Evenness", title = "Salinity")
+p3 <- plot_ce_simple("pH", model, "phyto_evenness",xlab = "pH", 
+                     ylab = "Phytoplankton Evenness", title = "pH")
+p4 <- plot_ce_simple("TotalNitrogen_unfiltered", model, "phyto_evenness",
+                     xlab = "Nitrogen concentrations", 
+                     ylab = "Phytoplankton Evenness", title = "Nitrogen concentrations")
+p5 <- plot_ce_simple("MaxDepth", model, "phyto_evenness", xlab = "Depth", 
+                      ylab = "Phytoplankton Evenness", title = "Depth")
+p6 <- plot_ce_simple("daylight_hours", model, "phyto_evenness", xlab = "Daylight Hours", 
+                      ylab = "Phytoplankton Evenness", title = "Daylight Hours")
+
+combined_plot <- wrap_plots(
+  p1, p2, p3, p4,
+  p5, p6,
+  
+  ncol = 4
+)
+
+combined_plot
+
+setwd("~/GitHub/PlanktonRUE-Project/Figures/CE_plots")
+ggsave("CE_Phyto_SE.png", 
        plot = combined_plot, width = 20, height = 8, dpi = 300, device = ragg::agg_png)
 
 #Phyto FEve #-----------------------------------------------------------------
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load("BRM_phyto_FEve_P_260604.RDATA")
+load("BRM_phyto_FEve_P_260916.RDATA")
 
-p1 <- plot_ce_simple("Temperature", model, "FEve", xlab = "Temperature", 
+p1 <- plot_ce_simple("Temperature", model, "phyto_FEve_PD", xlab = "Temperature", 
                      ylab = "Phytoplankton FEve", title = "Temperature")
-p2 <- plot_ce_simple("Salinity", model, "FEve", xlab = "Salinity", 
+p2 <- plot_ce_simple("Salinity", model, "phyto_FEve_PD", xlab = "Salinity", 
                      ylab = "Phytoplankton FEve", title = "Salinity")
-p3 <- plot_ce_simple("pH", model, "FEve",xlab = "pH", 
+p3 <- plot_ce_simple("pH", model, "phyto_FEve_PD",xlab = "pH", 
                      ylab = "Phytoplankton FEve", title = "pH")
-p4 <- plot_ce_simple("TotalNitrogen_unfiltered", model, "FEve",
+p4 <- plot_ce_simple("TotalNitrogen_unfiltered", model, "phyto_FEve_PD",
                      xlab = "Nitrogen concentrations", 
                      ylab = "Phytoplankton FEve", title = "Nitrogen concentrations")
-p5 <- plot_ce_simple("MaxDepth", model, "FEve", xlab = "Depth", 
+p5 <- plot_ce_simple("MaxDepth", model, "phyto_FEve_PD", xlab = "Depth", 
                      ylab = "Phytoplankton FEve", title = "Depth")
-p6 <- plot_ce_simple("daylight_hours", model, "FEve", xlab = "Daylight Hours", 
+p6 <- plot_ce_simple("daylight_hours", model, "phyto_FEve_PD", xlab = "Daylight Hours", 
                      ylab = "Phytoplankton FEve", title = "Daylight Hours")
 
 combined_plot <- wrap_plots(
@@ -163,20 +199,20 @@ ggsave("CE_Phyto_FEve.png",
 
 #Phyto FDis #-----------------------------------------------------------------
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load("BRM_phyto_FDis_P_260604.RDATA")
+load("BRM_phyto_FDis_P_260916.RDATA")
 
-p1 <- plot_ce_simple("Temperature", model, "FDis", xlab = "Temperature", 
+p1 <- plot_ce_simple("Temperature", model, "phyto_FDis_PD", xlab = "Temperature", 
                      ylab = "Phytoplankton FDis", title = "Temperature")
-p2 <- plot_ce_simple("Salinity", model, "FDis", xlab = "Salinity", 
+p2 <- plot_ce_simple("Salinity", model, "phyto_FDis_PD", xlab = "Salinity", 
                      ylab = "Phytoplankton FDis", title = "Salinity")
-p3 <- plot_ce_simple("pH", model, "FDis",xlab = "pH", 
+p3 <- plot_ce_simple("pH", model, "phyto_FDis_PD",xlab = "pH", 
                      ylab = "Phytoplankton FDis", title = "pH")
-p4 <- plot_ce_simple("TotalNitrogen_unfiltered", model, "FDis",
+p4 <- plot_ce_simple("TotalNitrogen_unfiltered", model, "phyto_FDis_PD",
                      xlab = "Nitrogen concentrations", 
                      ylab = "Phytoplankton FDis", title = "Nitrogen concentrations")
-p5 <- plot_ce_simple("MaxDepth", model, "FDis", xlab = "Depth", 
+p5 <- plot_ce_simple("MaxDepth", model, "phyto_FDis_PD", xlab = "Depth", 
                      ylab = "Phytoplankton FDis", title = "Depth")
-p6 <- plot_ce_simple("daylight_hours", model, "FDis", xlab = "Daylight Hours", 
+p6 <- plot_ce_simple("daylight_hours", model, "phyto_FDis_PD", xlab = "Daylight Hours", 
                      ylab = "Phytoplankton FDis", title = "Daylight Hours")
 
 combined_plot <- wrap_plots(
@@ -194,7 +230,7 @@ ggsave("CE_Phyto_FDis.png",
 
 #Cyanobacteria Dominance #------------------------------------------------------
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load("BRM_cyanodom_P_260604_Z.RDATA")
+load("BRM_cyanodom_P_261009_z.RDATA")
 
 p1 <- plot_ce_simple("Temperature", model, "cyano_prop", xlab = "Temperature", 
                      ylab = "Cyanobacteria Dominance", title = "Temperature")
@@ -223,9 +259,9 @@ setwd("~/GitHub/PlanktonRUE-Project/Figures/CE_plots")
 ggsave("CE_Phyto_CD.png", 
        plot = combined_plot, width = 20, height = 8, dpi = 300, device = ragg::agg_png)
 
-#Zooplankton Species richness #------------------------------------------------------
+#Zooplankton Species Richness #------------------------------------------------------
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load("BRM_zoo_SR_CD_P_260604.RDATA")
+load("BRM_zoo_SR_CD_P_261013_All.RDATA")
 
 p1 <- plot_ce_simple("Temperature", model, "species_richness", xlab = "Temperature", 
                      ylab = "Zooplankton Species Richness", title = "Temperature")
@@ -237,23 +273,26 @@ p4 <- plot_ce_simple("TotalNitrogen_unfiltered", model, "species_richness",
                      xlab = "Nitrogen concentrations", 
                      ylab = "Zooplankton Species Richness", title = "Nitrogen concentrations")
 p5 <- plot_ce_simple("genus_richness", model, "species_richness", 
-                     xlab = "Phytoplankton genus richness", ylab = "Zooplankton Species Richness", 
-                     title = "Phytoplankton genus richness")
-p6 <- plot_ce_simple("FEve", model, "species_richness", xlab = "Phytoplankton FEve", 
+                     xlab = "Phytoplankton Genus Richness", ylab = "Zooplankton Species Richness", 
+                     title = "Phytoplankton Genus Richness")
+p6 <- plot_ce_simple("phyto_evenness", model, "species_richness", 
+                     xlab = "Phytoplankton Evenness", ylab = "Zooplankton Species Richness", 
+                     title = "Phytoplankton Evenness")
+p7 <- plot_ce_simple("phyto_FEve_ZD", model, "species_richness", xlab = "Phytoplankton FEve", 
                      ylab = "Zooplankton Species Richness", title = "Phytoplankton FEve")
-p7 <- plot_ce_simple("FDis", model, "species_richness", xlab = "Phytoplankton FDis", 
+p8 <- plot_ce_simple("phyto_FDis_ZD", model, "species_richness", xlab = "Phytoplankton FDis", 
                      ylab = "Zooplankton Species Richness", title = "Phytoplankton FDis")
-p8 <- plot_ce_simple("cyano_prop", model, "species_richness", xlab = "Cyanobacteria Dominance", 
+p9 <- plot_ce_simple("cyano_prop", model, "species_richness", xlab = "Cyanobacteria Dominance", 
                      ylab = "Zooplankton Species Richness", title = "Cyanobacteria Dominance")
-p9 <- plot_ce_simple("Zooplankton_MaxDepth", model, "species_richness", xlab = "Depth", 
+p10 <- plot_ce_simple("Zooplankton_MaxDepth", model, "species_richness", xlab = "Depth", 
                      ylab = "Zooplankton Species Richness", title = "Depth")
-p10 <- plot_ce_simple("daylight_hours", model, "species_richness", xlab = "Daylight Hours", 
-                     ylab = "Zooplankton Species Richness", title = "Daylight Hours")
+p11 <- plot_ce_simple("daylight_hours", model, "species_richness", xlab = "Daylight Hours", 
+                      ylab = "Zooplankton Species Richness", title = "Daylight Hours")
 
 combined_plot <- wrap_plots(
   p1, p2, p3, p4, 
   p5, p6, p7, p8, 
-  p9, p10,
+  p9, p10, p11,
   
   ncol = 4
 )
@@ -261,12 +300,56 @@ combined_plot <- wrap_plots(
 combined_plot
 
 setwd("~/GitHub/PlanktonRUE-Project/Figures/CE_plots")
-ggsave("CE_Zoo_SD.png", 
+ggsave("CE_Zoo_Species_Richness.png", 
+       plot = combined_plot, width = 20, height = 10, dpi = 300, device = ragg::agg_png)
+
+#Zooplankton Shannon Evennesss #------------------------------------------------------
+setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
+load("BRM_zoo_SE_CD_P_261013_All.RDATA")
+
+p1 <- plot_ce_simple("Temperature", model, "zoo_evenness", xlab = "Temperature", 
+                     ylab = "Zooplankton Evenness", title = "Temperature")
+p2 <- plot_ce_simple("Salinity", model, "zoo_evenness", xlab = "Salinity", 
+                     ylab = "Zooplankton Evenness", title = "Salinity")
+p3 <- plot_ce_simple("pH", model, "zoo_evenness",xlab = "pH", 
+                     ylab = "Zooplankton Evenness", title = "pH")
+p4 <- plot_ce_simple("TotalNitrogen_unfiltered", model, "zoo_evenness",
+                     xlab = "Nitrogen concentrations", 
+                     ylab = "Zooplankton Evenness", title = "Nitrogen concentrations")
+p5 <- plot_ce_simple("genus_richness", model, "zoo_evenness", 
+                     xlab = "Phytoplankton Genus Richness", ylab = "Zooplankton Evenness", 
+                     title = "Phytoplankton Genus Richness")
+p6 <- plot_ce_simple("phyto_evenness", model, "zoo_evenness", 
+                     xlab = "Phytoplankton Evenness", ylab = "Zooplankton Evenness", 
+                     title = "Phytoplankton Evenness")
+p7 <- plot_ce_simple("phyto_FEve_ZD", model, "zoo_evenness", xlab = "Phytoplankton FEve", 
+                     ylab = "Zooplankton Evenness", title = "Phytoplankton FEve")
+p8 <- plot_ce_simple("phyto_FDis_ZD", model, "zoo_evenness", xlab = "Phytoplankton FDis", 
+                     ylab = "Zooplankton Evenness", title = "Phytoplankton FDis")
+p9 <- plot_ce_simple("cyano_prop", model, "zoo_evenness", xlab = "Cyanobacteria Dominance", 
+                     ylab = "Zooplankton Evenness", title = "Cyanobacteria Dominance")
+p10 <- plot_ce_simple("Zooplankton_MaxDepth", model, "zoo_evenness", xlab = "Depth", 
+                     ylab = "Zooplankton Evenness", title = "Depth")
+p11 <- plot_ce_simple("daylight_hours", model, "zoo_evenness", xlab = "Daylight Hours", 
+                     ylab = "Zooplankton Evenness", title = "Daylight Hours")
+
+combined_plot <- wrap_plots(
+  p1, p2, p3, p4, 
+  p5, p6, p7, p8, 
+  p9, p10, p11,
+  
+  ncol = 4
+)
+
+combined_plot
+
+setwd("~/GitHub/PlanktonRUE-Project/Figures/CE_plots")
+ggsave("CE_Zoo_SE.png", 
        plot = combined_plot, width = 20, height = 10, dpi = 300, device = ragg::agg_png)
 
 #Zooplankton FEve #-------------------------------------------------------------
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load("BRM_zoo_FE_CD_P_260604.RDATA")
+load("BRM_zoo_FE_CD_P_261013_All.RDATA")
 
 p1 <- plot_ce_simple("Temperature", model, "zoo_FEve", xlab = "Temperature", 
                      ylab = "Zooplankton FEve", title = "Temperature")
@@ -278,23 +361,26 @@ p4 <- plot_ce_simple("TotalNitrogen_unfiltered", model, "zoo_FEve",
                      xlab = "Nitrogen concentrations", 
                      ylab = "Zooplankton FEve", title = "Nitrogen concentrations")
 p5 <- plot_ce_simple("genus_richness", model, "zoo_FEve", 
-                     xlab = "Phytoplankton genus richness", ylab = "Zooplankton FEve", 
-                     title = "Phytoplankton genus richness")
-p6 <- plot_ce_simple("FEve", model, "zoo_FEve", xlab = "Phytoplankton FEve", 
+                     xlab = "Phytoplankton Genus Richness", ylab = "Zooplankton FEve", 
+                     title = "Phytoplankton Genus Richness")
+p6 <- plot_ce_simple("phyto_evenness", model, "zoo_FEve", 
+                     xlab = "Phytoplankton Evenness", ylab = "Zooplankton FEve", 
+                     title = "Phytoplankton Evenness")
+p7 <- plot_ce_simple("phyto_FEve_ZD", model, "zoo_FEve", xlab = "Phytoplankton FEve", 
                      ylab = "Zooplankton FEve", title = "Phytoplankton FEve")
-p7 <- plot_ce_simple("FDis", model, "zoo_FEve", xlab = "Phytoplankton FDis", 
+p8 <- plot_ce_simple("phyto_FDis_ZD", model, "zoo_FEve", xlab = "Phytoplankton FDis", 
                      ylab = "Zooplankton FEve", title = "Phytoplankton FDis")
-p8 <- plot_ce_simple("cyano_prop", model, "zoo_FEve", xlab = "Cyanobacteria Dominance", 
+p9 <- plot_ce_simple("cyano_prop", model, "zoo_FEve", xlab = "Cyanobacteria Dominance", 
                      ylab = "Zooplankton FEve", title = "Cyanobacteria Dominance")
-p9 <- plot_ce_simple("Zooplankton_MaxDepth", model, "zoo_FEve", xlab = "Depth", 
+p10 <- plot_ce_simple("Zooplankton_MaxDepth", model, "zoo_FEve", xlab = "Depth", 
                      ylab = "Zooplankton FEve", title = "Depth")
-p10 <- plot_ce_simple("daylight_hours", model, "zoo_FEve", xlab = "Daylight Hours", 
+p11 <- plot_ce_simple("daylight_hours", model, "zoo_FEve", xlab = "Daylight Hours", 
                       ylab = "Zooplankton FEve", title = "Daylight Hours")
 
 combined_plot <- wrap_plots(
   p1, p2, p3, p4, 
   p5, p6, p7, p8, 
-  p9, p10,
+  p9, p10, p11,
   
   ncol = 4
 )
@@ -307,7 +393,7 @@ ggsave("CE_Zoo_FEve.png",
 
 #Zooplankton FDis #-------------------------------------------------------------
 setwd("~/GitHub/PlanktonRUE-Project/BRM_final_260401/RDATA")
-load("BRM_zoo_FD_CD_P_260604.RDATA")
+load("BRM_zoo_FD_CD_P_261013_All.RDATA")
 
 p1 <- plot_ce_simple("Temperature", model, "zoo_FDis", xlab = "Temperature", 
                      ylab = "Zooplankton FDis", title = "Temperature")
@@ -319,23 +405,26 @@ p4 <- plot_ce_simple("TotalNitrogen_unfiltered", model, "zoo_FDis",
                      xlab = "Nitrogen concentrations", 
                      ylab = "Zooplankton FDis", title = "Nitrogen concentrations")
 p5 <- plot_ce_simple("genus_richness", model, "zoo_FDis", 
-                     xlab = "Phytoplankton genus richness", ylab = "Zooplankton FDis", 
-                     title = "Phytoplankton genus richness")
-p6 <- plot_ce_simple("FEve", model, "zoo_FDis", xlab = "Phytoplankton FEve", 
+                     xlab = "Phytoplankton Genus Richness", ylab = "Zooplankton FDis", 
+                     title = "Phytoplankton Genus Richness")
+p6 <- plot_ce_simple("phyto_evenness", model, "zoo_FDis", 
+                     xlab = "Phytoplankton Evenness", ylab = "Zooplankton FDis", 
+                     title = "Phytoplankton Evenness")
+p7 <- plot_ce_simple("phyto_FEve_ZD", model, "zoo_FDis", xlab = "Phytoplankton FEve", 
                      ylab = "Zooplankton FDis", title = "Phytoplankton FEve")
-p7 <- plot_ce_simple("FDis", model, "zoo_FDis", xlab = "Phytoplankton FDis", 
+p8 <- plot_ce_simple("phyto_FDis_ZD", model, "zoo_FDis", xlab = "Phytoplankton FDis", 
                      ylab = "Zooplankton FDis", title = "Phytoplankton FDis")
-p8 <- plot_ce_simple("cyano_prop", model, "zoo_FDis", xlab = "Cyanobacteria Dominance", 
+p9 <- plot_ce_simple("cyano_prop", model, "zoo_FDis", xlab = "Cyanobacteria Dominance", 
                      ylab = "Zooplankton FDis", title = "Cyanobacteria Dominance")
-p9 <- plot_ce_simple("Zooplankton_MaxDepth", model, "zoo_FDis", xlab = "Depth", 
+p10 <- plot_ce_simple("Zooplankton_MaxDepth", model, "zoo_FDis", xlab = "Depth", 
                      ylab = "Zooplankton FDis", title = "Depth")
-p10 <- plot_ce_simple("daylight_hours", model, "zoo_FDis", xlab = "Daylight Hours", 
+p11 <- plot_ce_simple("daylight_hours", model, "zoo_FDis", xlab = "Daylight Hours", 
                       ylab = "Zooplankton FDis", title = "Daylight Hours")
 
 combined_plot <- wrap_plots(
   p1, p2, p3, p4, 
   p5, p6, p7, p8, 
-  p9, p10,
+  p9, p10, p11,
   
   ncol = 4
 )

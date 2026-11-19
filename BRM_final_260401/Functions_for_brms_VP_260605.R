@@ -213,14 +213,16 @@ wit_btw_lin_term_cov <- function(params, H, X, y) {
 
 
 
-vp_plot <- function(x, col = 'grey80', nm, main, las =1) {
+vp_plot <- function(x, col = 'grey80', nm, main, las =1, ylab = "", ylim = NULL) {
   vp <- as.data.frame(aperm(x, c('iterations', 'variance')))
   colnames(vp) <- nm
   
-  if (max(vp) <= 1 & min(vp) >= 0) {
-    ylim <- 0:1
-  } else {
-    ylim <- NULL
+  if (is.null(ylim)) {
+    if (max(vp) <= 1 & min(vp) >= 0) {
+      ylim <- c(0, 1)
+    } else {
+      ylim <- NULL
+    }
   }
   
   vioplot(
@@ -230,7 +232,8 @@ vp_plot <- function(x, col = 'grey80', nm, main, las =1) {
     drawRect = TRUE,
     pchMed = NA,
     ylim = ylim,
-    main = main
+    main = main,
+    ylab = ylab
   )
 }
 
