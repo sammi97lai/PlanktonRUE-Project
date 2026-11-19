@@ -16,10 +16,10 @@ library(corrplot)
 
 rm(list = ls())
 
-setwd("~/GitHub/PlanktonRUE-Project/spatial_sensitivity_analysis/Larger_radius/RDATA")
-load('plankton_RUE_data_scaled_260408.RDATA')
+setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/spatial_sensitivity_analysis/Larger_radius/RDATA")
+load('plankton_RUE_data_scaled_260526.RDATA')
 
-setwd("~/GitHub/PlanktonRUE-Project/spatial_sensitivity_analysis/Larger_radius/RDATA")
+setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/spatial_sensitivity_analysis/Larger_radius/RDATA")
 
 ################# Getting results for all models ################################
 
@@ -27,14 +27,14 @@ setwd("~/GitHub/PlanktonRUE-Project/spatial_sensitivity_analysis/Larger_radius/R
 # for phytoplankton div models
 # Automatic output folder
 date_tag <- format(Sys.Date(), "%Y%m%d")
-outdir <- file.path("~/GitHub/PlanktonRUE-Project/spatial_sensitivity_analysis/Larger_radius/Results",
+outdir <- file.path("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/spatial_sensitivity_analysis/Larger_radius/Results",
                     paste0("BRM_phytodiv_results_", date_tag))
 dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
 cat("\n Results will be saved to:", outdir, "\n")
 
 # Load model list
-source("~/GitHub/PlanktonRUE-Project/spatial_sensitivity_analysis/Larger_radius/2.1.phytodiv_model_list.R")
+source("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/spatial_sensitivity_analysis/Larger_radius/2.1.phytodiv_model_list.R")
 
 # Check it loaded correctly
 length(model_list)
@@ -45,14 +45,14 @@ names(model_list[[1]])
 # for phytoplankton RUE models
 # Automatic output folder
 date_tag <- format(Sys.Date(), "%Y%m%d")
-outdir <- file.path("~/GitHub/PlanktonRUE-Project/spatial_sensitivity_analysis/Larger_radius/Results",
+outdir <- file.path("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/spatial_sensitivity_analysis/Larger_radius/Results",
                     paste0("BRM_phytoRUE_results_", date_tag))
 dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
 cat("\n Results will be saved to:", outdir, "\n")
 
 # Load model list
-source("~/GitHub/PlanktonRUE-Project/spatial_sensitivity_analysis/Larger_radius/2.2.phytoRUE_model_list.R")
+source("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/spatial_sensitivity_analysis/Larger_radius/2.2.phytoRUE_model_list.R")
 
 # Check it loaded correctly
 length(model_list)
@@ -63,14 +63,14 @@ names(model_list[[1]])
 # for zooplankton models
 # Automatic output folder
 date_tag <- format(Sys.Date(), "%Y%m%d")
-outdir <- file.path("~/GitHub/PlanktonRUE-Project/spatial_sensitivity_analysis/Larger_radius/Results",
+outdir <- file.path("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/spatial_sensitivity_analysis/Larger_radius/Results",
                     paste0("BRM_zoo_results_", date_tag))
 dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
 cat("\n Results will be saved to:", outdir, "\n")
 
 # Load model list
-source("~/GitHub/PlanktonRUE-Project/spatial_sensitivity_analysis/Larger_radius/2.3.zoo_model_list.R")
+source("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/spatial_sensitivity_analysis/Larger_radius/2.3.zoo_model_list.R")
 
 # Check it loaded correctly
 length(model_list)
@@ -81,14 +81,14 @@ names(model_list[[1]])
 # for cyanobacteria dominance models
 # Automatic output folder
 date_tag <- format(Sys.Date(), "%Y%m%d")
-outdir <- file.path("~/GitHub/PlanktonRUE-Project/spatial_sensitivity_analysis/Larger_radius/Results",
+outdir <- file.path("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/spatial_sensitivity_analysis/Larger_radius/Results",
                     paste0("BRM_cyanodom_results_", date_tag))
 dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
 cat("\n Results will be saved to:", outdir, "\n")
 
 # Load model list
-source("~/GitHub/PlanktonRUE-Project/spatial_sensitivity_analysis/Larger_radius/2.4.cyanodom_model_list.R")
+source("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/spatial_sensitivity_analysis/Larger_radius/2.4.cyanodom_model_list.R")
 
 # Check it loaded correctly
 length(model_list)
@@ -98,7 +98,7 @@ names(model_list[[1]])
 # =============================================================================
 # Function: Check beta trend from Emy's code
 # =============================================================================
-check_beta_trend<-function(LpredDeriv){
+check_beta_trend <-function(LpredDeriv){
   
   pn<-dim(LpredDeriv)[2]
   response = matrix(NA,nrow = nrow(LpredDeriv),ncol = 1)
@@ -202,8 +202,7 @@ classify_predictor <- function(model, data, var, n = 200) {
 # ===========================================================
 # Function: Full model analysis
 # ===========================================================
-analyze_model <- function(model_file, name, resp = NULL, predictors = NULL, 
-                          ncol_ce = 3, ce_title = NULL) {
+analyze_model <- function(model_file, name, resp = NULL, predictors = NULL) {
   
   cat("\n========================================\n")
   cat("Running model:", name, "\n")
@@ -228,7 +227,7 @@ analyze_model <- function(model_file, name, resp = NULL, predictors = NULL,
   # --- Summary sink ---
   summary_path <- file.path(outdir, paste0("summary_", name, ".txt"))
   sink(summary_path)
-  on.exit(sink(), add = TRUE)
+  
   cat("========================================\n")
   cat(" Model Summary -", name, "\n")
   cat("========================================\n\n")
@@ -274,14 +273,14 @@ analyze_model <- function(model_file, name, resp = NULL, predictors = NULL,
   cat("Calculating LOO and ELPD for model:", name, "\n")
   loo_res <- loo(m, moment_match = TRUE)
   
-  if (any(loo_res$diagnostics$pareto_k > 0.7, na.rm = TRUE)) {
-    message("High Pareto-k detected → running reloo() for ", name)
-    loo_res <- loo(
-      m,
-      reloo = TRUE,
-      cores = 1
-    )
-  }
+  # if (any(loo_res$diagnostics$pareto_k > 0.7, na.rm = TRUE)) {
+  #   message("High Pareto-k detected → running reloo() for ", name)
+  #   loo_res <- loo(
+  #     m,
+  #     reloo = TRUE,
+  #     cores = 1
+  #   )
+  # }
   
   sink(summary_path, append = TRUE)
   cat("\n\n========================================\n")
@@ -415,16 +414,20 @@ analyze_model <- function(model_file, name, resp = NULL, predictors = NULL,
   # --- Define predictor color groups ---
   abiotic_vars <- c("Temperature", "Salinity", "pH", "TotalNitrogen_unfiltered", "MaxDepth", 
                     "Zooplankton_MaxDepth", "DOY", "daylight_hours")
-  phyto_vars <- c("genus_richness", "FEve", "FDis", "cyano_prop",
+  phyto_vars <- c("genus_richness", "phyto_evenness", "phyto_FEve_PD", "phyto_FDis_PD", "phyto_FEve_ZD", "phyto_FDis_ZD", "phyto_FEve_PRUE", 
+                  "phyto_FDis_PRUE", "phyto_FEve_ZRUE", "phyto_FDis_ZRUE", "cyano_prop",
                   "genus_richness:Temperature", "genus_richness:Salinity", "genus_richness:TotalNitrogen_unfiltered",
-                  "FEve:Temperature", "FEve:Salinity",  "FEve:TotalNitrogen_unfiltered", 
-                  "FDis:Temperature", "FDis:Salinity",  "FDis:TotalNitrogen_unfiltered",
+                  "phyto_evenness:Temperature", "phyto_evenness:Salinity", "phyto_evenness:TotalNitrogen_unfiltered",
+                  "phyto_FEve_PRUE:Temperature", "phyto_FEve_PRUE:Salinity",  "phyto_FEve_PRUE:TotalNitrogen_unfiltered", 
+                  "phyto_FDis_PRUE:Temperature", "phyto_FDis_PRUE:Salinity",  "phyto_FDis_PRUE:TotalNitrogen_unfiltered",
+                  "phyto_FEve_ZRUE:Temperature", "phyto_FEve_ZRUE:Salinity",  "phyto_FEve_ZRUE:TotalNitrogen_unfiltered", 
+                  "phyto_FDis_ZRUE:Temperature", "phyto_FDis_ZRUE:Salinity",  "phyto_FDis_ZRUE:TotalNitrogen_unfiltered",
                   "cyano_prop:Temperature", "cyano_prop:Salinity", "cyano_prop:TotalNitrogen_unfiltered")
-  zoo_vars <- c("species_richness", "zoo_FEve", "zoo_FDis",
+  zoo_vars <- c("species_richness", "zoo_evenness", "zoo_FEve", "zoo_FDis",
                 "species_richness:Temperature", "species_richness:Salinity", "species_richness:TotalNitrogen_unfiltered",
+                "zoo_evenness:Temperature", "zoo_evenness:Salinity", "zoo_evenness:TotalNitrogen_unfiltered",
                 "zoo_FEve:Temperature", "zoo_FEve:Salinity", "zoo_FEve:TotalNitrogen_unfiltered",
-                "zoo_FDis:Temperature", "zoo_FDis:Salinity", "zoo_FDis:TotalNitrogen_unfiltered",
-                "mean_edibility_unweighted")
+                "zoo_FDis:Temperature", "zoo_FDis:Salinity", "zoo_FDis:TotalNitrogen_unfiltered")
   
   group_colors <- c(
     "Abiotic" = "#1f78b4",               
@@ -439,63 +442,6 @@ analyze_model <- function(model_file, name, resp = NULL, predictors = NULL,
     return("grey50")
   }
   
-  # --- Conditional Effects Plots ---
-  if (!is.null(predictors) && length(predictors) > 0) {
-    
-    available_resps <- tryCatch(names(m$resp), error = function(e) NULL)
-    if (!is.null(available_resps)) {
-      cat("Available responses in model:", paste(available_resps, collapse = ", "), "\n")
-    }
-    
-    plots <- lapply(predictors, function(var) {
-      ce_single <- tryCatch(
-        conditional_effects(m, effects = var, resp = resp),
-        error = function(e) {
-          message(paste("Skipping", var, ":", e$message))
-          return(NULL)
-        }
-      )
-      
-      if (is.null(ce_single)) return(NULL)
-      ce_plot_list <- plot(ce_single, plot = FALSE)
-      ce_plot <- ce_plot_list[[1]]
-      
-      rawdat <- m$data
-      if (!is.null(resp)) rawdat <- rawdat[!is.na(rawdat[[resp]]), ]
-      
-      group_color <- get_group_color(var)
-      
-      ce_plot +
-        # Add raw points only if not an interaction
-        {if(!grepl(":", var)) geom_point(
-          data = rawdat,
-          aes_string(x = var, y = resp),
-          inherit.aes = FALSE,
-          color = "black",
-          alpha = 0.3
-        ) else NULL} +
-        ggtitle(var) +
-        theme_minimal() +
-        theme(
-          plot.title = element_text(color = group_color, face = "bold"),
-          axis.title = element_text(color = group_color),
-          axis.text = element_text(color = "black")
-        )
-    })
-    
-    plots <- Filter(Negate(is.null), plots)
-    if (length(plots) > 0) {
-      combined_plot <- wrap_plots(plots, ncol = ncol_ce) +
-        plot_annotation(title = ce_title,
-                        theme = theme(plot.title = element_text(size = 10)))
-      fname <- paste0("CE_", name, "_", date_tag, ".png")
-      ggsave(file.path(outdir, fname),
-             plot = combined_plot, width = 14, height = 8, dpi = 300)
-      print(combined_plot)
-    } else {
-      message("No conditional effects plots were created for ", name)
-    }
-  }
   
   cat("Completed:", name, "\n\n")
   invisible(NULL)
@@ -510,9 +456,7 @@ for (mdl in model_list) {
       model_file = mdl$file,
       name = mdl$name,
       resp = mdl$resp,
-      predictors = mdl$predictors,
-      ncol_ce = mdl$ncol_ce,
-      ce_title = mdl$ce_title
+      predictors = mdl$predictors
     ),
     error = function(e) message("Error in ", mdl$name, ": ", e$message)
   )

@@ -2,7 +2,7 @@
 library(suncalc)
 library(dplyr)
 
-setwd("~/GitHub/PlanktonRUE-Project/spatial_sensitivity_analysis/Smaller_radius/RDATA")
+setwd("~/GitHub/PlanktonRUE-Project/Data_formatting_scripts/spatial_sensitivity_analysis/Smaller_radius/RDATA")
 load('plankton_RUE_data5_260526.RDATA')
 
 #calculate Daylight hours ...............................................
