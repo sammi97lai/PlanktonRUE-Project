@@ -1,0 +1,88 @@
+========================================
+ Model Summary - phytoRUEN_LI 
+========================================
+
+ Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: log_RUE_B_N ~ pH + MaxDepth + daylight_hours + genus_richness * Temperature + genus_richness * Salinity + genus_richness * TotalNitrogen_unfiltered + phyto_evenness * Temperature + phyto_evenness * Salinity + phyto_evenness * TotalNitrogen_unfiltered + phyto_FEve_PRUE * Temperature + phyto_FEve_PRUE * Salinity + phyto_FEve_PRUE * TotalNitrogen_unfiltered + phyto_FDis_PRUE * Temperature + phyto_FDis_PRUE * Salinity + phyto_FDis_PRUE * TotalNitrogen_unfiltered + species_richness * Temperature + species_richness * Salinity + species_richness * TotalNitrogen_unfiltered + zoo_evenness * Temperature + zoo_evenness * Salinity + zoo_evenness * TotalNitrogen_unfiltered + zoo_FEve * Temperature + zoo_FEve * Salinity + zoo_FEve * TotalNitrogen_unfiltered + zoo_FDis * Temperature + zoo_FDis * Salinity + zoo_FDis * TotalNitrogen_unfiltered + (1 | Year) + (1 | Site_Id) 
+   Data: plankton_RUE_data_scaled_RUE (Number of observations: 928) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Multilevel Hyperparameters:
+~Site_Id (Number of levels: 27) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     1.47      0.22     1.11     1.96 1.00     2242     3817
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.50      0.09     0.35     0.70 1.00     2403     4181
+
+Regression Coefficients:
+                                          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept                                     1.74      0.32     1.11     2.34 1.00     1481     2676
+pH                                            0.21      0.02     0.17     0.25 1.00    10321     5649
+MaxDepth                                     -0.00      0.03    -0.06     0.05 1.00    10734     5779
+daylight_hours                                0.08      0.02     0.04     0.12 1.00    10938     6804
+genus_richness                                0.09      0.02     0.05     0.13 1.00     9397     6618
+Temperature                                  -0.17      0.03    -0.24    -0.11 1.00     9204     6223
+Salinity                                      0.16      0.11    -0.05     0.36 1.00     5614     5657
+TotalNitrogen_unfiltered                      0.03      0.03    -0.03     0.10 1.00     8685     6284
+phyto_evenness                               -0.29      0.02    -0.34    -0.24 1.00     9783     6771
+phyto_FEve_PRUE                              -0.15      0.02    -0.19    -0.12 1.00    11345     6697
+phyto_FDis_PRUE                               0.04      0.03    -0.00     0.09 1.00    12463     7139
+species_richness                              0.03      0.02    -0.01     0.07 1.00    11353     5860
+zoo_evenness                                  0.01      0.03    -0.05     0.07 1.00     8433     6230
+zoo_FEve                                     -0.03      0.01    -0.06     0.00 1.00    12192     6142
+zoo_FDis                                     -0.04      0.03    -0.09     0.02 1.00     7873     6378
+genus_richness:Temperature                    0.05      0.02     0.02     0.09 1.00    10158     6560
+genus_richness:Salinity                       0.07      0.02     0.03     0.11 1.00    11009     6186
+genus_richness:TotalNitrogen_unfiltered      -0.07      0.02    -0.11    -0.04 1.00     9976     6465
+Temperature:phyto_evenness                   -0.03      0.02    -0.06     0.01 1.00     8306     6629
+Salinity:phyto_evenness                       0.07      0.02     0.03     0.12 1.00    11025     6876
+TotalNitrogen_unfiltered:phyto_evenness      -0.03      0.02    -0.07     0.00 1.00     8176     6660
+Temperature:phyto_FEve_PRUE                   0.05      0.02     0.02     0.09 1.00    12105     5604
+Salinity:phyto_FEve_PRUE                      0.04      0.02     0.01     0.07 1.00    10961     6281
+TotalNitrogen_unfiltered:phyto_FEve_PRUE      0.03      0.02    -0.00     0.07 1.00    11827     6372
+Temperature:phyto_FDis_PRUE                   0.09      0.03     0.04     0.14 1.00     8450     6588
+Salinity:phyto_FDis_PRUE                      0.12      0.03     0.06     0.17 1.00    10493     6053
+TotalNitrogen_unfiltered:phyto_FDis_PRUE     -0.01      0.02    -0.06     0.03 1.00     7854     5641
+Temperature:species_richness                 -0.01      0.02    -0.04     0.03 1.00    11043     6621
+Salinity:species_richness                    -0.03      0.02    -0.07     0.01 1.00    10662     6864
+TotalNitrogen_unfiltered:species_richness    -0.03      0.02    -0.07     0.00 1.00    10284     6419
+Temperature:zoo_evenness                     -0.21      0.03    -0.27    -0.14 1.00     8097     6517
+Salinity:zoo_evenness                        -0.09      0.03    -0.15    -0.03 1.00     9484     5899
+TotalNitrogen_unfiltered:zoo_evenness         0.13      0.03     0.07     0.19 1.00     8653     5905
+Temperature:zoo_FEve                         -0.03      0.02    -0.06     0.01 1.00    10713     6379
+Salinity:zoo_FEve                            -0.02      0.02    -0.05     0.02 1.00    12626     6390
+TotalNitrogen_unfiltered:zoo_FEve             0.01      0.02    -0.03     0.04 1.00    11550     6324
+Temperature:zoo_FDis                          0.18      0.03     0.12     0.25 1.00     8122     6110
+Salinity:zoo_FDis                             0.11      0.03     0.05     0.17 1.00     9643     6035
+TotalNitrogen_unfiltered:zoo_FDis            -0.14      0.03    -0.20    -0.09 1.00     8392     6662
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     0.38      0.01     0.36     0.40 1.00     9867     6019
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 928 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo   -471.3 27.9
+p_loo       101.3  7.3
+looic       942.5 55.8
+------
+MCSE of elpd_loo is 0.2.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.6, 1.3]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
