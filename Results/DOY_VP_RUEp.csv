@@ -1,0 +1,52 @@
+"Group","Region","MeanVP","PosteriorSD","Lower95","Upper95"
+"Temperature","Early season",0.1146,0.0289,0.0631,0.1757
+"Salinity","Early season",0.0185,0.0191,2e-04,0.0686
+"pH","Early season",0.0091,0.0049,0.0019,0.0202
+"Total_Nitrogen","Early season",0.0038,0.0043,0,0.015
+"MaxDepth","Early season",0.003,0.0027,1e-04,0.0102
+"Daylight_hours","Early season",0.075,0.018,0.0429,0.1133
+"Phyto_genus_richness","Early season",0.1385,0.0192,0.1022,0.1777
+"Phyto_evenness","Early season",0.0043,0.0025,7e-04,0.0105
+"Phyto_FEve","Early season",0.0107,0.0048,0.0036,0.0219
+"Phyto_FDis","Early season",0.0546,0.0155,0.0277,0.0878
+"Cyano_dom","Early season",0.0269,0.0118,0.0089,0.0542
+"Zoo_species_richness","Early season",0.0427,0.0111,0.0229,0.0663
+"oo_evenness","Early season",0.0072,0.0036,0.002,0.0157
+"Zoo_FEve","Early season",0.0137,0.0059,0.0044,0.0273
+"Zoo_FDis","Early season",0.0169,0.0077,0.0047,0.0344
+"Site","Early season",0.3095,0.0384,0.2346,0.3833
+"Year","Early season",0.0467,0.0105,0.0284,0.0694
+"Temperature","Summer",0.0308,0.0095,0.0152,0.052
+"Salinity","Summer",0.03,0.0268,6e-04,0.098
+"pH","Summer",0.0042,0.0023,8e-04,0.0094
+"Total_Nitrogen","Summer",0.0013,0.0012,0,0.0043
+"MaxDepth","Summer",0.0012,0.0013,0,0.0046
+"Daylight_hours","Summer",0.0011,5e-04,4e-04,0.0023
+"Phyto_genus_richness","Summer",0.0643,0.0085,0.0487,0.0816
+"Phyto_evenness","Summer",0.007,0.0041,0.0013,0.0168
+"Phyto_FEve","Summer",0.0066,0.0026,0.0025,0.0126
+"Phyto_FDis","Summer",0.012,0.0036,0.0059,0.02
+"Cyano_dom","Summer",0.0134,0.0036,0.0071,0.0213
+"Zoo_species_richness","Summer",0.0182,0.0051,0.0098,0.0297
+"oo_evenness","Summer",0.0093,0.0042,0.003,0.0192
+"Zoo_FEve","Summer",0.0092,0.004,0.0032,0.0185
+"Zoo_FDis","Summer",0.0085,0.0038,0.0026,0.0172
+"Site","Summer",0.5085,0.0353,0.4361,0.571
+"Year","Summer",0.17,0.0131,0.1444,0.1965
+"Temperature","Late season",0.0414,0.014,0.0185,0.0725
+"Salinity","Late season",0.0081,0.0086,1e-04,0.0308
+"pH","Late season",0.0017,0.001,3e-04,0.0041
+"Total_Nitrogen","Late season",0.0033,0.0038,0,0.0137
+"MaxDepth","Late season",0.0019,0.0025,0,0.009
+"Daylight_hours","Late season",0.3454,0.0403,0.2646,0.4236
+"Phyto_genus_richness","Late season",0.2348,0.0318,0.1748,0.2998
+"Phyto_evenness","Late season",0.0018,0.0016,3e-04,0.0061
+"Phyto_FEve","Late season",0.0053,0.0025,0.0018,0.0115
+"Phyto_FDis","Late season",0.0299,0.0159,0.006,0.0675
+"Cyano_dom","Late season",0.0183,0.0072,0.0066,0.0344
+"Zoo_species_richness","Late season",0.0275,0.009,0.0124,0.0481
+"oo_evenness","Late season",0.0045,0.0021,0.0014,0.0094
+"Zoo_FEve","Late season",0.0392,0.0177,0.0107,0.0797
+"Zoo_FDis","Late season",0.0156,0.0084,0.0035,0.0359
+"Site","Late season",0.0376,0.0163,0.0116,0.0747
+"Year","Late season",0.0792,0.0193,0.0454,0.1199
