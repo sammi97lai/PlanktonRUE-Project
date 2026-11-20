@@ -58,14 +58,18 @@ scale reduction factor on split chains (at convergence, Rhat = 1).
 Computed from 8000 by 890 log-likelihood matrix.
 
          Estimate   SE
-elpd_loo    774.5 46.0
-p_loo        66.6  6.1
-looic     -1549.0 91.9
+elpd_loo    774.3 46.0
+p_loo        66.8  6.2
+looic     -1548.6 92.0
 ------
-MCSE of elpd_loo is 0.2.
+MCSE of elpd_loo is NA.
 MCSE and ESS estimates assume MCMC draws (r_eff in [0.5, 1.5]).
 
-All Pareto k estimates are good (k < 0.7).
+Pareto k diagnostic values:
+                         Count Pct.    Min. ESS
+(-Inf, 0.7]   (good)     888   99.8%   1118    
+   (0.7, 1]   (bad)        2    0.2%   <NA>    
+   (1, Inf)   (very bad)   0    0.0%   <NA>    
 See help('pareto-k-diagnostic') for details.
 
 Derivative-based Predictor Classification

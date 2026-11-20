@@ -1,0 +1,72 @@
+========================================
+ Model Summary - Phyto_Evenness_P 
+========================================
+
+ Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: phyto_evenness ~ poly(Temperature, 2, raw = TRUE) + poly(Salinity, 2, raw = TRUE) + poly(pH, 2, raw = TRUE) + poly(TotalNitrogen_unfiltered, 2, raw = TRUE) + poly(MaxDepth, 2, raw = TRUE) + poly(daylight_hours, 2, raw = TRUE) + (1 | Year) + (1 | Site_Id) 
+   Data: plankton_RUE_data_scaled (Number of observations: 890) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Multilevel Hyperparameters:
+~Site_Id (Number of levels: 27) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.11      0.02     0.08     0.16 1.00     1624     3404
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.07      0.01     0.04     0.10 1.00     2107     3334
+
+Regression Coefficients:
+                                        Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept                                   0.60      0.03     0.54     0.66 1.00     1599     2658
+polyTemperature2rawEQTRUE1                  0.02      0.01     0.01     0.04 1.00     6663     6076
+polyTemperature2rawEQTRUE2                  0.00      0.00    -0.01     0.01 1.00     7000     6185
+polySalinity2rawEQTRUE1                    -0.02      0.02    -0.07     0.02 1.00     1977     3276
+polySalinity2rawEQTRUE2                     0.01      0.01    -0.00     0.02 1.00     3657     5090
+polypH2rawEQTRUE1                          -0.03      0.01    -0.04    -0.02 1.00     6673     5695
+polypH2rawEQTRUE2                          -0.00      0.00    -0.00     0.00 1.00    10104     6700
+polyTotalNitrogen_unfiltered2rawEQTRUE1    -0.04      0.01    -0.05    -0.02 1.00     5620     5540
+polyTotalNitrogen_unfiltered2rawEQTRUE2     0.01      0.00    -0.00     0.01 1.00     7714     6779
+polyMaxDepth2rawEQTRUE1                     0.00      0.01    -0.02     0.02 1.00     5567     5418
+polyMaxDepth2rawEQTRUE2                    -0.00      0.00    -0.01     0.00 1.00     5965     6670
+polydaylight_hours2rawEQTRUE1              -0.02      0.00    -0.03    -0.01 1.00     8918     6285
+polydaylight_hours2rawEQTRUE2              -0.01      0.00    -0.01    -0.01 1.00    10251     6836
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     0.09      0.00     0.09     0.10 1.00     7738     5730
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 890 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo    822.6 25.4
+p_loo        64.0  4.3
+looic     -1645.2 50.9
+------
+MCSE of elpd_loo is 0.1.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.5, 1.4]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
+
+Derivative-based Predictor Classification
+Predictor | Pr_positive | Pr_negative | Pr_hump | Pr_Ushape
+-----------------------------------------------------------
+Temperature     |      0.925 |      0.000 |   0.050 |     0.025
+Salinity        |      0.041 |      0.262 |   0.015 |     0.682
+pH              |      0.000 |      0.970 |   0.030 |     0.000
+TotalNitrogen_unfiltered |      0.000 |      0.665 |   0.000 |     0.335
+MaxDepth        |      0.167 |      0.211 |   0.467 |     0.155
+daylight_hours  |      0.000 |      0.000 |   1.000 |     0.000
