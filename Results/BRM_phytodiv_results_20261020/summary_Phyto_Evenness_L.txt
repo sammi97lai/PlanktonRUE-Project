@@ -1,10 +1,10 @@
 ========================================
- Model Summary - Phyto_FDis_L 
+ Model Summary - Phyto_Evenness_L 
 ========================================
 
  Family: gaussian 
   Links: mu = identity; sigma = identity 
-Formula: FDis ~ Temperature + Salinity + pH + TotalNitrogen_unfiltered + MaxDepth + daylight_hours + (1 | Year) + (1 | Site_Id) 
+Formula: phyto_evenness ~ Temperature + Salinity + pH + TotalNitrogen_unfiltered + MaxDepth + daylight_hours + (1 | Year) + (1 | Site_Id) 
    Data: plankton_RUE_data_scaled (Number of observations: 928) 
   Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
          total post-warmup draws = 8000
@@ -12,25 +12,25 @@ Formula: FDis ~ Temperature + Salinity + pH + TotalNitrogen_unfiltered + MaxDept
 Multilevel Hyperparameters:
 ~Site_Id (Number of levels: 27) 
               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-sd(Intercept)     0.04      0.01     0.03     0.05 1.00     1831     2811
+sd(Intercept)     0.10      0.02     0.07     0.14 1.00     1758     3317
 
 ~Year (Number of levels: 22) 
               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-sd(Intercept)     0.05      0.01     0.03     0.07 1.00     1725     3414
+sd(Intercept)     0.06      0.01     0.04     0.09 1.00     1695     3026
 
 Regression Coefficients:
                          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-Intercept                    0.21      0.01     0.19     0.24 1.00     1135     2209
-Temperature                  0.03      0.00     0.02     0.03 1.00     7803     7046
-Salinity                     0.02      0.01     0.00     0.03 1.00     2197     3178
-pH                          -0.01      0.00    -0.01    -0.01 1.00     9044     6112
-TotalNitrogen_unfiltered    -0.01      0.00    -0.01    -0.01 1.00     7996     6282
-MaxDepth                     0.01      0.00     0.00     0.01 1.00     7467     5935
-daylight_hours              -0.00      0.00    -0.01    -0.00 1.00    10337     6938
+Intercept                    0.61      0.02     0.56     0.65 1.00     1519     2691
+Temperature                  0.03      0.01     0.02     0.04 1.00     6211     5750
+Salinity                    -0.00      0.02    -0.04     0.03 1.00     2189     3366
+pH                          -0.03      0.00    -0.04    -0.02 1.00     6418     5770
+TotalNitrogen_unfiltered    -0.03      0.01    -0.04    -0.02 1.00     6143     6250
+MaxDepth                     0.00      0.01    -0.01     0.02 1.00     6320     5905
+daylight_hours              -0.01      0.00    -0.02    -0.00 1.00     8818     5773
 
 Further Distributional Parameters:
       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-sigma     0.04      0.00     0.03     0.04 1.00     7499     5767
+sigma     0.09      0.00     0.09     0.10 1.00     7744     5538
 
 Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
 and Tail_ESS are effective sample size measures, and Rhat is the potential
@@ -45,9 +45,9 @@ scale reduction factor on split chains (at convergence, Rhat = 1).
 Computed from 8000 by 928 log-likelihood matrix.
 
          Estimate   SE
-elpd_loo   1742.2 26.2
-p_loo        59.4  4.1
-looic     -3484.4 52.3
+elpd_loo    846.8 27.2
+p_loo        56.7  4.1
+looic     -1693.7 54.4
 ------
 MCSE of elpd_loo is 0.1.
 MCSE and ESS estimates assume MCMC draws (r_eff in [0.5, 1.5]).

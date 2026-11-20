@@ -4,7 +4,7 @@
 
  Family: gaussian 
   Links: mu = identity; sigma = identity 
-Formula: FEve ~ poly(Temperature, 2, raw = TRUE) + poly(Salinity, 2, raw = TRUE) + poly(pH, 2, raw = TRUE) + poly(TotalNitrogen_unfiltered, 2, raw = TRUE) + poly(MaxDepth, 2, raw = TRUE) + poly(daylight_hours, 2, raw = TRUE) + (1 | Year) + (1 | Site_Id) 
+Formula: phyto_FEve_PD ~ poly(Temperature, 2, raw = TRUE) + poly(Salinity, 2, raw = TRUE) + poly(pH, 2, raw = TRUE) + poly(TotalNitrogen_unfiltered, 2, raw = TRUE) + poly(MaxDepth, 2, raw = TRUE) + poly(daylight_hours, 2, raw = TRUE) + (1 | Year) + (1 | Site_Id) 
    Data: plankton_RUE_data_scaled (Number of observations: 928) 
   Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
          total post-warmup draws = 8000
