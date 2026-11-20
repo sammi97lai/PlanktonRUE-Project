@@ -1,0 +1,76 @@
+========================================
+ Model Summary - Zoo_Species_Richness_P 
+========================================
+
+ Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: species_richness ~ poly(Temperature, 2, raw = TRUE) + poly(Salinity, 2, raw = TRUE) + poly(pH, 2, raw = TRUE) + poly(TotalNitrogen_unfiltered, 2, raw = TRUE) + poly(Zooplankton_MaxDepth, 2, raw = TRUE) + genus_richness + phyto_evenness + phyto_FEve_ZD + phyto_FDis_ZD + poly(daylight_hours, 2, raw = TRUE) + (1 | Year) + (1 | Site_Id) 
+   Data: plankton_RUE_data_scaled_Zdiv (Number of observations: 928) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Multilevel Hyperparameters:
+~Site_Id (Number of levels: 27) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     1.50      0.24     1.10     2.06 1.00     2812     4247
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.76      0.15     0.51     1.10 1.00     2382     4159
+
+Regression Coefficients:
+                                        Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept                                   8.38      0.39     7.63     9.16 1.00     2179     3488
+polyTemperature2rawEQTRUE1                  0.31      0.10     0.11     0.51 1.00     6523     5882
+polyTemperature2rawEQTRUE2                 -0.00      0.06    -0.12     0.11 1.00     7290     5836
+polySalinity2rawEQTRUE1                     0.56      0.25     0.06     1.03 1.00     2974     4301
+polySalinity2rawEQTRUE2                     0.08      0.10    -0.10     0.28 1.00     5129     5644
+polypH2rawEQTRUE1                          -0.14      0.09    -0.30     0.03 1.00     8333     5685
+polypH2rawEQTRUE2                           0.08      0.04     0.01     0.16 1.00     9414     5742
+polyTotalNitrogen_unfiltered2rawEQTRUE1    -0.46      0.12    -0.69    -0.24 1.00     6970     5960
+polyTotalNitrogen_unfiltered2rawEQTRUE2    -0.06      0.05    -0.17     0.05 1.00     8108     6240
+polyZooplankton_MaxDepth2rawEQTRUE1         0.09      0.09    -0.10     0.27 1.00     8016     6021
+polyZooplankton_MaxDepth2rawEQTRUE2         0.01      0.04    -0.06     0.09 1.00     8132     6427
+genus_richness                              0.03      0.08    -0.12     0.18 1.00     8815     6295
+phyto_evenness                              0.03      0.08    -0.13     0.19 1.00     8126     6683
+phyto_FEve_ZD                               0.09      0.06    -0.03     0.21 1.00    11079     5917
+phyto_FDis_ZD                               0.03      0.10    -0.17     0.23 1.00     7163     6383
+polydaylight_hours2rawEQTRUE1              -0.08      0.07    -0.23     0.06 1.00     8875     5914
+polydaylight_hours2rawEQTRUE2               0.02      0.02    -0.03     0.07 1.00     8798     6824
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     1.59      0.04     1.52     1.66 1.00    10914     5314
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 928 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo  -1776.7 27.6
+p_loo        55.7  3.5
+looic      3553.3 55.3
+------
+MCSE of elpd_loo is 0.1.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.6, 1.6]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
+
+Derivative-based Predictor Classification
+Predictor | Pr_positive | Pr_negative | Pr_hump | Pr_Ushape
+-----------------------------------------------------------
+Temperature     |      0.796 |      0.000 |   0.159 |     0.045
+Salinity        |      0.780 |      0.001 |   0.010 |     0.209
+pH              |      0.001 |      0.195 |   0.006 |     0.799
+TotalNitrogen_unfiltered |      0.000 |      0.958 |   0.041 |     0.001
+Zooplankton_MaxDepth |      0.692 |      0.004 |   0.150 |     0.153
+daylight_hours  |      0.008 |      0.406 |   0.086 |     0.501

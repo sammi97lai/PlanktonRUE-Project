@@ -1,0 +1,92 @@
+========================================
+ Model Summary - zoo_RUE_CD_LI 
+========================================
+
+ Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: log_RUE_zooplankton ~ pH + Zooplankton_MaxDepth + daylight_hours + genus_richness * Temperature + genus_richness * Salinity + genus_richness * TotalNitrogen_unfiltered + phyto_evenness * Temperature + phyto_evenness * Salinity + phyto_evenness * TotalNitrogen_unfiltered + phyto_FEve_ZRUE * Temperature + phyto_FEve_ZRUE * Salinity + phyto_FEve_ZRUE * TotalNitrogen_unfiltered + phyto_FDis_ZRUE * Temperature + phyto_FDis_ZRUE * Salinity + phyto_FDis_ZRUE * TotalNitrogen_unfiltered + cyano_prop * Temperature + cyano_prop * Salinity + cyano_prop * TotalNitrogen_unfiltered + species_richness * Temperature + species_richness * Salinity + species_richness * TotalNitrogen_unfiltered + zoo_evenness * Temperature + zoo_evenness * Salinity + zoo_evenness * TotalNitrogen_unfiltered + zoo_FEve * Temperature + zoo_FEve * Salinity + zoo_FEve * TotalNitrogen_unfiltered + zoo_FDis * Temperature + zoo_FDis * Salinity + zoo_FDis * TotalNitrogen_unfiltered + (1 | Year) + (1 | Site_Id) 
+   Data: plankton_RUE_data_scaled_RUE (Number of observations: 928) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Multilevel Hyperparameters:
+~Site_Id (Number of levels: 27) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.84      0.14     0.61     1.17 1.00     2945     5211
+
+~Year (Number of levels: 22) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.59      0.12     0.40     0.85 1.00     2697     4170
+
+Regression Coefficients:
+                                          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept                                    -3.31      0.23    -3.77    -2.88 1.00     2384     4136
+pH                                           -0.30      0.05    -0.41    -0.19 1.00     8993     6016
+Zooplankton_MaxDepth                         -0.85      0.04    -0.94    -0.77 1.00    13463     6300
+daylight_hours                               -0.13      0.05    -0.22    -0.04 1.00     9267     6604
+genus_richness                               -0.06      0.05    -0.16     0.04 1.00     8259     6304
+Temperature                                   0.97      0.08     0.81     1.13 1.00     5906     6231
+Salinity                                     -0.32      0.16    -0.63    -0.02 1.00     4004     4914
+TotalNitrogen_unfiltered                     -0.05      0.08    -0.20     0.10 1.00     7168     6304
+phyto_evenness                                0.23      0.07     0.10     0.36 1.00     6951     5694
+phyto_FEve_ZRUE                               0.05      0.04    -0.03     0.12 1.00    10690     5535
+phyto_FDis_ZRUE                              -0.02      0.08    -0.17     0.14 1.00     6922     5846
+cyano_prop                                    0.02      0.07    -0.13     0.16 1.00     6803     6366
+species_richness                             -0.02      0.05    -0.12     0.08 1.00    10526     6614
+zoo_evenness                                 -0.43      0.08    -0.58    -0.28 1.00     7621     6129
+zoo_FEve                                     -0.02      0.04    -0.09     0.06 1.00    12014     6292
+zoo_FDis                                      0.19      0.08     0.04     0.33 1.00     6904     6319
+genus_richness:Temperature                   -0.22      0.04    -0.30    -0.14 1.00     8537     6515
+genus_richness:Salinity                      -0.21      0.05    -0.31    -0.10 1.00     8958     6500
+genus_richness:TotalNitrogen_unfiltered      -0.04      0.04    -0.13     0.05 1.00     7979     6328
+Temperature:phyto_evenness                   -0.08      0.05    -0.19     0.02 1.00     6422     6024
+Salinity:phyto_evenness                      -0.15      0.06    -0.26    -0.04 1.00     8465     6198
+TotalNitrogen_unfiltered:phyto_evenness       0.03      0.05    -0.07     0.13 1.00     7280     6209
+Temperature:phyto_FEve_ZRUE                  -0.04      0.04    -0.11     0.04 1.00    11107     6501
+Salinity:phyto_FEve_ZRUE                      0.05      0.04    -0.03     0.12 1.00    11032     5910
+TotalNitrogen_unfiltered:phyto_FEve_ZRUE     -0.10      0.05    -0.19    -0.01 1.00     9946     6281
+Temperature:phyto_FDis_ZRUE                  -0.12      0.08    -0.27     0.04 1.00     5816     5935
+Salinity:phyto_FDis_ZRUE                     -0.05      0.09    -0.22     0.11 1.00     7218     6212
+TotalNitrogen_unfiltered:phyto_FDis_ZRUE     -0.00      0.08    -0.15     0.14 1.00     6482     6099
+Temperature:cyano_prop                       -0.06      0.07    -0.20     0.08 1.00     5899     6033
+Salinity:cyano_prop                           0.04      0.09    -0.14     0.21 1.00     6780     6390
+TotalNitrogen_unfiltered:cyano_prop          -0.02      0.07    -0.15     0.11 1.00     7128     6102
+Temperature:species_richness                  0.04      0.05    -0.06     0.13 1.00     7969     5989
+Salinity:species_richness                     0.02      0.05    -0.08     0.12 1.00    10508     6703
+TotalNitrogen_unfiltered:species_richness     0.11      0.05     0.03     0.20 1.00     8332     6360
+Temperature:zoo_evenness                      0.31      0.09     0.14     0.48 1.00     5845     6030
+Salinity:zoo_evenness                        -0.07      0.08    -0.23     0.09 1.00     7627     6027
+TotalNitrogen_unfiltered:zoo_evenness        -0.16      0.08    -0.31    -0.01 1.00     6583     6028
+Temperature:zoo_FEve                          0.06      0.04    -0.02     0.14 1.00     9543     6223
+Salinity:zoo_FEve                             0.04      0.04    -0.04     0.12 1.00    11001     6520
+TotalNitrogen_unfiltered:zoo_FEve            -0.03      0.04    -0.11     0.04 1.00    11078     6610
+Temperature:zoo_FDis                         -0.27      0.08    -0.42    -0.11 1.00     5696     6198
+Salinity:zoo_FDis                             0.07      0.08    -0.08     0.23 1.00     7370     6491
+TotalNitrogen_unfiltered:zoo_FDis             0.25      0.07     0.10     0.39 1.00     6514     6029
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     0.95      0.02     0.91     1.00 1.00    10371     6124
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+
+========================================
+ LOO Cross-Validation Results
+========================================
+
+
+Computed from 8000 by 928 log-likelihood matrix.
+
+         Estimate   SE
+elpd_loo  -1316.7 24.8
+p_loo        82.8  4.9
+looic      2633.3 49.7
+------
+MCSE of elpd_loo is 0.1.
+MCSE and ESS estimates assume MCMC draws (r_eff in [0.5, 1.5]).
+
+All Pareto k estimates are good (k < 0.7).
+See help('pareto-k-diagnostic') for details.
